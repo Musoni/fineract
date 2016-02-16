@@ -82,21 +82,9 @@ public final class ResultsetColumnHeaderData {
         this.columnDisplayExpression = columnDisplayExpression;
         this.columnFormulaExpression = columnFormulaExpression;
 
-        if("NEWDECIMAL".equalsIgnoreCase(this.columnType)) {
-        	this.columnType = "DECIMAL" ;
-        	//Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
-        }
-        
-        if("CLOB".equalsIgnoreCase(this.columnType)) {
-        	this.columnType = "varchar" ;
-        	//Drizzle is returning some of the String data a CLOB
-        }
-        
-        if("LONGLONG".equalsIgnoreCase(this.columnType) || "LONG".equalsIgnoreCase(this.columnType)) {
-        	this.columnType = "bigint" ;
-        	//Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
-        }
-        
+        // Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
+        adjustColumnTypes();
+
         String displayType = null;
         if (this.columnCode == null) {
             if (isString()) {
@@ -114,7 +102,7 @@ public final class ResultsetColumnHeaderData {
                 displayType = "DECIMAL";
             } else if (isAnyText()) {
                 displayType = "TEXT";
-            } else if(isBit()) {
+            } else if (isBit()) {
                 displayType = "BOOLEAN";
             } else {
                 throw new PlatformDataIntegrityException("error.msg.invalid.lookup.type", "Invalid Lookup Type:" + this.columnType
@@ -136,6 +124,33 @@ public final class ResultsetColumnHeaderData {
         }
 
         this.columnDisplayType = displayType;
+    }
+
+    private void adjustColumnTypes() {
+        switch (this.columnType) {
+            case "NEWDECIMAL":
+                this.columnType = "DECIMAL";
+            break;
+            case "CLOB":
+            case "ENUM":
+            case "SET":
+                this.columnType = "varchar";
+            break;
+            case "LONGLONG":
+                this.columnType = "bigint";
+            break;
+            case "SHORT":
+                this.columnType = "smallint";
+            break;
+            case "TINY":
+                this.columnType = "tinyint";
+            break;
+            case "INT24":
+                this.columnType = "int";
+            break;
+            default:
+            break;
+        }
     }
 
     public boolean isNamed(final String columnName) {
@@ -164,7 +179,7 @@ public final class ResultsetColumnHeaderData {
 
     private boolean isDecimal() {
         return "decimal".equalsIgnoreCase(this.columnType) || "NEWDECIMAL".equalsIgnoreCase(this.columnType);
-        //Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
+        // Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
     }
 
     private boolean isDate() {
@@ -210,10 +225,10 @@ public final class ResultsetColumnHeaderData {
     public boolean isBigInt() {
         return "bigint".equalsIgnoreCase(this.columnType);
     }
-    
+
     private boolean isLong() {
         return "LONG".equalsIgnoreCase(this.columnType) || "LONGLONG".equalsIgnoreCase(this.columnType);
-        //Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
+        // Refer org.drizzle.jdbc.internal.mysql.MySQLType.java
     }
 
     private boolean isBit() {
