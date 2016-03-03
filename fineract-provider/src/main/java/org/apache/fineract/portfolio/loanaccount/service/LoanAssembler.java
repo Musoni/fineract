@@ -20,14 +20,10 @@ package org.apache.fineract.portfolio.loanaccount.service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -87,12 +83,11 @@ import org.apache.fineract.portfolio.loanproduct.exception.InvalidCurrencyExcept
 import org.apache.fineract.portfolio.loanproduct.exception.LinkedAccountRequiredException;
 import org.apache.fineract.portfolio.loanproduct.exception.LoanProductNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 @Service
 public class LoanAssembler {
@@ -115,6 +110,7 @@ public class LoanAssembler {
     private final ConfigurationDomainService configurationDomainService;
     private final WorkingDaysRepositoryWrapper workingDaysRepository;
     private final GroupLoanMemberAllocationAssembler groupLoanMemberAllocationAssembler;
+    private final LoanUtilService loanUtilService;
 
     @Autowired
     public LoanAssembler(final FromJsonHelper fromApiJsonHelper, final LoanRepositoryWrapper loanRepository,
@@ -127,7 +123,8 @@ public class LoanAssembler {
             final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory,
             final HolidayRepository holidayRepository, final ConfigurationDomainService configurationDomainService,
             final WorkingDaysRepositoryWrapper workingDaysRepository, 
-            final GroupLoanMemberAllocationAssembler groupLoanMemberAllocationAssembler) {
+            final GroupLoanMemberAllocationAssembler groupLoanMemberAllocationAssembler, 
+            final LoanUtilService loanUtilService) {
         this.fromApiJsonHelper = fromApiJsonHelper;
         this.loanRepository = loanRepository;
         this.loanProductRepository = loanProductRepository;
@@ -146,6 +143,7 @@ public class LoanAssembler {
         this.configurationDomainService = configurationDomainService;
         this.workingDaysRepository = workingDaysRepository;
         this.groupLoanMemberAllocationAssembler = groupLoanMemberAllocationAssembler;
+        this.loanUtilService = loanUtilService;
     }
 
     public Loan assembleFrom(final Long accountId) {
@@ -205,7 +203,7 @@ public class LoanAssembler {
         }
         BigDecimal maxOutstandingLoanBalance = null;
         if (loanProduct.isMultiDisburseLoan()) {
-            disbursementDetails = fetchDisbursementData(element.getAsJsonObject());
+            disbursementDetails = this.loanUtilService.fetchDisbursementData(element.getAsJsonObject());
             final Locale locale = this.fromApiJsonHelper.extractLocaleParameter(element.getAsJsonObject());
             maxOutstandingLoanBalance = this.fromApiJsonHelper.extractBigDecimalNamed(LoanApiConstants.maxOutstandingBalanceParameterName,
                     element, locale);
@@ -326,41 +324,6 @@ public class LoanAssembler {
                 recalculationRestFrequencyDate, recalculationCompoundingFrequencyDate);
 
         return loanApplication;
-    }
-
-    public Set<LoanDisbursementDetails> fetchDisbursementData(final JsonObject command) {
-        final Locale locale = this.fromApiJsonHelper.extractLocaleParameter(command);
-        final String dateFormat = this.fromApiJsonHelper.extractDateFormatParameter(command);
-        Set<LoanDisbursementDetails> disbursementDatas = new HashSet<>();
-        if (command.has(LoanApiConstants.disbursementDataParameterName)) {
-            final JsonArray disbursementDataArray = command.getAsJsonArray(LoanApiConstants.disbursementDataParameterName);
-            if (disbursementDataArray != null && disbursementDataArray.size() > 0) {
-                int i = 0;
-                do {
-                    final JsonObject jsonObject = disbursementDataArray.get(i).getAsJsonObject();
-                    Date expectedDisbursementDate = null;
-                    Date actualDisbursementDate = null;
-                    BigDecimal principal = null;
-
-                    if (jsonObject.has(LoanApiConstants.disbursementDateParameterName)) {
-                        LocalDate date = this.fromApiJsonHelper.extractLocalDateNamed(LoanApiConstants.disbursementDateParameterName,
-                                jsonObject, dateFormat, locale);
-                        if (date != null) {
-                            expectedDisbursementDate = date.toDate();
-                        }
-                    }
-                    if (jsonObject.has(LoanApiConstants.disbursementPrincipalParameterName)
-                            && jsonObject.get(LoanApiConstants.disbursementPrincipalParameterName).isJsonPrimitive()
-                            && StringUtils.isNotBlank((jsonObject.get(LoanApiConstants.disbursementPrincipalParameterName).getAsString()))) {
-                        principal = jsonObject.getAsJsonPrimitive(LoanApiConstants.disbursementPrincipalParameterName).getAsBigDecimal();
-                    }
-
-                    disbursementDatas.add(new LoanDisbursementDetails(expectedDisbursementDate, actualDisbursementDate, principal));
-                    i++;
-                } while (i < disbursementDataArray.size());
-            }
-        }
-        return disbursementDatas;
     }
 
     private LoanLifecycleStateMachine defaultLoanLifecycleStateMachine() {
