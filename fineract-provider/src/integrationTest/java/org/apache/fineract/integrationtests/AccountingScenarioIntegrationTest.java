@@ -523,6 +523,7 @@ public class AccountingScenarioIntegrationTest {
         System.out.println("------------------------------CREATING NEW FIXED DEPOSIT PRODUCT ---------------------------------------");
         FixedDepositProductHelper fixedDepositProductHelper = new FixedDepositProductHelper(this.requestSpec, this.responseSpec);
         final String fixedDepositProductJSON = fixedDepositProductHelper //
+                .withPeriodRangeChart()//
                 .withAccountingRuleAsCashBased(accounts).build(validFrom, validTo);
         return FixedDepositProductHelper.createFixedDepositProduct(fixedDepositProductJSON, requestSpec, responseSpec);
     }
@@ -531,7 +532,7 @@ public class AccountingScenarioIntegrationTest {
             final String validTo, final String submittedOnDate, final String penalInterestType) {
         System.out.println("--------------------------------APPLYING FOR FIXED DEPOSIT ACCOUNT --------------------------------");
         final String fixedDepositApplicationJSON = new FixedDepositAccountHelper(this.requestSpec, this.responseSpec) //
-                .withSubmittedOnDate(submittedOnDate).build(clientID, productID, validFrom, validTo, penalInterestType);
+                .withSubmittedOnDate(submittedOnDate).build(clientID, productID, penalInterestType);
         return this.fixedDepositAccountHelper
                 .applyFixedDepositApplication(fixedDepositApplicationJSON, this.requestSpec, this.responseSpec);
     }
@@ -540,6 +541,7 @@ public class AccountingScenarioIntegrationTest {
         System.out.println("------------------------------CREATING NEW RECURRING DEPOSIT PRODUCT ---------------------------------------");
         RecurringDepositProductHelper recurringDepositProductHelper = new RecurringDepositProductHelper(this.requestSpec, this.responseSpec);
         final String recurringDepositProductJSON = recurringDepositProductHelper //
+                .withPeriodRangeChart()//
                 .withAccountingRuleAsCashBased(accounts).build(validFrom, validTo);
         return RecurringDepositProductHelper.createRecurringDepositProduct(recurringDepositProductJSON, requestSpec, responseSpec);
     }
@@ -550,7 +552,7 @@ public class AccountingScenarioIntegrationTest {
         final String recurringDepositApplicationJSON = new RecurringDepositAccountHelper(this.requestSpec, this.responseSpec)
                 //
                 .withSubmittedOnDate(submittedOnDate).withExpectedFirstDepositOnDate(expectedFirstDepositOnDate)
-                .build(clientID, productID, validFrom, validTo, penalInterestType);
+                .build(clientID, productID, penalInterestType);
         return this.recurringDepositAccountHelper.applyRecurringDepositApplication(recurringDepositApplicationJSON, this.requestSpec,
                 this.responseSpec);
     }

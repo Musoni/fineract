@@ -77,13 +77,13 @@ public class SavingsProductInterestRateChart extends AbstractPersistable<Long> {
 
         final boolean applyToExistingSavingsAccount = command.booleanPrimitiveValueOfParameterNamed("applyToExistingSavingsAccount");
 
-        final InterestRateChartFields interestRateChartFields = InterestRateChartFields.createNew(name,description,fromDate,endDate);
+        final InterestRateChartFields interestRateChartFields = InterestRateChartFields.createNew(name,description,fromDate,endDate, false);
 
         return new SavingsProductInterestRateChart(savingsProduct,interestRateChartFields,annualInterestRate,applyToExistingSavingsAccount);
     }
     public static SavingsProductInterestRateChart createNew(final SavingsProduct savingsProduct,final String name, final String description, final LocalDate fromDate,final LocalDate endDate,
                                                             final BigDecimal annualInterestRate, final boolean applyToExistingSavingsAccount){
-        final InterestRateChartFields interestRateChartFields = InterestRateChartFields.createNew(name,description,fromDate,endDate);
+        final InterestRateChartFields interestRateChartFields = InterestRateChartFields.createNew(name,description,fromDate,endDate, false);
 
         return new SavingsProductInterestRateChart(savingsProduct,interestRateChartFields,annualInterestRate,applyToExistingSavingsAccount);
     }
@@ -120,10 +120,4 @@ public class SavingsProductInterestRateChart extends AbstractPersistable<Long> {
     public void updateApplyToExistingSavingsAccount(boolean applyToExistingSavingsAccount) {
         this.applyToExistingSavingsAccount = applyToExistingSavingsAccount;
     }
-
-
-
-
-
-
 }

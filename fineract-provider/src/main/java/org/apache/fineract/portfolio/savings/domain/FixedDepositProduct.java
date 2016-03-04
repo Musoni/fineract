@@ -200,7 +200,7 @@ public class FixedDepositProduct extends SavingsProduct {
                         }
                     } else {
                         // assemble chart
-                        final InterestRateChart newChart = this.chartAssembler.assembleFrom(chartElement, this.currency().getCode());
+                        final InterestRateChart newChart = this.chartAssembler.assembleFrom(chartElement, this.currency().getCode(), baseDataValidator);
                         this.addChart(newChart);
                     }
                 }
