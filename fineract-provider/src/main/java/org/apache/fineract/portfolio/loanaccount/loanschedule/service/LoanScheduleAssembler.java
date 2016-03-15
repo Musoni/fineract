@@ -288,8 +288,10 @@ public class LoanScheduleAssembler {
         final Integer graceOnPrincipalPayment = this.fromApiJsonHelper.extractIntegerWithLocaleNamed("graceOnPrincipalPayment", element);
         final Integer graceOnInterestPayment = this.fromApiJsonHelper.extractIntegerWithLocaleNamed("graceOnInterestPayment", element);
         final Integer graceOnInterestCharged = this.fromApiJsonHelper.extractIntegerWithLocaleNamed("graceOnInterestCharged", element);
-        LocalDate interestChargedFromDate = this.fromApiJsonHelper.extractLocalDateNamed("interestChargedFromDate", element);
+        final Boolean isInterestChargedFromDateSameAsDisbursalDateEnabled = this.configurationDomainService.isInterestChargedFromDateSameAsDisbursementDate();
 
+        LocalDate interestChargedFromDate = this.fromApiJsonHelper.extractLocalDateNamed("interestChargedFromDate", element);
+        
         // Override interestchargedfromdate if same as repayment period to avoid calculation collapses:
         if(interestCalculationPeriodMethod.equals(InterestCalculationPeriodMethod.SAME_AS_REPAYMENT_PERIOD)) {
             interestChargedFromDate = null;
@@ -401,7 +403,7 @@ public class LoanScheduleAssembler {
                 maxOutstandingBalance, graceOnArrearsAgeing, daysInMonthType, daysInYearType, isInterestRecalculationEnabled,
                 recalculationFrequencyType, restCalendarInstance, compoundingCalendarInstance, compoundingFrequencyType,
                 principalThresholdForLastInstalment, installmentAmountInMultiplesOf, loanProduct.preCloseInterestCalculationStrategy(),
-                calendar, BigDecimal.ZERO, loanTermVariations);
+                calendar, BigDecimal.ZERO, loanTermVariations, isInterestChargedFromDateSameAsDisbursalDateEnabled);
     }
 
     private CalendarInstance createCalendarForSameAsRepayment(final Integer repaymentEvery,

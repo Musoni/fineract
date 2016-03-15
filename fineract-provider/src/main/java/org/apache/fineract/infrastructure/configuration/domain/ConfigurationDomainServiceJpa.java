@@ -287,4 +287,11 @@ public class ConfigurationDomainServiceJpa implements ConfigurationDomainService
         final GlobalConfigurationProperty property = this.globalConfigurationRepository.findOneByNameWithNotFoundDetection(propertyName);
         return property.isEnabled();
 	}
+
+    @Override
+    public boolean isInterestChargedFromDateSameAsDisbursementDate() {
+        final String propertyName = "interest-charged-from-date-same-as-disbursal-date";
+        final GlobalConfigurationProperty property = this.globalConfigurationRepository.findOneByNameWithNotFoundDetection(propertyName);
+        return property.isEnabled();
+    }
 }

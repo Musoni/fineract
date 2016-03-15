@@ -81,4 +81,6 @@ public interface ConfigurationDomainService {
     Date retrieveOrganisationStartDate();
     
     boolean isPaymentTypeApplicableforDisbursementCharge();
+    
+    boolean isInterestChargedFromDateSameAsDisbursementDate();
 }
