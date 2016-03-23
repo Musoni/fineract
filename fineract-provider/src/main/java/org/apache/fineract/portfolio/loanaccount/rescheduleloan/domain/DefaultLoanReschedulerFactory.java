@@ -38,7 +38,7 @@ public class DefaultLoanReschedulerFactory implements LoanReschedulerFactory {
             final LoanRescheduleRequest loanRescheduleRequest, final ApplicationCurrency applicationCurrency,
             final HolidayDetailDTO holidayDetailDTO, final CalendarInstance restCalendarInstance,
             final CalendarInstance compoundingCalendarInstance, final Calendar loanCalendar, final FloatingRateDTO floatingRateDTO, 
-            final Collection<LoanCharge> loanCharges) {
+            final Collection<LoanCharge> loanCharges, final boolean isSkipRepaymentonmonthFirst, final Integer numberofdays) {
 
         LoanRescheduleModel loanRescheduleModel = null;
 
@@ -46,13 +46,13 @@ public class DefaultLoanReschedulerFactory implements LoanReschedulerFactory {
             case DECLINING_BALANCE:
                 loanRescheduleModel = new DecliningBalanceInterestLoanScheduleGenerator().reschedule(mathContext, loanRescheduleRequest,
                         applicationCurrency, holidayDetailDTO, restCalendarInstance, compoundingCalendarInstance, loanCalendar,
-                        floatingRateDTO, loanCharges);
+                        floatingRateDTO, loanCharges, isSkipRepaymentonmonthFirst, numberofdays);
             break;
 
             case FLAT:
                 loanRescheduleModel = new FlatInterestLoanScheduleGenerator().reschedule(mathContext, loanRescheduleRequest,
                         applicationCurrency, holidayDetailDTO, restCalendarInstance, compoundingCalendarInstance, loanCalendar,
-                        floatingRateDTO, loanCharges);
+                        floatingRateDTO, loanCharges, isSkipRepaymentonmonthFirst, numberofdays);
             break;
 
             case INVALID:

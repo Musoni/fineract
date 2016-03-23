@@ -83,4 +83,9 @@ public interface ConfigurationDomainService {
     boolean isPaymentTypeApplicableforDisbursementCharge();
     
     boolean isInterestChargedFromDateSameAsDisbursementDate();
+
+    boolean isSkippingMeetingOnFirstDayOfMonthEnabled();
+    
+    Long retreivePeroidInNumberOfDaysForSkipMeetingDate();
+    
 }

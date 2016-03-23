@@ -340,14 +340,17 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         // check for product mix validations
         checkForProductMixRestrictions(loan);
+        
+        LocalDate recalculateFrom = null;
+        ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
 
         // validate actual disbursement date against meeting date
         final CalendarInstance calendarInstance = this.calendarInstanceRepository.findCalendarInstaneByEntityId(loan.getId(),
                 CalendarEntityType.LOANS.getValue());
         if (loan.isSyncDisbursementWithMeeting()) {
-
             final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
-            this.loanEventApiJsonValidator.validateDisbursementDateWithMeetingDate(actualDisbursementDate, calendarInstance);
+            this.loanEventApiJsonValidator.validateDisbursementDateWithMeetingDate(actualDisbursementDate, calendarInstance, 
+                    scheduleGeneratorDTO.isSkipRepaymentOnFirstDayofMonth(), scheduleGeneratorDTO.getNumberOfdays());
         }
         
         // run any credit check associated with the loan
@@ -389,9 +392,6 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 disbursementTransaction.updateLoan(loan);
                 loan.getLoanTransactions().add(disbursementTransaction);
             }
-
-            LocalDate recalculateFrom = null;
-            ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
 
             regenerateScheduleOnDisbursement(command, loan, recalculateSchedule, scheduleGeneratorDTO, nextPossibleRepaymentDate, rescheduledRepaymentDate);
             if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled()) {
@@ -2114,11 +2114,22 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         // loop through each loan to reschedule the repayment dates
         for (final Loan loan : loans) {
             if (loan != null) {
+
                 if(loan.getExpectedFirstRepaymentOnDate() != null && loan.getExpectedFirstRepaymentOnDate().equals(presentMeetingDate)){
                     final String defaultUserMessage = "Meeting calendar date update is not supported since its a first repayment date";
                     throw new CalendarParameterUpdateNotSupportedException("meeting.for.first.repayment.date", defaultUserMessage,
                             loan.getExpectedFirstRepaymentOnDate(), presentMeetingDate);
                 }
+
+                Boolean isSkipRepaymentOnFirstMonth = false;
+                Integer numberOfDays = 0;
+                boolean isSkipRepaymentOnFirstMonthEnabled = configurationDomainService.isSkippingMeetingOnFirstDayOfMonthEnabled();
+                if(isSkipRepaymentOnFirstMonthEnabled){
+                    isSkipRepaymentOnFirstMonth = this.loanUtilService.isLoanRepaymentsSyncWithMeeting(loan.group(), calendar);
+                    if(isSkipRepaymentOnFirstMonth) { numberOfDays = configurationDomainService.retreivePeroidInNumberOfDaysForSkipMeetingDate().intValue(); }  
+                }
+   
+
                 holidays = this.holidayRepository.findByOfficeIdAndGreaterThanDate(loan.getOfficeId(), loan.getDisbursementDate().toDate());
                 if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled()) {
                     ScheduleGeneratorDTO scheduleGeneratorDTO = loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
@@ -2129,10 +2140,11 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                             loan.fetchRepaymentScheduleInstallments(), loan, null);
                 } else if (reschedulebasedOnMeetingDates != null && reschedulebasedOnMeetingDates) {
                     loan.updateLoanRepaymentScheduleDates(calendar.getStartDateLocalDate(), calendar.getRecurrence(), isHolidayEnabled,
-                            holidays, workingDays, reschedulebasedOnMeetingDates, presentMeetingDate, newMeetingDate);
+                            holidays, workingDays, reschedulebasedOnMeetingDates, presentMeetingDate, newMeetingDate,
+                            isSkipRepaymentOnFirstMonth, numberOfDays);
                 } else {
                     loan.updateLoanRepaymentScheduleDates(calendar.getStartDateLocalDate(), calendar.getRecurrence(), isHolidayEnabled,
-                            holidays, workingDays);
+                            holidays, workingDays, isSkipRepaymentOnFirstMonth, numberOfDays);
                 }
 
                 saveLoanWithDataIntegrityViolationChecks(loan);
@@ -2344,12 +2356,22 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 loanCalendar = loanCalendarInstance.getCalendar();
             }
             
+            Boolean isSkipRepaymentOnFirstMonth = false;
+            Integer numberOfDays = 0;
+            boolean isSkipRepaymentOnFirstMonthEnabled = this.configurationDomainService.isSkippingMeetingOnFirstDayOfMonthEnabled();
+            
+            if(isSkipRepaymentOnFirstMonthEnabled){
+                isSkipRepaymentOnFirstMonth = this.loanUtilService.isLoanRepaymentsSyncWithMeeting(loan.group(), loanCalendar);
+                if(isSkipRepaymentOnFirstMonth) { numberOfDays = configurationDomainService.retreivePeroidInNumberOfDaysForSkipMeetingDate().intValue(); }
+                
+            }
+            
             final FloatingRateDTO floatingRateDTO = constructFloatingRateDTO(loan);
             final LoanProductMinimumRepaymentScheduleRelatedDetail loanProductRelatedDetail = loan.getLoanRepaymentScheduleDetail();
             final MonetaryCurrency currency = loanProductRelatedDetail.getCurrency();
             final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
             final LoanApplicationTerms loanApplicationTerms = loan.getLoanApplicationTerms(applicationCurrency, restCalendarInstance,
-                    compoundingCalendarInstance, loanCalendar, floatingRateDTO);
+                    compoundingCalendarInstance, loanCalendar, floatingRateDTO, isSkipRepaymentOnFirstMonthEnabled, numberOfDays);
             
             loan.applyHolidayToRepaymentScheduleDates(holidayDetailDTO, loanApplicationTerms);
         }

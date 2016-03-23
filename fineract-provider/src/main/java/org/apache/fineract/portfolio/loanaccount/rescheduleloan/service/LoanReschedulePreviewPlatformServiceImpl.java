@@ -59,6 +59,7 @@ import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanResch
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanRescheduleRequest;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanRescheduleRequestRepository;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.exception.LoanRescheduleRequestNotFoundException;
+import org.apache.fineract.portfolio.loanaccount.service.LoanUtilService;
 import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductMinimumRepaymentScheduleRelatedDetail;
@@ -77,6 +78,7 @@ public class LoanReschedulePreviewPlatformServiceImpl implements LoanRescheduleP
     private final LoanScheduleHistoryWritePlatformService loanScheduleHistoryWritePlatformService;
     private final CalendarInstanceRepository calendarInstanceRepository;
     private final FloatingRatesReadPlatformService floatingRatesReadPlatformService;
+    private final LoanUtilService loanUtilService;
 
     @Autowired
     public LoanReschedulePreviewPlatformServiceImpl(final LoanRescheduleRequestRepository loanRescheduleRequestRepository,
@@ -85,7 +87,7 @@ public class LoanReschedulePreviewPlatformServiceImpl implements LoanRescheduleP
             final WorkingDaysRepositoryWrapper workingDaysRepository,
             final LoanScheduleHistoryWritePlatformService loanScheduleHistoryWritePlatformService,
             final CalendarInstanceRepository calendarInstanceRepository,
-            final FloatingRatesReadPlatformService floatingRatesReadPlatformService) {
+            final FloatingRatesReadPlatformService floatingRatesReadPlatformService, final LoanUtilService loanUtilService) {
         this.loanRescheduleRequestRepository = loanRescheduleRequestRepository;
         this.applicationCurrencyRepository = applicationCurrencyRepository;
         this.configurationDomainService = configurationDomainService;
@@ -94,6 +96,7 @@ public class LoanReschedulePreviewPlatformServiceImpl implements LoanRescheduleP
         this.loanScheduleHistoryWritePlatformService = loanScheduleHistoryWritePlatformService;
         this.calendarInstanceRepository = calendarInstanceRepository;
         this.floatingRatesReadPlatformService = floatingRatesReadPlatformService;
+        this.loanUtilService = loanUtilService;
     }
 
     @Override
@@ -159,9 +162,17 @@ public class LoanReschedulePreviewPlatformServiceImpl implements LoanRescheduleP
             loanCalendar = loanCalendarInstance.getCalendar();
         }
         final FloatingRateDTO floatingRateDTO = constructFloatingRateDTO(loan);
+        Boolean isSkipRepaymentOnFirstMonth = false;
+        Integer numberOfDays = 0;
+        boolean isSkipRepaymentOnFirstMonthEnabled = this.configurationDomainService.isSkippingMeetingOnFirstDayOfMonthEnabled();
+        if(isSkipRepaymentOnFirstMonthEnabled){
+            isSkipRepaymentOnFirstMonth = this.loanUtilService.isLoanRepaymentsSyncWithMeeting(loan.group(), loanCalendar);
+            if(isSkipRepaymentOnFirstMonth) { numberOfDays = configurationDomainService.retreivePeroidInNumberOfDaysForSkipMeetingDate().intValue(); }
+            
+        }
         LoanRescheduleModel loanRescheduleModel = new DefaultLoanReschedulerFactory().reschedule(mathContext, interestMethod,
                 loanRescheduleRequest, applicationCurrency, holidayDetailDTO, restCalendarInstance, compoundingCalendarInstance,
-                loanCalendar, floatingRateDTO, loanChargeList);
+                loanCalendar, floatingRateDTO, loanChargeList, isSkipRepaymentOnFirstMonth, numberOfDays);
         List<LoanRescheduleModelRepaymentPeriod> newPeriods = new ArrayList<>(loanRescheduleModel.getPeriods());
         
         // create a new LoanRescheduleModelRepaymentPeriod for the disbursement period
@@ -174,7 +185,7 @@ public class LoanReschedulePreviewPlatformServiceImpl implements LoanRescheduleP
         
         // update the "periods" property of the LoanRescheduleModel object
         loanRescheduleModel.updatePeriods(newPeriods);
-        
+
         LoanRescheduleModel loanRescheduleModelWithOldPeriods = LoanRescheduleModel.createWithSchedulehistory(loanRescheduleModel,
                 oldPeriods);
         return loanRescheduleModelWithOldPeriods;

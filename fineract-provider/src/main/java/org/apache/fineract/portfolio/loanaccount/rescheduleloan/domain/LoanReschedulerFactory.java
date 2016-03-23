@@ -34,5 +34,6 @@ public interface LoanReschedulerFactory {
     public LoanRescheduleModel reschedule(final MathContext mathContext, final InterestMethod interestMethod,
             final LoanRescheduleRequest loanRescheduleRequest, final ApplicationCurrency applicationCurrency,
             final HolidayDetailDTO holidayDetailDTO, CalendarInstance restCalendarInstance, CalendarInstance compoundingCalendarInstance,
-            final Calendar loanCalendar, FloatingRateDTO floatingRateDTO, Collection<LoanCharge> loanCharges);
+            final Calendar loanCalendar, FloatingRateDTO floatingRateDTO, Collection<LoanCharge> loanCharges, 
+            final boolean isSkipRepaymentonmonthFirst, final Integer numberofdays);
 }

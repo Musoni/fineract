@@ -40,14 +40,14 @@ import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanResch
 
 public interface LoanScheduleGenerator {
 
-    LoanScheduleModel generate(MathContext mc, LoanApplicationTerms loanApplicationTerms, Set<LoanCharge> loanCharges,
+	LoanScheduleModel generate(MathContext mc, LoanApplicationTerms loanApplicationTerms, Set<LoanCharge> loanCharges,
             final HolidayDetailDTO holidayDetailDTO);
 
     LoanScheduleDTO rescheduleNextInstallments(MathContext mc, LoanApplicationTerms loanApplicationTerms, Set<LoanCharge> loanCharges,
             final HolidayDetailDTO holidayDetailDTO, List<LoanTransaction> transactions,
             LoanRepaymentScheduleTransactionProcessor loanRepaymentScheduleTransactionProcessor,
             List<LoanRepaymentScheduleInstallment> repaymentScheduleInstallments, LocalDate rescheduleFrom);
-
+    
     LoanRepaymentScheduleInstallment calculatePrepaymentAmount(MonetaryCurrency currency, LocalDate onDate,
             LoanApplicationTerms loanApplicationTerms, MathContext mc, Set<LoanCharge> charges, HolidayDetailDTO holidayDetailDTO,
             List<LoanTransaction> loanTransactions, LoanRepaymentScheduleTransactionProcessor loanRepaymentScheduleTransactionProcessor,
@@ -55,5 +55,6 @@ public interface LoanScheduleGenerator {
 
     LoanRescheduleModel reschedule(final MathContext mathContext, final LoanRescheduleRequest loanRescheduleRequest,
             final ApplicationCurrency applicationCurrency, final HolidayDetailDTO holidayDetailDTO, CalendarInstance restCalendarInstance,
-            CalendarInstance compoundingCalendarInstance, final Calendar loanCalendar, FloatingRateDTO floatingRateDTO, Collection<LoanCharge> loanCharges);
+            CalendarInstance compoundingCalendarInstance, final Calendar loanCalendar, FloatingRateDTO floatingRateDTO, Collection<LoanCharge> loanCharges,
+    		final boolean isSkipRepaymentonmonthFirst, final Integer numberofdays);
 }

@@ -143,4 +143,9 @@ public class CalendarHistory extends AbstractPersistable<Long> {
     public void updateEndDate(Date historyCalEndDate) {
         this.endDate = historyCalEndDate;
     }
+
+	public Calendar getCalendar() {
+		return this.calendar;
+	}
+        
 }

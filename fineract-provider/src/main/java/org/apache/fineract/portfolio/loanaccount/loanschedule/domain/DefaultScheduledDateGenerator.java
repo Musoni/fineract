@@ -96,9 +96,11 @@ public class DefaultScheduledDateGenerator implements ScheduledDateGenerator {
                 dueRepaymentPeriodDate = CalendarUtils.getNewRepaymentMeetingDate(reccuringString, seedDate, lastRepaymentDate.plusDays(1),
                         loanApplicationTerms.getRepaymentEvery(),
                         CalendarUtils.getMeetingFrequencyFromPeriodFrequencyType(loanApplicationTerms.getLoanTermPeriodFrequencyType()),
-                        holidayDetailDTO.getWorkingDays());
+                        holidayDetailDTO.getWorkingDays(), loanApplicationTerms.isSkipRepaymentOnFirstDayofMonth(),
+                        loanApplicationTerms.getNumberOfdays());
             }
         }
+        
         return dueRepaymentPeriodDate;
     }
 
