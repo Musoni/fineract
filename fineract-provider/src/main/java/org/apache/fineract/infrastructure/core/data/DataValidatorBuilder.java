@@ -29,7 +29,6 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.ObjectUtils;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -207,7 +206,7 @@ public class DataValidatorBuilder {
         }
         return this;
     }
-
+   
     public DataValidatorBuilder notExceedingLengthOf(final Integer maxLength) {
         if (this.value == null && this.ignoreNullValue) { return this; }
 
