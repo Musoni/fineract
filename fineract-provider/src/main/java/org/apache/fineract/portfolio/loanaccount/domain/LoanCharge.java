@@ -969,6 +969,7 @@ public class LoanCharge extends AbstractPersistable<Long> {
         this.active = active;
         if (!active) {
             this.overdueInstallmentCharge = null;
+            this.loanTrancheDisbursementCharge = null;
             this.clearLoanInstallmentCharges();
         }
     }
