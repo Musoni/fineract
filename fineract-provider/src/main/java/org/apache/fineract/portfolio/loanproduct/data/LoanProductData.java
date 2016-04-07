@@ -108,6 +108,7 @@ public class LoanProductData {
     private final Long transactionProcessingStrategyId;
     private final String transactionProcessingStrategyName;
     private final Integer graceOnPrincipalPayment;
+    private final Integer recurringMoratoriumOnPrincipalPeriods;
     private final Integer graceOnInterestPayment;
     private final Integer graceOnInterestCharged;
     private final Integer graceOnArrearsAgeing;
@@ -229,6 +230,7 @@ public class LoanProductData {
         final Long transactionProcessingStrategyId = null;
         final String transactionProcessingStrategyName = null;
         final Integer graceOnPrincipalPayment = null;
+        final Integer recurringMoratoriumOnPrincipalPeriods = null;
         final Integer graceOnInterestPayment = null;
         final Integer graceOnInterestCharged = null;
         final Integer graceOnArrearsAgeing = null;
@@ -269,7 +271,7 @@ public class LoanProductData {
                 numberOfRepayments, minNumberOfRepayments, maxNumberOfRepayments, repaymentEvery, interestRatePerPeriod,
                 minInterestRatePerPeriod, maxInterestRatePerPeriod, annualInterestRate, repaymentFrequencyType, interestRateFrequencyType,
                 amortizationType, interestType, interestCalculationPeriodType, allowPartialPeriodInterestCalcualtion, fundId, fundName,
-                transactionProcessingStrategyId, transactionProcessingStrategyName, graceOnPrincipalPayment, graceOnInterestPayment,
+                transactionProcessingStrategyId, transactionProcessingStrategyName, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, charges, accountingType, includeInBorrowerCycle, useBorrowerCycle, startDate, closeDate, status,
                 externalId, principalVariations, interestRateVariations, numberOfRepaymentVariations, multiDisburseLoan, maxTrancheCount,
                 outstandingLoanBalance, graceOnArrearsAgeing, overdueDaysForNPA, daysInMonthType, daysInYearType,
@@ -319,6 +321,7 @@ public class LoanProductData {
         final Long transactionProcessingStrategyId = null;
         final String transactionProcessingStrategyName = null;
         final Integer graceOnPrincipalPayment = null;
+        final Integer recurringMoratoriumOnPrincipalPeriods = null;
         final Integer graceOnInterestPayment = null;
         final Integer graceOnInterestCharged = null;
         final Integer graceOnArrearsAgeing = null;
@@ -361,7 +364,7 @@ public class LoanProductData {
                 numberOfRepayments, minNumberOfRepayments, maxNumberOfRepayments, repaymentEvery, interestRatePerPeriod,
                 minInterestRatePerPeriod, maxInterestRatePerPeriod, annualInterestRate, repaymentFrequencyType, interestRateFrequencyType,
                 amortizationType, interestType, interestCalculationPeriodType, allowPartialPeriodInterestCalcualtion, fundId, fundName,
-                transactionProcessingStrategyId, transactionProcessingStrategyName, graceOnPrincipalPayment, graceOnInterestPayment,
+                transactionProcessingStrategyId, transactionProcessingStrategyName, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, charges, accountingType, includeInBorrowerCycle, useBorrowerCycle, startDate, closeDate, status,
                 externalId, principalVariations, interestRateVariations, numberOfRepaymentVariations, multiDisburseLoan, maxTrancheCount,
                 outstandingLoanBalance, graceOnArrearsAgeing, overdueDaysForNPA, daysInMonthType, daysInYearType,
@@ -418,6 +421,7 @@ public class LoanProductData {
         final CodeValueData productGroup = null;
 
         final Integer graceOnPrincipalPayment = null;
+        final Integer recurringMoratoriumOnPrincipalPeriods = null;
         final Integer graceOnInterestPayment = null;
         final Integer graceOnInterestCharged = null;
         final Integer graceOnArrearsAgeing = null;
@@ -460,7 +464,7 @@ public class LoanProductData {
                 numberOfRepayments, minNumberOfRepayments, maxNumberOfRepayments, repaymentEvery, interestRatePerPeriod,
                 minInterestRatePerPeriod, maxInterestRatePerPeriod, annualInterestRate, repaymentFrequencyType, interestRateFrequencyType,
                 amortizationType, interestType, interestCalculationPeriodType, allowPartialPeriodInterestCalcualtion, fundId, fundName,
-                transactionProcessingStrategyId, transactionProcessingStrategyName, graceOnPrincipalPayment, graceOnInterestPayment,
+                transactionProcessingStrategyId, transactionProcessingStrategyName, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, charges, accountingType, includeInBorrowerCycle, useBorrowerCycle, startDate, closeDate, status,
                 externalId, principalVariationsForBorrowerCycle, interestRateVariationsForBorrowerCycle,
                 numberOfRepaymentVariationsForBorrowerCycle, multiDisburseLoan, maxTrancheCount, outstandingLoanBalance,
@@ -492,7 +496,7 @@ public class LoanProductData {
             final EnumOptionData interestRateFrequencyType, final EnumOptionData amortizationType, final EnumOptionData interestType,
             final EnumOptionData interestCalculationPeriodType, final Boolean allowPartialPeriodInterestCalcualtion, final Long fundId,
             final String fundName, final Long transactionProcessingStrategyId, final String transactionProcessingStrategyName,
-            final Integer graceOnPrincipalPayment, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
+            final Integer graceOnPrincipalPayment, final Integer recurringMoratoriumOnPrincipalPeriods, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
             final Collection<ChargeData> charges, final EnumOptionData accountingType, final boolean includeInBorrowerCycle,
             boolean useBorrowerCycle, final LocalDate startDate, final LocalDate closeDate, final String status, final String externalId,
             Collection<LoanProductBorrowerCycleVariationData> principalVariations,
@@ -525,6 +529,7 @@ public class LoanProductData {
         this.minNumberOfRepayments = minNumberOfRepayments;
         this.maxNumberOfRepayments = maxNumberOfRepayments;
         this.graceOnPrincipalPayment = graceOnPrincipalPayment;
+        this.recurringMoratoriumOnPrincipalPeriods = recurringMoratoriumOnPrincipalPeriods;
         this.graceOnInterestPayment = graceOnInterestPayment;
         this.graceOnInterestCharged = graceOnInterestCharged;
         this.repaymentEvery = repaymentEvery;
@@ -702,6 +707,7 @@ public class LoanProductData {
         }
 
         this.graceOnPrincipalPayment = productData.graceOnPrincipalPayment;
+        this.recurringMoratoriumOnPrincipalPeriods = productData.recurringMoratoriumOnPrincipalPeriods;
         this.graceOnInterestPayment = productData.graceOnInterestPayment;
         this.graceOnInterestCharged = productData.graceOnInterestCharged;
         this.includeInBorrowerCycle = productData.includeInBorrowerCycle;
@@ -849,6 +855,10 @@ public class LoanProductData {
 
     public Integer getGraceOnPrincipalPayment() {
         return this.graceOnPrincipalPayment;
+    }
+    
+    public Integer getRecurringMoratoriumOnPrincipalPeriods() {
+    	return this.recurringMoratoriumOnPrincipalPeriods;
     }
 
     public Integer getGraceOnInterestPayment() {

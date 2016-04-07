@@ -118,6 +118,7 @@ public class LoanAccountData {
     private final Long transactionProcessingStrategyId;
     private final String transactionProcessingStrategyName;
     private final Integer graceOnPrincipalPayment;
+    private final Integer recurringMoratoriumOnPrincipalPeriods;
     private final Integer graceOnInterestPayment;
     private final Integer graceOnInterestCharged;
     private final Integer graceOnArrearsAgeing;
@@ -265,6 +266,7 @@ public class LoanAccountData {
         final Boolean allowPartialPeriodInterestCalcualtion = null;
         final LocalDate expectedFirstRepaymentOnDate = null;
         final Integer graceOnPrincipalPayment = null;
+        final Integer recurringMoratoriumOnPrincipalPeriods = null;
         final Integer graceOnInterestPayment = null;
         final Integer graceOnInterestCharged = null;
         final Integer graceOnArrearsAgeing = null;
@@ -336,7 +338,7 @@ public class LoanAccountData {
                 repaymentFrequencyType, repaymentFrequencyNthDayType, repaymentFrequencyDayOfWeekType, transactionProcessingStrategyId,
                 transactionProcessingStrategyName, amortizationType, interestRatePerPeriod, interestRateFrequencyType, annualInterestRate,
                 interestType, isFloatingInterestRate, interestRateDifferential, interestCalculationPeriodType,
-                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, graceOnInterestPayment,
+                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, interestChargedFromDate, timeline, summary, feeChargesDueAtDisbursementCharged, repaymentSchedule,
                 transactions, charges, collateral, guarantors, calendarData, productOptions, termFrequencyTypeOptions,
                 repaymentFrequencyTypeOptions, repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions,
@@ -407,6 +409,7 @@ public class LoanAccountData {
         final Boolean allowPartialPeriodInterestCalcualtion = null;
         final LocalDate expectedFirstRepaymentOnDate = null;
         final Integer graceOnPrincipalPayment = null;
+        final Integer recurringMoratoriumOnPrincipalPeriods = null;
         final Integer graceOnInterestPayment = null;
         final Integer graceOnArrearsAgeing = null;
         final Integer graceOnInterestCharged = null;
@@ -480,7 +483,7 @@ public class LoanAccountData {
                 repaymentFrequencyType, repaymentFrequencyNthDayType, repaymentFrequencyDayOfWeekType, transactionProcessingStrategyId,
                 transactionProcessingStrategyName, amortizationType, interestRatePerPeriod, interestRateFrequencyType, annualInterestRate,
                 interestType, isFloatingInterestRate, interestRateDifferential, interestCalculationPeriodType,
-                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, graceOnInterestPayment,
+                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, interestChargedFromDate, timeline, summary, feeChargesDueAtDisbursementCharged, repaymentSchedule,
                 transactions, charges, collateral, guarantors, calendarData, productOptions, termFrequencyTypeOptions,
                 repaymentFrequencyTypeOptions, repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions,
@@ -505,7 +508,7 @@ public class LoanAccountData {
                 acc.repaymentFrequencyDayOfWeekType, acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName,
                 acc.amortizationType, acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, clientAcc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, acc.repaymentSchedule, acc.transactions, acc.charges, acc.collateral, acc.guarantors,
                 acc.meeting, acc.productOptions, acc.termFrequencyTypeOptions, acc.repaymentFrequencyTypeOptions,
@@ -572,6 +575,7 @@ public class LoanAccountData {
         final Boolean allowPartialPeriodInterestCalcualtion = null;
         final LocalDate expectedFirstRepaymentOnDate = null;
         final Integer graceOnPrincipalPayment = null;
+        final Integer recurringMoratoriumOnPrincipalPeriods = null;
         final Integer graceOnInterestPayment = null;
         final Integer graceOnInterestCharged = null;
         final Integer graceOnArrearsAgeing = null;
@@ -645,7 +649,7 @@ public class LoanAccountData {
                 repaymentFrequencyType, repaymentFrequencyNthDayType, repaymentFrequencyDayOfWeekType, transactionProcessingStrategyId,
                 transactionProcessingStrategyName, amortizationType, interestRatePerPeriod, interestRateFrequencyType, annualInterestRate,
                 interestType, isFloatingInterestRate, interestRateDifferential, interestCalculationPeriodType,
-                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, graceOnInterestPayment,
+                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, interestChargedFromDate, timeline, summary, feeChargesDueAtDisbursementCharged, repaymentSchedule,
                 transactions, charges, collateral, guarantors, calendarData, productOptions, termFrequencyTypeOptions,
                 repaymentFrequencyTypeOptions, repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions,
@@ -670,7 +674,7 @@ public class LoanAccountData {
                 acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName, acc.amortizationType,
                 acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, groupAcc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, acc.repaymentSchedule, acc.transactions, acc.charges, acc.collateral, acc.guarantors,
                 acc.meeting, acc.productOptions, acc.termFrequencyTypeOptions, acc.repaymentFrequencyTypeOptions,
@@ -823,7 +827,7 @@ public class LoanAccountData {
                 product.getInterestRateFrequencyType(), product.getAnnualInterestRate(), product.getInterestType(),
                 product.isFloatingInterestRateCalculationAllowed(), product.getDefaultDifferentialLendingRate(),
                 product.getInterestCalculationPeriodType(), product.getAllowPartialPeriodInterestCalcualtion(),
-                expectedFirstRepaymentOnDate, product.getGraceOnPrincipalPayment(), product.getGraceOnInterestPayment(),
+                expectedFirstRepaymentOnDate, product.getGraceOnPrincipalPayment(), product.getRecurringMoratoriumOnPrincipalPeriods(), product.getGraceOnInterestPayment(),
                 product.getGraceOnInterestCharged(), interestChargedFromDate, timeline, summary, feeChargesDueAtDisbursementCharged,
                 repaymentSchedule, transactions, charges, collateral, guarantors, calendarData, productOptions, termFrequencyTypeOptions,
                 repaymentFrequencyTypeOptions, repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions,
@@ -885,7 +889,7 @@ public class LoanAccountData {
                 product.getAmortizationType(), product.getInterestRatePerPeriod(), product.getInterestRateFrequencyType(),
                 product.getAnnualInterestRate(), product.getInterestType(), product.isFloatingInterestRateCalculationAllowed(),
                 product.getDefaultDifferentialLendingRate(), product.getInterestCalculationPeriodType(),
-                product.getAllowPartialPeriodInterestCalcualtion(), acc.expectedFirstRepaymentOnDate, product.getGraceOnPrincipalPayment(),
+                product.getAllowPartialPeriodInterestCalcualtion(), acc.expectedFirstRepaymentOnDate, product.getGraceOnPrincipalPayment(), product.getRecurringMoratoriumOnPrincipalPeriods(),
                 product.getGraceOnInterestPayment(), product.getGraceOnInterestCharged(), acc.interestChargedFromDate, acc.timeline,
                 acc.summary, acc.feeChargesAtDisbursementCharged, repaymentSchedule, transactions, charges, collateral, guarantors,
                 calendarData, productOptions, termFrequencyTypeOptions, repaymentFrequencyTypeOptions, null, null,
@@ -920,7 +924,7 @@ public class LoanAccountData {
             final BigDecimal annualInterestRate, final EnumOptionData interestType, final boolean isFloatingInterestRate,
             final BigDecimal interestRateDifferential, final EnumOptionData interestCalculationPeriodType,
             Boolean allowPartialPeriodInterestCalcualtion, final LocalDate expectedFirstRepaymentOnDate,
-            final Integer graceOnPrincipalPayment, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
+            final Integer graceOnPrincipalPayment, final Integer recurringMoratoriumOnPrincipalPeriods, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
             final LocalDate interestChargedFromDate, final LoanApplicationTimelineData timeline, final LoanSummaryData loanSummary,
             final BigDecimal feeChargesDueAtDisbursementCharged, final Boolean syncDisbursementWithMeeting, final Integer loancounter,
             final Integer loanProductCounter, final Boolean multiDisburseLoan, Boolean canDefineInstallmentAmount,
@@ -976,7 +980,7 @@ public class LoanAccountData {
                 repaymentEvery, repaymentFrequencyType, repaymentFrequencyNthDayType, repaymentFrequencyDayOfWeekType,
                 transactionStrategyId, transactionStrategyName, amortizationType, interestRatePerPeriod, interestRateFrequencyType,
                 annualInterestRate, interestType, isFloatingInterestRate, interestRateDifferential, interestCalculationPeriodType,
-                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, graceOnInterestPayment,
+                allowPartialPeriodInterestCalcualtion, expectedFirstRepaymentOnDate, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods, graceOnInterestPayment,
                 graceOnInterestCharged, interestChargedFromDate, timeline, loanSummary, feeChargesDueAtDisbursementCharged,
                 repaymentSchedule, transactions, charges, collateral, guarantors, calendarData, productOptions, termFrequencyTypeOptions,
                 repaymentFrequencyTypeOptions, repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions,
@@ -1026,7 +1030,7 @@ public class LoanAccountData {
                 acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName, acc.amortizationType,
                 acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, acc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, repaymentSchedule, transactions, charges, collateral, guarantors, calendarData,
                 productOptions, termFrequencyTypeOptions, repaymentFrequencyTypeOptions, repaymentFrequencyNthDayTypeOptions,
@@ -1066,7 +1070,7 @@ public class LoanAccountData {
                 acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName, acc.amortizationType,
                 acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, acc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, acc.repaymentSchedule, acc.transactions, acc.charges, acc.collateral, acc.guarantors,
                 acc.meeting, acc.productOptions, acc.termFrequencyTypeOptions, acc.repaymentFrequencyTypeOptions,
@@ -1131,7 +1135,7 @@ public class LoanAccountData {
                 acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName, acc.amortizationType,
                 acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, acc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, acc.repaymentSchedule, acc.transactions, acc.charges, acc.collateral, acc.guarantors,
                 acc.meeting, acc.productOptions, acc.termFrequencyTypeOptions, acc.repaymentFrequencyTypeOptions,
@@ -1164,7 +1168,7 @@ public class LoanAccountData {
                 acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName, acc.amortizationType,
                 acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, acc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, acc.repaymentSchedule, acc.transactions, acc.charges, acc.collateral, acc.guarantors,
                 acc.meeting, acc.productOptions, acc.termFrequencyTypeOptions, acc.repaymentFrequencyTypeOptions,
@@ -1193,7 +1197,7 @@ public class LoanAccountData {
                 acc.transactionProcessingStrategyId, acc.transactionProcessingStrategyName, acc.amortizationType,
                 acc.interestRatePerPeriod, acc.interestRateFrequencyType, acc.annualInterestRate, acc.interestType,
                 acc.isFloatingInterestRate, acc.interestRateDifferential, acc.interestCalculationPeriodType,
-                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment,
+                acc.allowPartialPeriodInterestCalcualtion, acc.expectedFirstRepaymentOnDate, acc.graceOnPrincipalPayment, acc.recurringMoratoriumOnPrincipalPeriods,
                 acc.graceOnInterestPayment, acc.graceOnInterestCharged, acc.interestChargedFromDate, acc.timeline, acc.summary,
                 acc.feeChargesAtDisbursementCharged, acc.repaymentSchedule, acc.transactions, acc.charges, acc.collateral, acc.guarantors,
                 acc.meeting, acc.productOptions, acc.termFrequencyTypeOptions, acc.repaymentFrequencyTypeOptions,
@@ -1249,7 +1253,7 @@ public class LoanAccountData {
             final BigDecimal annualInterestRate, final EnumOptionData interestType, final boolean isFloatingInterestRate,
             final BigDecimal interestRateDifferential, final EnumOptionData interestCalculationPeriodType,
             final Boolean allowPartialPeriodInterestCalcualtion, final LocalDate expectedFirstRepaymentOnDate,
-            final Integer graceOnPrincipalPayment, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
+            final Integer graceOnPrincipalPayment, final Integer recurringMoratoriumOnPrincipalPeriods, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
             final LocalDate interestChargedFromDate, final LoanApplicationTimelineData timeline, final LoanSummaryData summary,
             final BigDecimal feeChargesDueAtDisbursementCharged, final LoanScheduleData repaymentSchedule,
             final Collection<LoanTransactionData> transactions, final Collection<LoanChargeData> charges,
@@ -1323,6 +1327,8 @@ public class LoanAccountData {
         this.allowPartialPeriodInterestCalcualtion = allowPartialPeriodInterestCalcualtion;
         this.expectedFirstRepaymentOnDate = expectedFirstRepaymentOnDate;
         this.graceOnPrincipalPayment = graceOnPrincipalPayment;
+        this.recurringMoratoriumOnPrincipalPeriods = recurringMoratoriumOnPrincipalPeriods;
+        
         this.graceOnInterestPayment = graceOnInterestPayment;
         this.graceOnInterestCharged = graceOnInterestCharged;
         this.interestChargedFromDate = interestChargedFromDate;
