@@ -27,6 +27,7 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientIdentifierData;
+import org.apache.fineract.portfolio.client.domain.ClientIdentifierStatus;
 import org.apache.fineract.portfolio.client.exception.ClientIdentifierNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class ClientIdentifierReadPlatformServiceImpl implements ClientIdentifier
             return "ci.id as id, ci.client_id as clientId, ci.document_type_id as documentTypeId, ci.document_key as documentKey,"
                     + " ci.description as description, cv.code_value as documentType, cv.is_mandatory as documentIsMandatory, "
                     + " cv.order_position as documentPosition, cv.code_description as documentDescription,"
-                    + " cv.is_active as documentIsActive"
+                    + " cv.is_active as documentIsActive, ci.status as status"
                     + " from m_client_identifier ci, m_client c, m_office o, m_code_value cv"
                     + " where ci.client_id=c.id and c.office_id=o.id" + " and ci.document_type_id=cv.id"
                     + " and ci.client_id = ? and o.hierarchy like ? ";
@@ -113,11 +114,11 @@ public class ClientIdentifierReadPlatformServiceImpl implements ClientIdentifier
             final boolean documentIsActive = rs.getBoolean("documentIsActive");
             final Integer documentPosition = JdbcSupport.getInteger(rs, "documentPosition");
             final String documentDescription = rs.getString("documentDescription");
-
             final CodeValueData documentType = CodeValueData.instance(documentTypeId, documentTypeName, documentPosition, 
                     documentDescription, documentIsActive, documentIsMandatory);
-
-            return ClientIdentifierData.singleItem(id, clientId, documentType, documentKey, description);
+            final String status = ClientIdentifierStatus.fromInt(rs.getInt("status")).getCode();
+            
+            return ClientIdentifierData.singleItem(id, clientId, documentType, documentKey, status, description);
         }
 
     }
