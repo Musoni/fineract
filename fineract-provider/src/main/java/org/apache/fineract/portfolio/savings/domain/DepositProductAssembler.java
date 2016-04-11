@@ -65,6 +65,8 @@ import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYea
 import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
+import org.apache.fineract.portfolio.tax.domain.TaxGroup;
+import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,13 +79,15 @@ public class DepositProductAssembler {
     private final ChargeRepositoryWrapper chargeRepository;
     private final InterestRateChartAssembler chartAssembler;
     private final CodeValueRepositoryWrapper codeValueRepository;
+    private final TaxGroupRepositoryWrapper taxGroupRepository;
 
     @Autowired
-    public DepositProductAssembler(final ChargeRepositoryWrapper chargeRepository, final InterestRateChartAssembler chartAssembler,
-                                   final CodeValueRepositoryWrapper codeValueRepository) {
+    public DepositProductAssembler(final ChargeRepositoryWrapper chargeRepository, final InterestRateChartAssembler chartAssembler, 
+    		final CodeValueRepositoryWrapper codeValueRepository, final TaxGroupRepositoryWrapper taxGroupRepository) {
         this.chargeRepository = chargeRepository;
         this.chartAssembler = chartAssembler;
         this.codeValueRepository = codeValueRepository;
+        this.taxGroupRepository = taxGroupRepository;
     }
 
     public FixedDepositProduct assembleFixedDepositProduct(final JsonCommand command) {
@@ -159,10 +163,19 @@ public class DepositProductAssembler {
         if (interestRate == null) {
             interestRate = BigDecimal.ZERO;
         }
+        
+        boolean withHoldTax = command.booleanPrimitiveValueOfParameterNamed(withHoldTaxParamName);
+
+        final Long taxGroupId = command.longValueOfParameterNamed(taxGroupIdParamName);
+        TaxGroup taxGroup = null;
+        if (taxGroupId != null) {
+            taxGroup = this.taxGroupRepository.findOneWithNotFoundDetection(taxGroupId);
+        }
+        
         FixedDepositProduct fixedDepositProduct = FixedDepositProduct.createNew(name, shortName, description, currency, interestRate,
                 productGroup,interestCompoundingPeriodType, interestPostingPeriodType, interestCalculationType,
                 interestCalculationDaysInYearType, lockinPeriodFrequency, lockinPeriodFrequencyType, accountingRuleType,
-                charges, productTermAndPreClosure, charts, minBalanceForInterestCalculation);
+                charges, productTermAndPreClosure, charts, minBalanceForInterestCalculation, withHoldTax, taxGroup);
 
         // update product reference
         productTermAndPreClosure.updateProductReference(fixedDepositProduct);
@@ -252,11 +265,15 @@ public class DepositProductAssembler {
         if (interestRate == null) {
             interestRate = BigDecimal.ZERO;
         }
+        
+        final boolean withHoldTax = command.booleanPrimitiveValueOfParameterNamed(withHoldTaxParamName);
+        final TaxGroup taxGroup = assembleTaxGroup(command);
 
         RecurringDepositProduct recurringDepositProduct = RecurringDepositProduct.createNew(name, shortName, description, currency,
                 interestRate, interestCompoundingPeriodType, interestPostingPeriodType, interestCalculationType,
                 interestCalculationDaysInYearType, lockinPeriodFrequency, lockinPeriodFrequencyType, accountingRuleType, charges,
-                productTermAndPreClosure, productRecurringDetail, charts, minBalanceForInterestCalculation, productGroup);
+                productTermAndPreClosure, productRecurringDetail, charts, minBalanceForInterestCalculation, productGroup, 
+                taxGroup, withHoldTax);
 
         // update product reference
         productTermAndPreClosure.updateProductReference(recurringDepositProduct);
@@ -493,5 +510,14 @@ public class DepositProductAssembler {
                 maxDepositAmount);
 
         return depositRecurringDetail;
+    }
+    
+    public TaxGroup assembleTaxGroup(final JsonCommand command) {
+        final Long taxGroupId = command.longValueOfParameterNamed(taxGroupIdParamName);
+        TaxGroup taxGroup = null;
+        if (taxGroupId != null) {
+            taxGroup = this.taxGroupRepository.findOneWithNotFoundDetection(taxGroupId);
+        }
+        return taxGroup;
     }
 }

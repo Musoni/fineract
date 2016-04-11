@@ -68,6 +68,8 @@ import org.apache.fineract.portfolio.savings.data.ApplyProductChargeToExistingSa
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.portfolio.savings.data.InterestRateCharts;
 import org.apache.fineract.portfolio.savings.service.*;
+import org.apache.fineract.portfolio.tax.data.TaxGroupData;
+import org.apache.fineract.portfolio.tax.service.TaxReadPlatformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -92,6 +94,7 @@ public class SavingsProductsApiResource {
     private final PaymentTypeReadPlatformService paymentTypeReadPlatformService;
     private final SavingsProductInterestRateChartReadPlatformService savingsProductInterestRateChartReadPlatformService;
     private final ApplyProductChargeToExistingSavingsReadPlatformService applyProductChargeToExistingSavingsReadPlatformService;
+    private final TaxReadPlatformService taxReadPlatformService;
 
     @Autowired
     public SavingsProductsApiResource(final SavingsProductReadPlatformService savingProductReadPlatformService,
@@ -105,7 +108,8 @@ public class SavingsProductsApiResource {
             final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService,
             final ChargeReadPlatformService chargeReadPlatformService, PaymentTypeReadPlatformService paymentTypeReadPlatformService,
             final SavingsProductInterestRateChartReadPlatformService savingsProductInterestRateChartReadPlatformService,
-            final ApplyProductChargeToExistingSavingsReadPlatformService applyProductChargeToExistingSavingsReadPlatformService) {
+            final ApplyProductChargeToExistingSavingsReadPlatformService applyProductChargeToExistingSavingsReadPlatformService, 
+            final TaxReadPlatformService taxReadPlatformService) {
         this.savingProductReadPlatformService = savingProductReadPlatformService;
         this.dropdownReadPlatformService = dropdownReadPlatformService;
         this.currencyReadPlatformService = currencyReadPlatformService;
@@ -120,6 +124,7 @@ public class SavingsProductsApiResource {
         this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
         this.savingsProductInterestRateChartReadPlatformService = savingsProductInterestRateChartReadPlatformService;
         this.applyProductChargeToExistingSavingsReadPlatformService = applyProductChargeToExistingSavingsReadPlatformService;
+        this.taxReadPlatformService = taxReadPlatformService;
     }
 
     @POST
@@ -280,6 +285,7 @@ public class SavingsProductsApiResource {
         Collection<ChargeData> penaltyOptions = this.chargeReadPlatformService.retrieveSavingsApplicablePenalties();
         penaltyOptions = CollectionUtils.isEmpty(penaltyOptions) ? null : penaltyOptions;
 
+        final Collection<TaxGroupData> taxGroupOptions = this.taxReadPlatformService.retrieveTaxGroupsForLookUp();
         SavingsProductData savingsProductToReturn = null;
         if (savingsProduct != null) {
             savingsProductToReturn = SavingsProductData.withTemplate(savingsProduct, currencyOptions, interestCompoundingPeriodTypeOptions,
@@ -291,7 +297,8 @@ public class SavingsProductsApiResource {
                     interestCalculationType, interestCalculationDaysInYearType, accountingRule, currencyOptions,
                     interestCompoundingPeriodTypeOptions, interestPostingPeriodTypeOptions, interestCalculationTypeOptions,
                     interestCalculationDaysInYearTypeOptions, lockinPeriodFrequencyTypeOptions, withdrawalFeeTypeOptions,
-                    paymentTypeOptions, accountingRuleOptions, accountingMappingOptions, chargeOptions, penaltyOptions, productGroupOptions);
+                    paymentTypeOptions, accountingRuleOptions, accountingMappingOptions, chargeOptions, penaltyOptions, productGroupOptions, 
+                    taxGroupOptions);
         }
 
         return savingsProductToReturn;

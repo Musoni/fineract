@@ -124,6 +124,8 @@ public class SavingsApiConstants {
     public static final String onHoldFundsParamName = "onHoldFunds";
     public static final String productGroupIdParamName = "productGroupId";
     public static final String savingsProductGroupsCodeParamName = "savingsProductGroups";
+    public static final String withHoldTaxParamName = "withHoldTax";
+    public static final String taxGroupIdParamName = "taxGroupId";
 
     // transaction parameters
     public static final String transactionDateParamName = "transactionDate";
@@ -191,7 +193,8 @@ public class SavingsApiConstants {
             SAVINGS_PRODUCT_ACCOUNTING_PARAMS.LOSSES_WRITTEN_OFF.getValue(),
             SAVINGS_PRODUCT_ACCOUNTING_PARAMS.INCOME_FROM_INTEREST.getValue(), allowOverdraftParamName, overdraftLimitParamName,
             nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName,
-            minRequiredBalanceParamName, enforceMinRequiredBalanceParamName, minBalanceForInterestCalculationParamName,interestRateCharts));
+            minRequiredBalanceParamName, enforceMinRequiredBalanceParamName, minBalanceForInterestCalculationParamName, 
+            interestRateCharts, withHoldTaxParamName, taxGroupIdParamName));
 
     public static final Set<String> SAVINGS_PRODUCTS_INTEREST_RATE_CREATE_CHARTS_REQUEST_DATA = new HashSet<>(Arrays.asList(localeParamName,
             dateFormatParamName, nameParamName, descriptionParamName, fromDateParamName, endDateParamName, applyToExistingSavingsAccountParamName,
@@ -215,7 +218,8 @@ public class SavingsApiConstants {
             withdrawalFeeForTransfersParamName, feeAmountParamName, feeOnMonthDayParamName, "currencyOptions",
             "interestCompoundingPeriodTypeOptions", "interestPostingPeriodTypeOptions", "interestCalculationTypeOptions",
             "interestCalculationDaysInYearTypeOptions", "lockinPeriodFrequencyTypeOptions", "withdrawalFeeTypeOptions",
-            nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName, productGroupIdParamName,interestRateCharts));
+            nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName, productGroupIdParamName, 
+            interestRateCharts, withHoldTaxParamName, taxGroupIdParamName));
 
     public static final Set<String> SAVINGS_ACCOUNT_REQUEST_DATA_PARAMETERS = new HashSet<>(Arrays.asList(localeParamName,
             dateFormatParamName, monthDayFormatParamName, staffIdParamName, accountNoParamName, externalIdParamName, clientIdParamName,
@@ -226,7 +230,7 @@ public class SavingsApiConstants {
             // withdrawalFeeAmountParamName, withdrawalFeeTypeParamName,
             withdrawalFeeForTransfersParamName, feeAmountParamName, feeOnMonthDayParamName, chargesParamName, allowOverdraftParamName,
             overdraftLimitParamName, minRequiredBalanceParamName, enforceMinRequiredBalanceParamName,
-            nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName));
+            nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName, withHoldTaxParamName));
 
     /**
      * These parameters will match the class level parameters of

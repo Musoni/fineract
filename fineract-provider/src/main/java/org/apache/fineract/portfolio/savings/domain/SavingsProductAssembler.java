@@ -33,6 +33,8 @@ import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
 import org.apache.fineract.portfolio.charge.exception.ChargeCannotBeAppliedToException;
 import org.apache.fineract.portfolio.loanproduct.exception.InvalidCurrencyException;
 import org.apache.fineract.portfolio.savings.*;
+import org.apache.fineract.portfolio.tax.domain.TaxGroup;
+import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,17 +54,20 @@ public class SavingsProductAssembler {
     private final FromJsonHelper fromApiJsonHelper;
     private final SavingsProductInterestRateChartRepository savingsProductInterestRateChartRepository;
     private final ApplyChargesToExistingSavingsAccountRepository applyChargesToExistingSavingsAccountRepository;
+    private final TaxGroupRepositoryWrapper taxGroupRepository;
 
     @Autowired
-    public SavingsProductAssembler(final ChargeRepositoryWrapper chargeRepository,
-                                   final CodeValueRepositoryWrapper codeValueRepository, final FromJsonHelper fromApiJsonHelper,
-                                   final SavingsProductInterestRateChartRepository savingsProductInterestRateChartRepository,
-                                   final ApplyChargesToExistingSavingsAccountRepository applyChargesToExistingSavingsAccountRepository) {
+    public SavingsProductAssembler(final ChargeRepositoryWrapper chargeRepository, 
+    		final CodeValueRepositoryWrapper codeValueRepository, final FromJsonHelper fromApiJsonHelper, 
+    		final SavingsProductInterestRateChartRepository savingsProductInterestRateChartRepository, 
+    		final ApplyChargesToExistingSavingsAccountRepository applyChargesToExistingSavingsAccountRepository, 
+    		final TaxGroupRepositoryWrapper taxGroupRepository) {
         this.chargeRepository = chargeRepository;
         this.codeValueRepository = codeValueRepository;
         this.fromApiJsonHelper = fromApiJsonHelper;
         this.savingsProductInterestRateChartRepository = savingsProductInterestRateChartRepository;
         this.applyChargesToExistingSavingsAccountRepository = applyChargesToExistingSavingsAccountRepository;
+        this.taxGroupRepository = taxGroupRepository;
     }
 
     public SavingsProduct assemble(final JsonCommand command) {
@@ -168,15 +173,19 @@ public class SavingsProductAssembler {
         if(command.parameterExists(interestRateCharts)){
             savingsProductInterestRateChart= this.assembleSetOfInterestRateCharts(command);
         }
+        
+        boolean withHoldTax = command.booleanPrimitiveValueOfParameterNamed(withHoldTaxParamName);
+        final TaxGroup taxGroup = assembleTaxGroup(command);
 
         return SavingsProduct.createNew(name, shortName, description, currency, interestRate, productGroup, interestCompoundingPeriodType,
                 interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance,
                 lockinPeriodFrequency, lockinPeriodFrequencyType, iswithdrawalFeeApplicableForTransfer, accountingRuleType, charges,
                 allowOverdraft, overdraftLimit, enforceMinRequiredBalance, minRequiredBalance, minBalanceForInterestCalculation,
-                nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation,savingsProductInterestRateChart,applyChargesToExistingSavingsAccounts);
+                nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation,savingsProductInterestRateChart, 
+                applyChargesToExistingSavingsAccounts, withHoldTax, taxGroup);
     }
 
-    public Set<ApplyChargesToExistingSavingsAccount> assembleApplyChargesToExistingSavingsAccount(final JsonCommand command){
+	public Set<ApplyChargesToExistingSavingsAccount> assembleApplyChargesToExistingSavingsAccount(final JsonCommand command){
 
         final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts = new HashSet<>();
 
@@ -283,5 +292,14 @@ public class SavingsProductAssembler {
         final SavingsProductInterestRateChart savingsProductInterestRateChart =  SavingsProductInterestRateChart.createNew(null,name,description,fromDate,endDate,annualInterestRate,applyToExistingSavings);
 
         return savingsProductInterestRateChart;
+    }
+    
+    public TaxGroup assembleTaxGroup(final JsonCommand command) {
+        final Long taxGroupId = command.longValueOfParameterNamed(taxGroupIdParamName);
+        TaxGroup taxGroup = null;
+        if (taxGroupId != null) {
+            taxGroup = this.taxGroupRepository.findOneWithNotFoundDetection(taxGroupId);
+        }
+        return taxGroup;
     }
 }

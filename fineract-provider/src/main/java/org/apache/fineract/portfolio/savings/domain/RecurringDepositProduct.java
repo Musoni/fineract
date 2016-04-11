@@ -48,6 +48,7 @@ import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYea
 import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
+import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 
 @Entity
 @DiscriminatorValue("300")
@@ -68,7 +69,8 @@ public class RecurringDepositProduct extends FixedDepositProduct {
             final SavingsPeriodFrequencyType lockinPeriodFrequencyType, final AccountingRuleType accountingRuleType,
             final Set<Charge> charges, final DepositProductTermAndPreClosure productTermAndPreClosure,
             final DepositProductRecurringDetail recurringDetail, final Set<InterestRateChart> charts,
-            BigDecimal minBalanceForInterestCalculation, final CodeValue productGroup) {
+            BigDecimal minBalanceForInterestCalculation, final CodeValue productGroup, 
+            final TaxGroup taxGroup, final boolean withHoldTax) {
 
         final BigDecimal minRequiredOpeningBalance = null;
         final boolean withdrawalFeeApplicableForTransfer = false;
@@ -79,7 +81,7 @@ public class RecurringDepositProduct extends FixedDepositProduct {
                 interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance,
                 lockinPeriodFrequency, lockinPeriodFrequencyType, withdrawalFeeApplicableForTransfer, accountingRuleType, charges,
                 productTermAndPreClosure, recurringDetail, charts, allowOverdraft, overdraftLimit, minBalanceForInterestCalculation,
-                productGroup);
+                productGroup, withHoldTax, taxGroup);
     }
 
     protected RecurringDepositProduct(final String name, final String shortName, final String description, final MonetaryCurrency currency,
@@ -90,12 +92,14 @@ public class RecurringDepositProduct extends FixedDepositProduct {
             final boolean withdrawalFeeApplicableForTransfer, final AccountingRuleType accountingRuleType, final Set<Charge> charges,
             final DepositProductTermAndPreClosure productTermAndPreClosure, final DepositProductRecurringDetail recurringDetail,
             final Set<InterestRateChart> charts, final boolean allowOverdraft, final BigDecimal overdraftLimit,
-            final BigDecimal minBalanceForInterestCalculation, final CodeValue productGroup) {
+            final BigDecimal minBalanceForInterestCalculation, final CodeValue productGroup, 
+            final boolean withHoldTax, final TaxGroup taxGroup) {
 
         super(name, shortName, description, currency, interestRate, interestCompoundingPeriodType, interestPostingPeriodType,
                 interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance, lockinPeriodFrequency,
                 lockinPeriodFrequencyType, withdrawalFeeApplicableForTransfer, accountingRuleType, charges, productTermAndPreClosure,
-                charts, allowOverdraft, overdraftLimit, minBalanceForInterestCalculation, productGroup);
+                charts, allowOverdraft, overdraftLimit, minBalanceForInterestCalculation, productGroup, 
+                withHoldTax, taxGroup);
 
         this.recurringDetail = recurringDetail;
     }

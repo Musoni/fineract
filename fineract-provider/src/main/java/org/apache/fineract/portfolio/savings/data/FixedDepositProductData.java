@@ -33,6 +33,7 @@ import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
+import org.apache.fineract.portfolio.tax.data.TaxGroupData;
 
 /**
  * Immutable data object representing a Fixed Deposit product.
@@ -73,7 +74,8 @@ public class FixedDepositProductData extends DepositProductData {
             final Map<String, List<GLAccountData>> accountingMappingOptions, final Collection<ChargeData> chargeOptions,
             final Collection<ChargeData> penaltyOptions, final InterestRateChartData chartTemplate,
             final Collection<EnumOptionData> preClosurePenalInterestOnTypeOptions,
-            final Collection<EnumOptionData> periodFrequencyTypeOptions, final Collection<CodeValueData> productGroupOptions) {
+            final Collection<EnumOptionData> periodFrequencyTypeOptions, 
+            final Collection<CodeValueData> productGroupOptions, final Collection<TaxGroupData> taxGroupOptions) {
 
         final Long id = null;
         final String name = null;
@@ -106,6 +108,8 @@ public class FixedDepositProductData extends DepositProductData {
         final LocalDate closeDate = null;
         final String status = null;
         final CodeValueData productGroup = null;
+        final boolean withHoldTax = false;
+        final TaxGroupData taxGroup = null;
 
         return new FixedDepositProductData(id, name, shortName, description, currency, nominalAnnualInterestRate,
                 interestCompoundingPeriodType, interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType,
@@ -117,7 +121,8 @@ public class FixedDepositProductData extends DepositProductData {
                 penaltyToIncomeAccountMappings, interestRateCharts, chartTemplate, preClosurePenalApplicable, preClosurePenalInterest,
                 preClosurePenalInterestOnType, preClosurePenalInterestOnTypeOptions, minDepositTerm, maxDepositTerm, minDepositTermType,
                 maxDepositTermType, inMultiplesOfDepositTerm, inMultiplesOfDepositTermType, minDepositAmount, depositAmount,
-                maxDepositAmount, periodFrequencyTypeOptions, startDate, closeDate, status, productGroup, productGroupOptions);
+                maxDepositAmount, periodFrequencyTypeOptions, startDate, closeDate, status, productGroup, productGroupOptions, 
+                withHoldTax, taxGroup, taxGroupOptions);
     }
 
     public static FixedDepositProductData withCharges(final FixedDepositProductData existingProduct, final Collection<ChargeData> charges) {
@@ -140,7 +145,8 @@ public class FixedDepositProductData extends DepositProductData {
                 existingProduct.maxDepositTermType, existingProduct.inMultiplesOfDepositTerm, existingProduct.inMultiplesOfDepositTermType,
                 existingProduct.minDepositAmount, existingProduct.depositAmount, existingProduct.maxDepositAmount,
                 existingProduct.periodFrequencyTypeOptions, existingProduct.startDate, existingProduct.closeDate,
-                existingProduct.status, existingProduct.productGroup, existingProduct.productGroupOptions);
+                existingProduct.status, existingProduct.productGroup, existingProduct.productGroupOptions, existingProduct.withHoldTax, existingProduct.taxGroup,
+                existingProduct.taxGroupOptions);
     }
 
     /**
@@ -159,7 +165,7 @@ public class FixedDepositProductData extends DepositProductData {
             final Collection<ChargeData> penaltyOptions, final InterestRateChartData chartTemplate,
             final Collection<EnumOptionData> preClosurePenalInterestOnTypeOptions,
             final Collection<EnumOptionData> periodFrequencyTypeOptions,
-            final Collection<CodeValueData> productGroupOptions) {
+            final Collection<CodeValueData> productGroupOptions, final Collection<TaxGroupData> taxGroupOptions) {
 
         return new FixedDepositProductData(existingProduct.id, existingProduct.name, existingProduct.shortName,
                 existingProduct.description, existingProduct.currency, existingProduct.nominalAnnualInterestRate,
@@ -178,7 +184,8 @@ public class FixedDepositProductData extends DepositProductData {
                 existingProduct.minDepositTermType, existingProduct.maxDepositTermType, existingProduct.inMultiplesOfDepositTerm,
                 existingProduct.inMultiplesOfDepositTermType, existingProduct.minDepositAmount, existingProduct.depositAmount,
                 existingProduct.maxDepositAmount, periodFrequencyTypeOptions, existingProduct.startDate,
-                existingProduct.closeDate, existingProduct.status, existingProduct.productGroup, productGroupOptions);
+                existingProduct.closeDate, existingProduct.status, existingProduct.productGroup, productGroupOptions, existingProduct.withHoldTax, existingProduct.taxGroup,
+                taxGroupOptions);
     }
 
     public static FixedDepositProductData withAccountingDetails(final FixedDepositProductData existingProduct,
@@ -217,7 +224,8 @@ public class FixedDepositProductData extends DepositProductData {
                 existingProduct.maxDepositTermType, existingProduct.inMultiplesOfDepositTerm, existingProduct.inMultiplesOfDepositTermType,
                 existingProduct.minDepositAmount, existingProduct.depositAmount, existingProduct.maxDepositAmount,
                 existingProduct.periodFrequencyTypeOptions, existingProduct.startDate, existingProduct.closeDate,
-                existingProduct.status, existingProduct.productGroup, existingProduct.productGroupOptions);
+                existingProduct.status, existingProduct.productGroup, existingProduct.productGroupOptions, 
+                existingProduct.withHoldTax, existingProduct.taxGroup, existingProduct.taxGroupOptions);
     }
 
     public static FixedDepositProductData instance(final DepositProductData depositProductData, final boolean preClosurePenalApplicable,
@@ -250,6 +258,7 @@ public class FixedDepositProductData extends DepositProductData {
         final Collection<EnumOptionData> preClosurePenalInterestOnTypeOptions = null;
         final Collection<EnumOptionData> periodFrequencyTypeOptions = null;
         final Collection<CodeValueData> productGroupOptions = null;
+        final Collection<TaxGroupData> taxGroupOptions = null;
 
         return new FixedDepositProductData(depositProductData.id, depositProductData.name, depositProductData.shortName,
                 depositProductData.description, depositProductData.currency, depositProductData.nominalAnnualInterestRate,
@@ -264,7 +273,8 @@ public class FixedDepositProductData extends DepositProductData {
                 penaltyToIncomeAccountMappings, interestRateCharts, chartTemplate, preClosurePenalApplicable, preClosurePenalInterest,
                 preClosurePenalInterestOnType, preClosurePenalInterestOnTypeOptions, minDepositTerm, maxDepositTerm, minDepositTermType,
                 maxDepositTermType, inMultiplesOfDepositTerm, inMultiplesOfDepositTermType, minDepositAmount, depositAmount,
-                maxDepositAmount, periodFrequencyTypeOptions, startDate, closeDate, status, productGroup, productGroupOptions);
+                maxDepositAmount, periodFrequencyTypeOptions, startDate, closeDate, status, productGroup, productGroupOptions, 
+                depositProductData.withHoldTax, depositProductData.taxGroup, taxGroupOptions);
     }
 
     public static FixedDepositProductData lookup(final Long id, final String name) {
@@ -320,6 +330,9 @@ public class FixedDepositProductData extends DepositProductData {
         final LocalDate closeDate = null;
         final String status = null;
         final CodeValueData productGroup = null;
+        final boolean withHoldTax = false;
+        final TaxGroupData taxGroup = null;
+        final Collection<TaxGroupData> taxGroupOptions = null;
 
         return new FixedDepositProductData(id, name, shortName, description, currency, nominalAnnualInterestRate,
                 interestCompoundingPeriodType, interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType,
@@ -331,7 +344,8 @@ public class FixedDepositProductData extends DepositProductData {
                 penaltyToIncomeAccountMappings, interestRateCharts, chartTemplate, preClosurePenalApplicable, preClosurePenalInterest,
                 preClosurePenalInterestOnType, preClosurePenalInterestOnTypeOptions, minDepositTerm, maxDepositTerm, minDepositTermType,
                 maxDepositTermType, inMultiplesOfDepositTerm, inMultiplesOfDepositTermType, minDepositAmount, depositAmount,
-                maxDepositAmount, periodFrequencyTypeOptions, startDate, closeDate, status, productGroup, productGroupOptions);
+                maxDepositAmount, periodFrequencyTypeOptions, startDate, closeDate, status, productGroup, productGroupOptions, 
+                withHoldTax, taxGroup, taxGroupOptions);
     }
 
     public static FixedDepositProductData withInterestChart(final FixedDepositProductData existingProduct,
@@ -355,7 +369,8 @@ public class FixedDepositProductData extends DepositProductData {
                 existingProduct.maxDepositTermType, existingProduct.inMultiplesOfDepositTerm, existingProduct.inMultiplesOfDepositTermType,
                 existingProduct.minDepositAmount, existingProduct.depositAmount, existingProduct.maxDepositAmount,
                 existingProduct.periodFrequencyTypeOptions, existingProduct.startDate, existingProduct.closeDate, existingProduct.status,
-                existingProduct.productGroup, existingProduct.productGroupOptions);
+                existingProduct.productGroup, existingProduct.productGroupOptions, existingProduct.withHoldTax, existingProduct.taxGroup,
+                existingProduct.taxGroupOptions);
 
     }
 
@@ -384,7 +399,8 @@ public class FixedDepositProductData extends DepositProductData {
             final EnumOptionData inMultiplesOfDepositTermType, final BigDecimal minDepositAmount, final BigDecimal depositAmount,
             final BigDecimal maxDepositAmount, final Collection<EnumOptionData> periodFrequencyTypeOptions,
             final LocalDate startDate, final LocalDate closeDate, final String status, final CodeValueData productGroup,
-            final Collection<CodeValueData> productGroupOptions) {
+            final Collection<CodeValueData> productGroupOptions, final boolean withHoldTax, final TaxGroupData taxGroup, 
+            final Collection<TaxGroupData> taxGroupOptions) {
 
         super(id, name, shortName, description, currency, nominalAnnualInterestRate, interestCompoundingPeriodType,
                 interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType, lockinPeriodFrequency,
@@ -392,7 +408,8 @@ public class FixedDepositProductData extends DepositProductData {
                 interestCompoundingPeriodTypeOptions, interestPostingPeriodTypeOptions, interestCalculationTypeOptions,
                 interestCalculationDaysInYearTypeOptions, lockinPeriodFrequencyTypeOptions, withdrawalFeeTypeOptions, paymentTypeOptions,
                 accountingRuleOptions, accountingMappingOptions, charges, chargeOptions, penaltyOptions, feeToIncomeAccountMappings,
-                penaltyToIncomeAccountMappings, interestRateCharts, chartTemplate, minBalanceForInterestCalculation);
+                penaltyToIncomeAccountMappings, interestRateCharts, chartTemplate, minBalanceForInterestCalculation, withHoldTax, taxGroup,
+                taxGroupOptions);
 
         // fixed deposit additional fields
         this.preClosurePenalApplicable = preClosurePenalApplicable;

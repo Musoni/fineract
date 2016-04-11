@@ -43,6 +43,8 @@ import org.apache.fineract.portfolio.charge.exception.ChargeNotFoundException;
 import org.apache.fineract.portfolio.charge.serialization.ChargeDefinitionCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
+import org.apache.fineract.portfolio.tax.domain.TaxGroup;
+import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +66,14 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
     private final LoanProductRepository loanProductRepository;
     private final FineractEntityAccessUtil FineractEntityAccessUtil;
     private final GLAccountRepositoryWrapper gLAccountRepository;
+    private final TaxGroupRepositoryWrapper taxGroupRepository;
 
     @Autowired
     public ChargeWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
             final ChargeDefinitionCommandFromApiJsonDeserializer fromApiJsonDeserializer, final ChargeRepository chargeRepository,
             final LoanProductRepository loanProductRepository, final RoutingDataSource dataSource,
-            final FineractEntityAccessUtil FineractEntityAccessUtil, final GLAccountRepositoryWrapper glAccountRepository) {
+            final FineractEntityAccessUtil FineractEntityAccessUtil, final GLAccountRepositoryWrapper glAccountRepository, 
+            final TaxGroupRepositoryWrapper taxGroupRepository) {
         this.context = context;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
         this.dataSource = dataSource;
@@ -78,6 +82,7 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
         this.loanProductRepository = loanProductRepository;
         this.FineractEntityAccessUtil = FineractEntityAccessUtil;
         this.gLAccountRepository = glAccountRepository;
+        this.taxGroupRepository = taxGroupRepository;
     }
 
     @Transactional
@@ -95,8 +100,14 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
             if (glAccountId != null) {
                 glAccount = this.gLAccountRepository.findOneWithNotFoundDetection(glAccountId);
             }
+            
+            final Long taxGroupId = command.longValueOfParameterNamed(ChargesApiConstants.taxGroupIdParamName);
+            TaxGroup taxGroup = null;
+            if (taxGroupId != null) {
+                taxGroup = this.taxGroupRepository.findOneWithNotFoundDetection(taxGroupId);
+            }
 
-            final Charge charge = Charge.fromJson(command, glAccount);
+            final Charge charge = Charge.fromJson(command, glAccount, taxGroup);
             this.chargeRepository.save(charge);
 
             // check if the office specific products are enabled. If yes, then
@@ -156,6 +167,15 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
                     newIncomeAccount = this.gLAccountRepository.findOneWithNotFoundDetection(newValue);
                 }
                 chargeForUpdate.setAccount(newIncomeAccount);
+            }
+            
+            if (changes.containsKey(ChargesApiConstants.taxGroupIdParamName)) {
+                final Long newValue = command.longValueOfParameterNamed(ChargesApiConstants.taxGroupIdParamName);
+                TaxGroup taxGroup = null;
+                if (newValue != null) {
+                    taxGroup = this.taxGroupRepository.findOneWithNotFoundDetection(newValue);
+                }
+                chargeForUpdate.setTaxGroup(taxGroup);
             }
 
             if (!changes.isEmpty()) {

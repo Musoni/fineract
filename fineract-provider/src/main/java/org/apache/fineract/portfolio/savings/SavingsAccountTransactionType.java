@@ -39,7 +39,8 @@ public enum SavingsAccountTransactionType {
     WITHDRAW_TRANSFER(14, "savingsAccountTransactionType.withdrawTransfer"), //
     REJECT_TRANSFER(15, "savingsAccountTransactionType.rejectTransfer"), WRITTEN_OFF(16, "savingsAccountTransactionType.writtenoff"), //
     OVERDRAFT_INTEREST(17, "savingsAccountTransactionType.overdraftInterest"),
-    GUARANTOR_INTEREST_DEPOSIT(18,"savingsAccountTransactionType.guarantorInterestDeposit"); //
+    GUARANTOR_INTEREST_DEPOSIT(18,"savingsAccountTransactionType.guarantorInterestDeposit"), //
+	WITHHOLD_TAX(19, "savingsAccountTransactionType.withholdTax");
 
     private final Integer value;
     private final String code;
@@ -105,6 +106,9 @@ public enum SavingsAccountTransactionType {
             case 18:
                 savingsAccountTransactionType = SavingsAccountTransactionType.GUARANTOR_INTEREST_DEPOSIT;
             break;
+            case 19:
+                savingsAccountTransactionType = SavingsAccountTransactionType.WITHHOLD_TAX;
+            break;
         }
         return savingsAccountTransactionType;
     }
@@ -119,6 +123,10 @@ public enum SavingsAccountTransactionType {
 
     public boolean isInterestPosting() {
         return this.value.equals(SavingsAccountTransactionType.INTEREST_POSTING.getValue());
+    }
+    
+    public boolean isWithHoldTax() {
+        return this.value.equals(SavingsAccountTransactionType.WITHHOLD_TAX.getValue());
     }
 
     public boolean isOverDraftInterestPosting() {
@@ -175,7 +183,7 @@ public enum SavingsAccountTransactionType {
     }
 
     public boolean isDebit() {
-        return isWithdrawal() || isWithdrawalFee() || isAnnualFee() || isPayCharge() || isIncomeFromInterest();
+        return isWithdrawal() || isWithdrawalFee() || isAnnualFee() || isPayCharge() || isIncomeFromInterest() || isWithHoldTax();
     }
 
     public boolean isCredit() {

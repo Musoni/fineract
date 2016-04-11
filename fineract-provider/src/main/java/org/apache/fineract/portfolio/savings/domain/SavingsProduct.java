@@ -41,6 +41,7 @@ import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChart;
 import org.apache.fineract.portfolio.savings.*;
+import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import com.google.gson.JsonArray;
@@ -163,6 +164,13 @@ public class SavingsProduct extends AbstractPersistable<Long> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingsProduct", orphanRemoval = true)
     private Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts = new HashSet<>();
 
+    @Column(name = "withhold_tax", nullable = false)
+    protected boolean withHoldTax;
+
+    @ManyToOne
+    @JoinColumn(name = "tax_group_id")
+    private TaxGroup taxGroup;
+    
     public static SavingsProduct createNew(final String name, final String shortName, final String description,
             final MonetaryCurrency currency, final BigDecimal interestRate, final CodeValue productGroup,
             final SavingsCompoundingInterestPeriodType interestCompoundingPeriodType,
@@ -173,13 +181,15 @@ public class SavingsProduct extends AbstractPersistable<Long> {
             final boolean allowOverdraft, final BigDecimal overdraftLimit, final boolean enforceMinRequiredBalance,
             final BigDecimal minRequiredBalance, final BigDecimal minBalanceForInterestCalculation,
             final BigDecimal nominalAnnualInterestRateOverdraft, final BigDecimal minOverdraftForInterestCalculation,final Set<SavingsProductInterestRateChart> savingsProductInterestRateCharts,
-            final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts) {
+            final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts, 
+            boolean withHoldTax, TaxGroup taxGroup) {
 
         return new SavingsProduct(name, shortName, description, currency, interestRate, interestCompoundingPeriodType,
                 interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance,
                 lockinPeriodFrequency, lockinPeriodFrequencyType, withdrawalFeeApplicableForTransfer, accountingRuleType, charges,
                 allowOverdraft, overdraftLimit, enforceMinRequiredBalance, minRequiredBalance, minBalanceForInterestCalculation, 
-                nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation, null, null, productGroup,savingsProductInterestRateCharts,applyChargesToExistingSavingsAccounts);
+                nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation, null, null, productGroup,savingsProductInterestRateCharts, 
+                applyChargesToExistingSavingsAccounts, withHoldTax, taxGroup);
     }
 
     protected SavingsProduct() {
@@ -195,11 +205,13 @@ public class SavingsProduct extends AbstractPersistable<Long> {
             final boolean withdrawalFeeApplicableForTransfer, final AccountingRuleType accountingRuleType, final Set<Charge> charges,
             final boolean allowOverdraft, final BigDecimal overdraftLimit, BigDecimal minBalanceForInterestCalculation,
             final CodeValue productGroup,final Set<SavingsProductInterestRateChart> savingsProductInterestRateCharts,
-            final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts) {
+            final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts, 
+            boolean withHoldTax, TaxGroup taxGroup) {
         this(name, shortName, description, currency, interestRate, interestCompoundingPeriodType, interestPostingPeriodType,
                 interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance, lockinPeriodFrequency,
                 lockinPeriodFrequencyType, withdrawalFeeApplicableForTransfer, accountingRuleType, charges, allowOverdraft, overdraftLimit,
-                false, null, minBalanceForInterestCalculation, null, null, null, null, productGroup, savingsProductInterestRateCharts,applyChargesToExistingSavingsAccounts);
+                false, null, minBalanceForInterestCalculation, null, null, null, null, productGroup, savingsProductInterestRateCharts, 
+                applyChargesToExistingSavingsAccounts, withHoldTax, taxGroup);
     }
 
     protected SavingsProduct(final String name, final String shortName, final String description, final MonetaryCurrency currency,
@@ -212,7 +224,8 @@ public class SavingsProduct extends AbstractPersistable<Long> {
             final BigDecimal minRequiredBalance, BigDecimal minBalanceForInterestCalculation,
             final BigDecimal nominalAnnualInterestRateOverdraft, final BigDecimal minOverdraftForInterestCalculation,
             final LocalDate startDate, final LocalDate closeDate, final CodeValue productGroup,final Set<SavingsProductInterestRateChart> savingsProductInterestRateCharts,
-            final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts) {
+            final Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts, 
+            final boolean withHoldTax, final TaxGroup taxGroup) {
 
         this.name = name;
         this.shortName = shortName;
@@ -263,6 +276,9 @@ public class SavingsProduct extends AbstractPersistable<Long> {
         if(applyChargesToExistingSavingsAccounts != null){
             this.applyChargesToExistingSavingsAccounts = associateApplyChargeToExistingSavingsAccountWith(applyChargesToExistingSavingsAccounts);
         }
+        
+        this.withHoldTax = withHoldTax;
+        this.taxGroup = taxGroup;
     }
 
     /**
@@ -538,6 +554,21 @@ public class SavingsProduct extends AbstractPersistable<Long> {
             } else {
                 this.closeDate = null;
             }
+        }
+        
+        if (command.isChangeInBooleanParameterNamed(withHoldTaxParamName, this.withHoldTax)) {
+            final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(withHoldTaxParamName);
+            actualChanges.put(withHoldTaxParamName, newValue);
+            this.withHoldTax = newValue;
+        }
+
+        if (this.withHoldTax) {
+            if (this.taxGroup == null || command.isChangeInLongParameterNamed(taxGroupIdParamName, this.taxGroup.getId())) {
+                final Long newValue = command.longValueOfParameterNamed(taxGroupIdParamName);
+                actualChanges.put(taxGroupIdParamName, newValue);
+            }
+        } else {
+            this.taxGroup = null;
         }
 
         validateLockinDetails();
@@ -852,5 +883,17 @@ public class SavingsProduct extends AbstractPersistable<Long> {
     }
 
 
+    public TaxGroup getTaxGroup() {
+        return this.taxGroup;
+    }
 
+    
+    public void setTaxGroup(TaxGroup taxGroup) {
+        this.taxGroup = taxGroup;
+    }
+
+    
+    public boolean withHoldTax() {
+        return this.withHoldTax;
+    }
 }

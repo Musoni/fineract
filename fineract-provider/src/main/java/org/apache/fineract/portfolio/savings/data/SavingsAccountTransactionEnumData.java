@@ -42,6 +42,7 @@ public class SavingsAccountTransactionEnumData {
     private final boolean writtenoff;
     private final boolean overdraftFee = true;
     private final boolean guarantorInterestDeposit;
+    private final boolean withholdTax;
 
     public SavingsAccountTransactionEnumData(final Long id, final String code, final String value) {
         this.id = id;
@@ -60,6 +61,7 @@ public class SavingsAccountTransactionEnumData {
         this.writtenoff = Long.valueOf(SavingsAccountTransactionType.WRITTEN_OFF.getValue()).equals(this.id);
         this.overdraftInterest = Long.valueOf(SavingsAccountTransactionType.OVERDRAFT_INTEREST.getValue()).equals(this.id);
         this.guarantorInterestDeposit =  Long.valueOf(SavingsAccountTransactionType.GUARANTOR_INTEREST_DEPOSIT.getValue()).equals(this.id);
+        this.withholdTax = Long.valueOf(SavingsAccountTransactionType.WITHHOLD_TAX.getValue()).equals(this.id);
         // this.overdraftFee =
         // Long.valueOf(SavingsAccountTransactionType.OVERDRAFT_INTEREST.getValue()).equals(this.id);
     }
@@ -125,4 +127,8 @@ public class SavingsAccountTransactionEnumData {
     }
 
     public boolean isGuarantorInterestDeposit() {return this.guarantorInterestDeposit;}
+
+    public boolean isWithholdTax() {
+        return this.withholdTax;
+    }
 }
