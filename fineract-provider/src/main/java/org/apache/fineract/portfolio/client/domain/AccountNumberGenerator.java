@@ -31,6 +31,7 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
+import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccount;
 import org.springframework.stereotype.Component;
 
 import java.io.StringReader;
@@ -55,7 +56,8 @@ public class AccountNumberGenerator {
     private final static String OFFICE_EXTERNAL_ID = "officeExternalId";
     private final static String LOAN_PRODUCT_SHORT_NAME = "loanProductShortName";
     private final static String SAVINGS_PRODUCT_SHORT_NAME = "savingsProductShortName";
-
+    private final static String SHARE_PRODUCT_SHORT_NAME = "sharesProductShortName" ;
+    
     public String generate(Client client, AccountNumberFormat accountNumberFormat) {
         Map<String, String> propertyMap = new HashMap<>();
         propertyMap.put(ID, client.getId().toString());
@@ -183,6 +185,13 @@ public class AccountNumberGenerator {
         return generateAccountNumber(propertyMap, accountNumberFormat);
     }
 
+    public String generate(ShareAccount shareaccount, AccountNumberFormat accountNumberFormat) {
+    	Map<String, String> propertyMap = new HashMap<>();
+    	propertyMap.put(ID, shareaccount.getId().toString());
+    	propertyMap.put(SHARE_PRODUCT_SHORT_NAME, shareaccount.getShareProduct().getShortName());
+    	return generateAccountNumber(propertyMap, accountNumberFormat) ;
+    }
+    
     private String generateAccountNumber(Map<String, String> propertyMap, AccountNumberFormat accountNumberFormat) {
         int maxLength = AccountNumberGenerator.maxLength;
         if(accountNumberFormat !=null && accountNumberFormat.getZeroPadding() !=null){

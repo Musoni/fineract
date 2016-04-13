@@ -18,11 +18,20 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.fineract.accounting.common.AccountingConstants.ACCRUAL_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SAVINGS;
+import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SHARES;
 import org.apache.fineract.accounting.common.AccountingConstants.LOAN_PRODUCT_ACCOUNTING_DATA_PARAMS;
 import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_DATA_PARAMS;
+import org.apache.fineract.accounting.common.AccountingConstants.SHARES_PRODUCT_ACCOUNTING_PARAMS;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.producttoaccountmapping.data.ChargeToGLAccountMapper;
@@ -36,13 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class ProductToGLAccountMappingReadPlatformServiceImpl implements ProductToGLAccountMappingReadPlatformService {
@@ -333,6 +335,52 @@ public class ProductToGLAccountMappingReadPlatformServiceImpl implements Product
             chargeToGLAccountMappers.add(chargeToGLAccountMapper);
         }
         return chargeToGLAccountMappers;
+    }
+
+    @Override
+    public Map<String, Object> fetchAccountMappingDetailsForShareProduct(Long productId, Integer accountingType) {
+
+        final Map<String, Object> accountMappingDetails = new LinkedHashMap<>(8);
+
+        final ProductToGLAccountMappingMapper rm = new ProductToGLAccountMappingMapper();
+        final String sql = "select " + rm.schema() + " and product_id = ? and payment_type is null and mapping.charge_id is null ";
+
+        final List<Map<String, Object>> listOfProductToGLAccountMaps = this.jdbcTemplate.query(sql, rm, new Object[] {
+                PortfolioProductType.SHARES.getValue(), productId });
+
+        if (AccountingRuleType.CASH_BASED.getValue().equals(accountingType)) {
+            for (final Map<String, Object> productToGLAccountMap : listOfProductToGLAccountMaps) {
+                final Integer financialAccountType = (Integer) productToGLAccountMap.get("financialAccountType");
+                final CASH_ACCOUNTS_FOR_SHARES glAccountForShares = CASH_ACCOUNTS_FOR_SHARES.fromInt(financialAccountType);
+
+                final Long glAccountId = (Long) productToGLAccountMap.get("glAccountId");
+                final String glAccountName = (String) productToGLAccountMap.get("glAccountName");
+                final String glCode = (String) productToGLAccountMap.get("glCode");
+                final GLAccountData gLAccountData = new GLAccountData(glAccountId, glAccountName, glCode);
+
+                if (glAccountForShares.equals(CASH_ACCOUNTS_FOR_SHARES.SHARES_REFERENCE)) {
+                    accountMappingDetails.put(SHARES_PRODUCT_ACCOUNTING_PARAMS.SHARES_REFERENCE.getValue(), gLAccountData);
+                } else if (glAccountForShares.equals(CASH_ACCOUNTS_FOR_SHARES.SHARES_SUSPENSE)) {
+                    accountMappingDetails.put(SHARES_PRODUCT_ACCOUNTING_PARAMS.SHARES_SUSPENSE.getValue(), gLAccountData);
+                } else if (glAccountForShares.equals(CASH_ACCOUNTS_FOR_SHARES.INCOME_FROM_FEES)) {
+                    accountMappingDetails.put(SHARES_PRODUCT_ACCOUNTING_PARAMS.INCOME_FROM_FEES.getValue(), gLAccountData);
+                } else if (glAccountForShares.equals(CASH_ACCOUNTS_FOR_SHARES.SHARES_EQUITY)) {
+                    accountMappingDetails.put(SHARES_PRODUCT_ACCOUNTING_PARAMS.SHARES_EQUITY.getValue(), gLAccountData);
+                }
+            }
+        }
+        return accountMappingDetails;
+
+    }
+
+    @Override
+    public List<PaymentTypeToGLAccountMapper> fetchPaymentTypeToFundSourceMappingsForShareProduct(Long productId) {
+        return fetchPaymentTypeToFundSourceMappings(PortfolioProductType.SHARES, productId);
+    }
+
+    @Override
+    public List<ChargeToGLAccountMapper> fetchFeeToIncomeAccountMappingsForShareProduct(Long productId) {
+        return fetchChargeToIncomeAccountMappings(PortfolioProductType.SHARES, productId, false);
     }
 
 }

@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum PortfolioProductType {
-    INVALID(0, "accountType.invalid"),LOAN(1, "productType.loan"), SAVING(2, "productType.saving"), CLIENT(3, "productType.client"), PROVISIONING(4, "productType.provisioning"),CASHIERTRANSACTION(5, "productType.cashier");
+    INVALID(0, "accountType.invalid"),LOAN(1, "productType.loan"), SAVING(2, "productType.saving"), 
+    CLIENT(3, "productType.client"), PROVISIONING(4, "productType.provisioning"), 
+    CASHIERTRANSACTION(5, "productType.cashier"), SHARES(6, "productType.shares");
 
     private final Integer value;
     private final String code;
@@ -82,5 +84,8 @@ public enum PortfolioProductType {
     public boolean isCashierTransaction() {
         return this.value.equals(PortfolioProductType.CASHIERTRANSACTION.getValue());
     }
-
+    
+    public boolean isShareProduct() {
+        return this.value.equals(PortfolioProductType.SHARES.getValue());
+    }
 }

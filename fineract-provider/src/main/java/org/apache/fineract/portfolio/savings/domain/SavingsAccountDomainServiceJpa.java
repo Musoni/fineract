@@ -28,6 +28,7 @@ import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
+import org.apache.fineract.portfolio.savings.SavingsAccountTransactionType;
 import org.apache.fineract.portfolio.savings.SavingsTransactionBooleanValues;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionDTO;
 import org.apache.fineract.portfolio.savings.exception.DepositAccountTransactionNotAllowedException;
@@ -123,12 +124,29 @@ public class SavingsAccountDomainServiceJpa implements SavingsAccountDomainServi
         }
         return user;
     }
+    
+    @Transactional
+    @Override
+    public SavingsAccountTransaction handleDeposit(final SavingsAccount account, final DateTimeFormatter fmt,
+            final LocalDate transactionDate, final BigDecimal transactionAmount, final PaymentDetail paymentDetail,
+            final boolean isAccountTransfer, final boolean isRegularTransaction, 
+            final boolean isGuarantorInterestDeposit) {
+    	SavingsAccountTransactionType savingsAccountTransactionType = SavingsAccountTransactionType.DEPOSIT;
+    	
+    	if (isGuarantorInterestDeposit) {
+    		savingsAccountTransactionType = SavingsAccountTransactionType.GUARANTOR_INTEREST_DEPOSIT;
+    	}
+    	
+    	return handleDeposit(account, fmt, transactionDate, transactionAmount, paymentDetail, 
+    			isAccountTransfer, isRegularTransaction, savingsAccountTransactionType);
+    }
 
     @Transactional
     @Override
     public SavingsAccountTransaction handleDeposit(final SavingsAccount account, final DateTimeFormatter fmt,
             final LocalDate transactionDate, final BigDecimal transactionAmount, final PaymentDetail paymentDetail,
-            final boolean isAccountTransfer, final boolean isRegularTransaction,final boolean isGuarantorInterestDeposit) {
+            final boolean isAccountTransfer, final boolean isRegularTransaction, 
+            final SavingsAccountTransactionType savingsAccountTransactionType) {
 
         AppUser user = getAppUserIfPresent();
         final boolean isSavingsInterestPostingAtCurrentPeriodEnd = this.configurationDomainService
@@ -139,12 +157,13 @@ public class SavingsAccountDomainServiceJpa implements SavingsAccountDomainServi
                 "deposit", account.depositAccountType()); }
 
         boolean isInterestTransfer = false;
+        boolean isGuarantorInterestDeposit = savingsAccountTransactionType.isGuarantorInterestDeposit();
         final Set<Long> existingTransactionIds = new HashSet<>();
         final Set<Long> existingReversedTransactionIds = new HashSet<>();
         updateExistingTransactionsDetails(account, existingTransactionIds, existingReversedTransactionIds);
         final SavingsAccountTransactionDTO transactionDTO = new SavingsAccountTransactionDTO(fmt, transactionDate, transactionAmount,
-                paymentDetail, new Date(), user,isGuarantorInterestDeposit);
-        final SavingsAccountTransaction deposit = account.deposit(transactionDTO);
+                paymentDetail, new Date(), user, isGuarantorInterestDeposit);
+        final SavingsAccountTransaction deposit = account.deposit(transactionDTO, savingsAccountTransactionType);
         final LocalDate postInterestOnDate = null;
         final MathContext mc = MathContext.DECIMAL64;
         if (account.isBeforeLastPostingPeriod(transactionDate)) {
@@ -194,5 +213,17 @@ public class SavingsAccountDomainServiceJpa implements SavingsAccountDomainServi
 
         final boolean isAccountTransfer = false;
         postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
+    }
+
+    @Override
+    public SavingsAccountTransaction handleDividendPayout(final SavingsAccount account, final LocalDate transactionDate,
+            final BigDecimal transactionAmount) {
+        final DateTimeFormatter fmt = null;
+        final PaymentDetail paymentDetail = null;
+        final boolean isAccountTransfer = false;
+        final boolean isRegularTransaction = true;
+        final SavingsAccountTransactionType savingsAccountTransactionType = SavingsAccountTransactionType.DIVIDEND_PAYOUT;
+        return handleDeposit(account, fmt, transactionDate, transactionAmount, paymentDetail, isAccountTransfer, isRegularTransaction,
+                savingsAccountTransactionType);
     }
 }

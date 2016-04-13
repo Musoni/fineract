@@ -254,7 +254,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
             boolean isAccountTransfer = false;
             boolean isGuarantorInterestDeposit = false;
             this.savingsAccountDomainService.handleDeposit(account, fmt, account.getActivationLocalDate(), amountForDeposit.getAmount(),
-                    null, isAccountTransfer, isRegularTransaction,isGuarantorInterestDeposit);
+                    null, isAccountTransfer, isRegularTransaction, isGuarantorInterestDeposit);
             updateExistingTransactionsDetails(account, existingTransactionIds, existingReversedTransactionIds);
         }
         account.processAccountUponActivation(isSavingsInterestPostingAtCurrentPeriodEnd, financialYearBeginningMonth, user);
@@ -288,7 +288,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
         boolean isRegularTransaction = true;
         boolean isGuarantorInterest = false;
         final SavingsAccountTransaction deposit = this.savingsAccountDomainService.handleDeposit(account, fmt, transactionDate,
-                transactionAmount, paymentDetail, isAccountTransfer, isRegularTransaction,isGuarantorInterest);
+                transactionAmount, paymentDetail, isAccountTransfer, isRegularTransaction, isGuarantorInterest);
         
         changes.put("transactionDate", command.stringValueOfParameterNamed("transactionDate"));
         changes.put("transactionAmount", command.stringValueOfParameterNamed("transactionAmount"));

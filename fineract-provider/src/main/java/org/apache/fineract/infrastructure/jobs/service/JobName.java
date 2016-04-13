@@ -49,8 +49,9 @@ public enum JobName {
     EXECUTE_REPORT_MAILING_JOBS("Execute Report Mailing Jobs"),
     EXECUTE_EMAIL("Execute Email"),
     APPLY_CHARGE_TO_OVERDUE_ON_MATURITY_LOANS("Apply penalty to overdue on maturity loans"),
-    APPLY_PRODUCT_CHARGE_TO_EXISTING_SAVINGS_ACCOUNT("Apply product charge to existing savings account");
+    APPLY_PRODUCT_CHARGE_TO_EXISTING_SAVINGS_ACCOUNT("Apply product charge to existing savings account"),
 
+    POST_DIVIDENTS_FOR_SHARES("Post Dividends For Shares");
 
     private final String name;
 

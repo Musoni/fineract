@@ -52,4 +52,6 @@ public interface JournalEntryWritePlatformService {
     public String createJournalEntryForIncomeAndExpenseBookOff(final JournalEntryCommand journalEntryCommand);
 
     void revertJournalEntry(String transactionId);
+
+    void createJournalEntriesForShares(Map<String, Object> accountingBridgeData);
 }

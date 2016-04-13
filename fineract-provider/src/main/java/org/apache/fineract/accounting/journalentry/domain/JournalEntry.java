@@ -78,6 +78,9 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
     @JoinColumn(name = "client_transaction_id", nullable = false)
     private ClientTransaction clientTransaction;
 
+    @Column(name = "share_transaction_id", nullable = true)
+    private Long shareTransactionId;
+
     @Column(name = "reversed", nullable = false)
     private boolean reversed = false;
 
@@ -114,10 +117,10 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
             final String currencyCode, final String transactionId, final boolean manualEntry, final Date transactionDate,
             final JournalEntryType journalEntryType, final BigDecimal amount, final String description, final Integer entityType,
             final Long entityId, final String referenceNumber, final LoanTransaction loanTransaction,
-            final SavingsAccountTransaction savingsTransaction, final ClientTransaction clientTransaction) {
+            final SavingsAccountTransaction savingsTransaction, final ClientTransaction clientTransaction, Long shareTransactionId) {
         return new JournalEntry(office, paymentDetail, glAccount, currencyCode, transactionId, manualEntry, transactionDate,
                 journalEntryType.getValue(), amount, description, entityType, entityId, referenceNumber, loanTransaction,
-                savingsTransaction, clientTransaction, false);
+                savingsTransaction, clientTransaction, false, shareTransactionId);
     }
 
     protected JournalEntry() {
@@ -128,7 +131,7 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
             final String transactionId, final boolean manualEntry, final Date transactionDate, final Integer type, final BigDecimal amount,
             final String description, final Integer entityType, final Long entityId, final String referenceNumber,
             final LoanTransaction loanTransaction, final SavingsAccountTransaction savingsTransaction,
-            final ClientTransaction clientTransaction, final boolean isReconciled) {
+            final ClientTransaction clientTransaction, final boolean isReconciled, final Long shareTransactionId) {
         this.office = office;
         this.glAccount = glAccount;
         this.reversalJournalEntry = null;
@@ -148,6 +151,7 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
         this.clientTransaction = clientTransaction;
         this.paymentDetail = paymentDetail;
         this.isReconciled = isReconciled;
+        this.shareTransactionId = shareTransactionId;
     }
 
     public boolean isDebitEntry() {
@@ -211,18 +215,22 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
     }
 
     public Long getEntityId() {
-        return this.entityId ;
+        return this.entityId;
     }
-    
+
     public Integer getEntityType() {
-        return this.entityType ;
+        return this.entityType;
     }
-    
+
     public boolean isReconciled() {
         return isReconciled;
     }
 
     public void setIsReconciled(boolean isReconciled) {
         this.isReconciled = isReconciled;
+    }
+
+    public Long getShareTransactionId() {
+        return this.shareTransactionId;
     }
 }

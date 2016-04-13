@@ -80,7 +80,7 @@ public class ChargeEnumerations {
             case OVERDUE_ON_MATURITY:
                 optionData = new EnumOptionData(ChargeTimeType.OVERDUE_ON_MATURITY.getValue().longValue(), ChargeTimeType.OVERDUE_ON_MATURITY.getCode(),
                         "Overdue on Maturity Fee");
-                break;
+        	break;
             case TRANCHE_DISBURSEMENT:
                 optionData = new EnumOptionData(ChargeTimeType.TRANCHE_DISBURSEMENT.getValue().longValue(),
                         ChargeTimeType.TRANCHE_DISBURSEMENT.getCode(), "Tranche Disbursement");
@@ -88,11 +88,21 @@ public class ChargeEnumerations {
             case DISBURSEMENT_PAID_WITH_REPAYMENT:
             	optionData = new EnumOptionData(ChargeTimeType.DISBURSEMENT_PAID_WITH_REPAYMENT.getValue().longValue(),
                         ChargeTimeType.DISBURSEMENT_PAID_WITH_REPAYMENT.getCode(), "Disbursement Paid With Repayment");
-            	break;
+        	break;
             case LOAN_RESCHEDULING_FEE:
                 optionData = new EnumOptionData(ChargeTimeType.LOAN_RESCHEDULING_FEE.getValue().longValue(), 
                         ChargeTimeType.LOAN_RESCHEDULING_FEE.getCode(), "Loan Rescheduling Fee");
-                break;
+            break;
+            case SHAREACCOUNT_ACTIVATION:
+                optionData = new EnumOptionData(ChargeTimeType.SHAREACCOUNT_ACTIVATION.getValue().longValue(), ChargeTimeType.SHAREACCOUNT_ACTIVATION.getCode(), "Share Account Activate") ;
+            break ;
+            
+            case SHARE_PURCHASE:
+            	optionData = new EnumOptionData(ChargeTimeType.SHARE_PURCHASE.getValue().longValue(), ChargeTimeType.SHARE_PURCHASE.getCode(), "Share Purchase") ;
+            break ;
+            case SHARE_REDEEM:
+            	optionData = new EnumOptionData(ChargeTimeType.SHARE_REDEEM.getValue().longValue(), ChargeTimeType.SHARE_REDEEM.getCode(), "Share Redeem") ;
+            break ;
             default:
                 optionData = new EnumOptionData(ChargeTimeType.INVALID.getValue().longValue(), ChargeTimeType.INVALID.getCode(), "Invalid");
             break;
@@ -117,6 +127,9 @@ public class ChargeEnumerations {
             case CLIENT:
                 optionData = new EnumOptionData(ChargeAppliesTo.CLIENT.getValue().longValue(), ChargeAppliesTo.CLIENT.getCode(), "Client");
             break;
+            case SHARES:
+            	optionData = new EnumOptionData(ChargeAppliesTo.SHARES.getValue().longValue(), ChargeAppliesTo.SHARES.getCode(), "Shares") ;
+            break ;
             default:
                 optionData = new EnumOptionData(ChargeAppliesTo.INVALID.getValue().longValue(), ChargeAppliesTo.INVALID.getCode(),
                         "Invalid");

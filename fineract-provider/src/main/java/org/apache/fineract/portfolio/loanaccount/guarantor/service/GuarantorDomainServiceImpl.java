@@ -600,7 +600,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
                             
                             // call method to handle savings account deposit
                             this.savingsAccountDomainService.handleDeposit(savingsAccount, fmt, transactionDate,
-                                    shareOfLoanInterestIncome, newPaymentTypeToSave, isAccountTransfer, isRegularTransaction,isGuarantorInterestDeposit);
+                                    shareOfLoanInterestIncome, newPaymentTypeToSave, isAccountTransfer, isRegularTransaction, isGuarantorInterestDeposit);
                         }
                     }
                 }
@@ -858,7 +858,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
 
                                 // call method to handle savings account deposit
                                 final SavingsAccountTransaction savingsAccountTransaction =this.savingsAccountDomainService.handleDeposit(savingsAccount, fmt, transactionDate,
-                                        shareOfLoanInterestIncome, newPaymentTypeToSave, isAccountTransfer, isRegularTransaction,isGuarantorInterestDeposit);
+                                        shareOfLoanInterestIncome, newPaymentTypeToSave, isAccountTransfer, isRegularTransaction, isGuarantorInterestDeposit);
 
 
                                 final GuarantorInterestPayment guarantorInterestPayment = GuarantorInterestPayment.createNew(guarantor,guarantorInterestAccumulated,shareOfLoanInterestIncome,savingsAccount,savingsAccountTransaction);

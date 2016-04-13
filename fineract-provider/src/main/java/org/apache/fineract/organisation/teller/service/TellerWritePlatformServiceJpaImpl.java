@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
 import org.apache.fineract.accounting.financialactivityaccount.domain.FinancialActivityAccount;
 import org.apache.fineract.accounting.financialactivityaccount.domain.FinancialActivityAccountRepositoryWrapper;
@@ -58,13 +56,17 @@ import org.apache.fineract.organisation.teller.domain.CashierTxnType;
 import org.apache.fineract.organisation.teller.domain.Teller;
 import org.apache.fineract.organisation.teller.domain.TellerRepository;
 import org.apache.fineract.organisation.teller.domain.TellerRepositoryWrapper;
-import org.apache.fineract.organisation.teller.exception.*;
+import org.apache.fineract.organisation.teller.exception.CashierAlreadyActiveInAnotherTellerException;
+import org.apache.fineract.organisation.teller.exception.CashierExistForTellerException;
+import org.apache.fineract.organisation.teller.exception.CashierHasTransactionTellerException;
+import org.apache.fineract.organisation.teller.exception.CashierNotFoundException;
+import org.apache.fineract.organisation.teller.exception.NoMoreThanOneActiveCashierPerTellerException;
+import org.apache.fineract.organisation.teller.exception.NotEnoughCashInTheMainVaultTellerException;
+import org.apache.fineract.organisation.teller.exception.TellerNotFoundException;
 import org.apache.fineract.organisation.teller.serialization.TellerCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.client.domain.ClientTransaction;
-import org.apache.fineract.useradministration.data.AppUserData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepository;
-import org.apache.fineract.useradministration.service.AppUserReadPlatformService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -582,6 +584,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             final String transactionId ="C"+cashierTxn.getId();  // Long.toHexString(Long.parseLong(uniqueVal));
 
             ClientTransaction clientTransaction = null;
+            final Long shareTransactionId = null;
 
             final JournalEntry debitJournalEntry = JournalEntry.createNew(cashierOffice, null, // payment
                                                                                                // detail
@@ -590,7 +593,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                     transactionId, false, // manual entry
                     cashierTxn.getTxnDate(), JournalEntryType.DEBIT, cashierTxn.getTxnAmount(), cashierTxn.getTxnNote(), // Description
                     PortfolioProductType.CASHIERTRANSACTION.getValue(), cashierTxn.getId(), null, // entity Type, entityId, reference number
-                    null, null, clientTransaction); // Loan and Savings Txn
+                    null, null, clientTransaction, shareTransactionId); // Loan and Savings Txn
 
             final JournalEntry creditJournalEntry = JournalEntry.createNew(cashierOffice, null, // payment
                                                                                                 // detail
@@ -599,7 +602,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                     transactionId, false, // manual entry
                     cashierTxn.getTxnDate(), JournalEntryType.CREDIT, cashierTxn.getTxnAmount(), cashierTxn.getTxnNote(), // Description
                     PortfolioProductType.CASHIERTRANSACTION.getValue(),cashierTxn.getId(), null, // entity Type, entityId, reference number
-                    null, null, clientTransaction); // Loan and Savings Txn
+                    null, null, clientTransaction, shareTransactionId); // Loan and Savings Txn
 
             this.glJournalEntryRepository.saveAndFlush(debitJournalEntry);
             this.glJournalEntryRepository.saveAndFlush(creditJournalEntry);

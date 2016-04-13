@@ -19,7 +19,6 @@
 package org.apache.fineract.portfolio.charge.domain;
 
 public enum ChargeTimeType {
-
     INVALID(0, "chargeTimeType.invalid"), //
     DISBURSEMENT(1, "chargeTimeType.disbursement"), // only for loan charges
     SPECIFIED_DUE_DATE(2, "chargeTimeType.specifiedDueDate"), // for loan and
@@ -30,13 +29,16 @@ public enum ChargeTimeType {
     MONTHLY_FEE(7, "chargeTimeType.monthlyFee"), // only for savings
     INSTALMENT_FEE(8, "chargeTimeType.instalmentFee"), // only for loan charges
     OVERDUE_INSTALLMENT(9, "chargeTimeType.overdueInstallment"), // only for
-    OVERDRAFT_FEE(10, "chargeTimeType.overdraftFee"),// only for savings
+    OVERDRAFT_FEE(10, "chargeTimeType.overdraftFee"), // only for savings
     WEEKLY_FEE(11, "chargeTimeType.weeklyFee"), // only for savings
     TRANCHE_DISBURSEMENT(12,"chargeTimeType.tranchedisbursement"), // only for loan
     DISBURSEMENT_PAID_WITH_REPAYMENT(13, "chargeTimeType.disbursementPaidWithRepayment"), // only for loan charge
     LOAN_RESCHEDULING_FEE(14, "chargeTimeType.loanReschedulingFee"), // only for loan charges
-    OVERDUE_ON_MATURITY(15, "chargeTimeType.overdueOnMaturity"); // only for loan
-    
+    OVERDUE_ON_MATURITY(15, "chargeTimeType.overdueOnMaturity"), // only for loan
+    SHAREACCOUNT_ACTIVATION(16, "chargeTimeType.activation"), // only for loan
+    SHARE_PURCHASE(17, "chargeTimeType.sharespurchase"), 
+    SHARE_REDEEM(18, "chargeTimeType.sharesredeem");
+
     private final Integer value;
     private final String code;
 
@@ -79,6 +81,10 @@ public enum ChargeTimeType {
 
     public static Object[] validClientValues() {
         return new Integer[] { ChargeTimeType.SPECIFIED_DUE_DATE.getValue() };
+    }
+
+    public static Object[] validShareValues() {
+        return new Integer[] { ChargeTimeType.SHAREACCOUNT_ACTIVATION.getValue(), ChargeTimeType.SHARE_PURCHASE.getValue(), ChargeTimeType.SHARE_REDEEM.getValue() };
     }
 
     public static ChargeTimeType fromInt(final Integer chargeTime) {
@@ -129,7 +135,16 @@ public enum ChargeTimeType {
                 break;
                 case 15:
                     chargeTimeType = OVERDUE_ON_MATURITY;
-                    break;
+                break;
+                case 16:
+                    chargeTimeType = SHAREACCOUNT_ACTIVATION;
+                break;
+                case 17:
+                    chargeTimeType = SHARE_PURCHASE;
+                break;
+                case 18:
+                    chargeTimeType = SHARE_REDEEM;
+                break;
                 default:
                     chargeTimeType = INVALID;
                 break;
@@ -197,8 +212,8 @@ public enum ChargeTimeType {
     }
 
     public boolean isAllowedSavingsChargeTime() {
-        return isOnSpecifiedDueDate() || isSavingsActivation() || isSavingsClosure() || isWithdrawalFee() || isAnnualFee() || isMonthlyFee()
-                || isWeeklyFee() || isOverdraftFee();
+        return isOnSpecifiedDueDate() || isSavingsActivation() || isSavingsClosure() || isWithdrawalFee() || isAnnualFee()
+                || isMonthlyFee() || isWeeklyFee() || isOverdraftFee();
     }
 
     public boolean isOverdraftFee() {
@@ -211,5 +226,17 @@ public enum ChargeTimeType {
     
     public boolean isDisbursementPaidWithRepayment() {
         return this.value.equals(DISBURSEMENT_PAID_WITH_REPAYMENT.getValue());
+    }
+
+    public boolean isShareAccountActivation() {
+        return this.value.equals(ChargeTimeType.SHAREACCOUNT_ACTIVATION.getValue());
+    }
+
+    public boolean isSharesPurchase() {
+        return this.value.equals(ChargeTimeType.SHARE_PURCHASE.getValue());
+    }
+
+    public boolean isSharesRedeem() {
+        return this.value.equals(ChargeTimeType.SHARE_REDEEM.getValue());
     }
 }
