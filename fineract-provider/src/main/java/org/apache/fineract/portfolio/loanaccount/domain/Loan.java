@@ -625,7 +625,7 @@ public class Loan extends AbstractPersistable<Long> {
                     getId(), loanCharge.name());
         }
 
-        validateChargeHasValidSpecifiedDateIfApplicable(loanCharge, getDisbursementDate(), getLastRepaymentPeriodDueDate());
+        validateChargeHasValidSpecifiedDateIfApplicable(loanCharge, getDisbursementDate(), getLastRepaymentPeriodDueDate(false));
 
         loanCharge.update(this);
 
@@ -782,10 +782,11 @@ public class Loan extends AbstractPersistable<Long> {
         }
     }
 
-    private LocalDate getLastRepaymentPeriodDueDate() {
+    private LocalDate getLastRepaymentPeriodDueDate(final boolean includeRecalculatedInterestComponent) {
         LocalDate lastRepaymentDate = getDisbursementDate();
         for (LoanRepaymentScheduleInstallment installment : this.repaymentScheduleInstallments) {
-            if (!installment.isRecalculatedInterestComponent() && installment.getDueDate().isAfter(lastRepaymentDate)) {
+            if ((includeRecalculatedInterestComponent || !installment.isRecalculatedInterestComponent())
+                    && installment.getDueDate().isAfter(lastRepaymentDate)) {
                 lastRepaymentDate = installment.getDueDate();
             }
         }
@@ -797,7 +798,7 @@ public class Loan extends AbstractPersistable<Long> {
         validateLoanIsNotClosed(loanCharge);
 
         // NOTE: to remove this constraint requires that loan transactions
-        // that represent the waive of charges also be removed (or reversed)
+        // that represent the waive of charges also be removed (or reversed)M
         // if you want ability to remove loan charges that are waived.
         validateLoanChargeIsNotWaived(loanCharge);
 
@@ -1167,7 +1168,7 @@ public class Loan extends AbstractPersistable<Long> {
             // add new charges
             if (loanCharge.getId() == null) {
                 LoanTrancheDisbursementCharge loanTrancheDisbursementCharge = null;
-                validateChargeHasValidSpecifiedDateIfApplicable(loanCharge, getDisbursementDate(), getLastRepaymentPeriodDueDate());
+                validateChargeHasValidSpecifiedDateIfApplicable(loanCharge, getDisbursementDate(), getLastRepaymentPeriodDueDate(false));
                 
                 loanCharge.update(this);
                 if (this.loanProduct.isMultiDisburseLoan() && loanCharge.isTrancheDisbursementCharge()) {
@@ -1763,7 +1764,7 @@ public class Loan extends AbstractPersistable<Long> {
         }
         if (loanCharge.isActive()) {
             loanCharge.update(chargeAmt, loanCharge.getDueLocalDate(), amount, fetchNumberOfInstallmensAfterExceptions(), totalChargeAmt, this.getCurrency());
-            validateChargeHasValidSpecifiedDateIfApplicable(loanCharge, getDisbursementDate(), getLastRepaymentPeriodDueDate());
+            validateChargeHasValidSpecifiedDateIfApplicable(loanCharge, getDisbursementDate(), getLastRepaymentPeriodDueDate(false));
         }
     }
 
@@ -5244,7 +5245,7 @@ public class Loan extends AbstractPersistable<Long> {
         if (loanSchedule == null) { return; }
         updateLoanSchedule(loanSchedule.getInstallments(), currentUser);
         this.interestRecalculatedOn = DateUtils.getDateOfTenant();
-        LocalDate lastRepaymentDate = this.getLastRepaymentPeriodDueDate();
+        LocalDate lastRepaymentDate = this.getLastRepaymentPeriodDueDate(true);
         Set<LoanCharge> charges = this.charges();
         for (LoanCharge loanCharge : charges) {
             if (!loanCharge.isDueAtDisbursement()) {
