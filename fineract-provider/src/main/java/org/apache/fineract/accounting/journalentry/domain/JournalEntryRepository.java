@@ -62,4 +62,7 @@ public interface JournalEntryRepository extends JpaRepository<JournalEntry, Long
      * @return {@link JournalEntry} objects
      */
     List<JournalEntry> findByIsReconciledFalseAndTransactionIdIn(String[] transactionIds);
+
+    @Query("from JournalEntry journalEntry where journalEntry.transactionId= :transactionId and journalEntry.reversed is false and journalEntry.entityType = :entityType")
+    List<JournalEntry> findJournalEntries(@Param("transactionId") String transactionId, @Param("entityType") Integer entityType) ;
 }
