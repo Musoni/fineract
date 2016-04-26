@@ -18,23 +18,20 @@
  */
 package org.apache.fineract.integrationtests;
 
-import com.sun.jersey.core.util.Base64;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.apache.fineract.integrationtests.common.ImageHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper;
 import org.apache.fineract.integrationtests.common.organisation.StaffHelper;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
-
-import java.io.IOException;
 
 public class StaffImageApiTest {
 
