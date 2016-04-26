@@ -88,4 +88,6 @@ public interface ConfigurationDomainService {
     
     Long retreivePeroidInNumberOfDaysForSkipMeetingDate();
     
+    boolean isChangeEmiIfRepaymentDateSameAsDisbursementDateEnabled();
+    
 }

@@ -341,6 +341,9 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         // check for product mix validations
         checkForProductMixRestrictions(loan);
         
+        // Recalculate first repayment date based in actual disbursement date.
+        final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
+        
         LocalDate recalculateFrom = null;
         if (loan.repaymentScheduleDetail().isInterestRecalculationEnabled()) {
             recalculateFrom = actualDisbursementDate;
@@ -351,7 +354,6 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final CalendarInstance calendarInstance = this.calendarInstanceRepository.findCalendarInstaneByEntityId(loan.getId(),
                 CalendarEntityType.LOANS.getValue());
         if (loan.isSyncDisbursementWithMeeting()) {
-            final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
             this.loanEventApiJsonValidator.validateDisbursementDateWithMeetingDate(actualDisbursementDate, calendarInstance, 
                     scheduleGeneratorDTO.isSkipRepaymentOnFirstDayofMonth(), scheduleGeneratorDTO.getNumberOfdays());
         }
@@ -371,8 +373,6 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final Boolean isPaymentTypeApplicableForDisbursementCharge = configurationDomainService.isPaymentTypeApplicableforDisbursementCharge();
         
-        // Recalculate first repayment date based in actual disbursement date.
-        final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
         updateLoanCounters(loan, actualDisbursementDate);
         Money amountBeforeAdjust = loan.getPrincpal();
         loan.validateAccountStatus(LoanEvent.LOAN_DISBURSED);
