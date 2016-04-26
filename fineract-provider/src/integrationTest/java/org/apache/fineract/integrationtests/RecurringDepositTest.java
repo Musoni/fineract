@@ -31,14 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import net.sf.ehcache.transaction.xa.EhcacheXAException;
-
-import org.joda.time.DateTime;
-import org.joda.time.Months;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
@@ -52,15 +44,19 @@ import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.accounting.FinancialActivityAccountHelper;
 import org.apache.fineract.integrationtests.common.accounting.JournalEntry;
 import org.apache.fineract.integrationtests.common.accounting.JournalEntryHelper;
-import org.apache.fineract.integrationtests.common.fixeddeposit.FixedDepositAccountHelper;
 import org.apache.fineract.integrationtests.common.fixeddeposit.FixedDepositAccountStatusChecker;
-import org.apache.fineract.integrationtests.common.fixeddeposit.FixedDepositProductHelper;
 import org.apache.fineract.integrationtests.common.recurringdeposit.RecurringDepositAccountHelper;
 import org.apache.fineract.integrationtests.common.recurringdeposit.RecurringDepositAccountStatusChecker;
 import org.apache.fineract.integrationtests.common.recurringdeposit.RecurringDepositProductHelper;
 import org.apache.fineract.integrationtests.common.savings.SavingsAccountHelper;
 import org.apache.fineract.integrationtests.common.savings.SavingsProductHelper;
 import org.apache.fineract.integrationtests.common.savings.SavingsStatusChecker;
+import org.joda.time.DateTime;
+import org.joda.time.Months;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
