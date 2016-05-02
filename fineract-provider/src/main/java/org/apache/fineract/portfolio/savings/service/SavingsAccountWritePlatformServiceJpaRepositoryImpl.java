@@ -110,6 +110,7 @@ import org.apache.fineract.portfolio.savings.exception.SavingsOfficerUnassignmen
 import org.apache.fineract.portfolio.savings.exception.SavingsTransferTransactionsCannotBeUndoneException;
 import org.apache.fineract.portfolio.savings.exception.TransactionUpdateNotAllowedException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.apache.fineract.useradministration.domain.AppUserRepositoryWrapper;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -148,6 +149,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
     private final StandingInstructionRepository standingInstructionRepository;
     private final BusinessEventNotifierService businessEventNotifierService;
+    private final AppUserRepositoryWrapper appuserRepository;
 
     @Autowired
     public SavingsAccountWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
@@ -169,7 +171,8 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
             final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository, 
             final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService, 
             final StandingInstructionRepository standingInstructionRepository,
-            final BusinessEventNotifierService businessEventNotifierService) {
+            final BusinessEventNotifierService businessEventNotifierService,
+            final AppUserRepositoryWrapper appuserRepository) {
         this.context = context;
         this.savingAccountRepository = savingAccountRepository;
         this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
@@ -195,6 +198,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
         this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
         this.standingInstructionRepository = standingInstructionRepository;
         this.businessEventNotifierService = businessEventNotifierService;
+        this.appuserRepository = appuserRepository;
     }
 
     @Transactional
@@ -1360,5 +1364,37 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
                 .withSavingsId(savingsAccountId) //
                 .with(actualChanges) //
                 .build();
+    }
+
+    @Override
+    @Transactional
+	public void setSubStatusInactive(Long savingsId){
+        final SavingsAccount account = this.savingAccountAssembler.assembleFrom(savingsId);
+        final Set<Long> existingTransactionIds = new HashSet<>();
+        final Set<Long> existingReversedTransactionIds = new HashSet<>();
+        updateExistingTransactionsDetails(account, existingTransactionIds, existingReversedTransactionIds);
+        account.setSubStatusInactive(appuserRepository.fetchSystemUser());
+        this.savingAccountRepository.save(account);
+        postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
+    }
+
+    @Override
+    @Transactional
+	public void setSubStatusDormant(Long savingsId){
+        final SavingsAccount account = this.savingAccountAssembler.assembleFrom(savingsId);
+        account.setSubStatusDormant();
+    	this.savingAccountRepository.save(account);
+    }
+
+    @Override
+    @Transactional
+	public void escheat(Long savingsId){
+        final SavingsAccount account = this.savingAccountAssembler.assembleFrom(savingsId);
+        final Set<Long> existingTransactionIds = new HashSet<>();
+        final Set<Long> existingReversedTransactionIds = new HashSet<>();
+        updateExistingTransactionsDetails(account, existingTransactionIds, existingReversedTransactionIds);
+        account.escheat(appuserRepository.fetchSystemUser());
+        this.savingAccountRepository.save(account);
+        postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
     }
 }

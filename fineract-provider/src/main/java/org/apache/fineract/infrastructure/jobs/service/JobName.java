@@ -51,7 +51,8 @@ public enum JobName {
     APPLY_CHARGE_TO_OVERDUE_ON_MATURITY_LOANS("Apply penalty to overdue on maturity loans"),
     APPLY_PRODUCT_CHARGE_TO_EXISTING_SAVINGS_ACCOUNT("Apply product charge to existing savings account"),
 
-    POST_DIVIDENTS_FOR_SHARES("Post Dividends For Shares");
+    POST_DIVIDENTS_FOR_SHARES("Post Dividends For Shares"),
+    UPDATE_SAVINGS_DORMANT_ACCOUNTS("Update Savings Dormant Accounts");
 
     private final String name;
 

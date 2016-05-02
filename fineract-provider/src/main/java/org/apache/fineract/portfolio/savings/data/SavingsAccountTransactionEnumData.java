@@ -44,6 +44,7 @@ public class SavingsAccountTransactionEnumData {
     private final boolean overdraftFee = true;
     private final boolean guarantorInterestDeposit;
     private final boolean withholdTax;
+    private final boolean escheat;
 
     public SavingsAccountTransactionEnumData(final Long id, final String code, final String value) {
         this.id = id;
@@ -64,6 +65,7 @@ public class SavingsAccountTransactionEnumData {
         this.overdraftInterest = Long.valueOf(SavingsAccountTransactionType.OVERDRAFT_INTEREST.getValue()).equals(this.id);
         this.guarantorInterestDeposit =  Long.valueOf(SavingsAccountTransactionType.GUARANTOR_INTEREST_DEPOSIT.getValue()).equals(this.id);
         this.withholdTax = Long.valueOf(SavingsAccountTransactionType.WITHHOLD_TAX.getValue()).equals(this.id);
+        this.escheat = Long.valueOf(SavingsAccountTransactionType.ESCHEAT.getValue()).equals(this.id);
         // this.overdraftFee =
         // Long.valueOf(SavingsAccountTransactionType.OVERDRAFT_INTEREST.getValue()).equals(this.id);
     }
@@ -136,5 +138,9 @@ public class SavingsAccountTransactionEnumData {
     
     public boolean isDividendPayout() {
         return this.dividendPayout;
+    }
+    
+    public boolean isEscheat() {
+    	return this.escheat;
     }
 }

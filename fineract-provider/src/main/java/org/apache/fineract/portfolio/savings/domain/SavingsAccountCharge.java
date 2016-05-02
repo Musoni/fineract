@@ -655,6 +655,10 @@ public class SavingsAccountCharge extends AbstractPersistable<Long> {
     public boolean isSavingsActivation() {
         return ChargeTimeType.fromInt(this.chargeTime).isSavingsActivation();
     }
+    
+    public boolean isSavingsNoActivity(){
+    	return ChargeTimeType.fromInt(this.chargeTime).isSavingsNoActivityFee();
+    }
 
     public boolean isSavingsClosure() {
         return ChargeTimeType.fromInt(this.chargeTime).isSavingsClosure();

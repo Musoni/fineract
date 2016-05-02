@@ -168,6 +168,13 @@ public class SavingsApiConstants {
     public static final String onHoldTransactionTypeParamName = "transactionType";
     public static final String onHoldTransactionDateParamName = "transactionDate";
     public static final String onHoldReversedParamName = "reversed";
+    
+    // Savings Dormancy
+    public static final String isDormancyTrackingActiveParamName = "isDormancyTrackingActive";
+    public static final String daysToInactiveParamName = "daysToInactive";
+    public static final String daysToDormancyParamName = "daysToDormancy";
+    public static final String daysToEscheatParamName = "daysToEscheat";
+    
 
     //interest chart
     public static final String interestRateCharts = "interestRateCharts";
@@ -194,7 +201,8 @@ public class SavingsApiConstants {
             SAVINGS_PRODUCT_ACCOUNTING_PARAMS.INCOME_FROM_INTEREST.getValue(), allowOverdraftParamName, overdraftLimitParamName,
             nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName,
             minRequiredBalanceParamName, enforceMinRequiredBalanceParamName, minBalanceForInterestCalculationParamName, 
-            interestRateCharts, withHoldTaxParamName, taxGroupIdParamName));
+            interestRateCharts, withHoldTaxParamName, taxGroupIdParamName, 
+            SAVINGS_PRODUCT_ACCOUNTING_PARAMS.ESCHEAT_LIABILITY.getValue()));
 
     public static final Set<String> SAVINGS_PRODUCTS_INTEREST_RATE_CREATE_CHARTS_REQUEST_DATA = new HashSet<>(Arrays.asList(localeParamName,
             dateFormatParamName, nameParamName, descriptionParamName, fromDateParamName, endDateParamName, applyToExistingSavingsAccountParamName,
@@ -219,7 +227,8 @@ public class SavingsApiConstants {
             "interestCompoundingPeriodTypeOptions", "interestPostingPeriodTypeOptions", "interestCalculationTypeOptions",
             "interestCalculationDaysInYearTypeOptions", "lockinPeriodFrequencyTypeOptions", "withdrawalFeeTypeOptions",
             nominalAnnualInterestRateOverdraftParamName, minOverdraftForInterestCalculationParamName, productGroupIdParamName, 
-            interestRateCharts, withHoldTaxParamName, taxGroupIdParamName));
+            interestRateCharts, withHoldTaxParamName, taxGroupIdParamName, isDormancyTrackingActiveParamName, daysToInactiveParamName, daysToDormancyParamName, 
+            daysToInactiveParamName));
 
     public static final Set<String> SAVINGS_ACCOUNT_REQUEST_DATA_PARAMETERS = new HashSet<>(Arrays.asList(localeParamName,
             dateFormatParamName, monthDayFormatParamName, staffIdParamName, accountNoParamName, externalIdParamName, clientIdParamName,

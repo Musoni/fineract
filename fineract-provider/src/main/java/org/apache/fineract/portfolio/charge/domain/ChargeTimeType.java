@@ -37,7 +37,8 @@ public enum ChargeTimeType {
     OVERDUE_ON_MATURITY(15, "chargeTimeType.overdueOnMaturity"), // only for loan
     SHAREACCOUNT_ACTIVATION(16, "chargeTimeType.activation"), // only for loan
     SHARE_PURCHASE(17, "chargeTimeType.sharespurchase"), 
-    SHARE_REDEEM(18, "chargeTimeType.sharesredeem");
+    SHARE_REDEEM(18, "chargeTimeType.sharesredeem"),
+    SAVINGS_NOACTIVITY_FEE(19, "chargeTimeType.savingsNoActivityFee");
 
     private final Integer value;
     private final String code;
@@ -76,7 +77,8 @@ public enum ChargeTimeType {
     public static Object[] validSavingsValues() {
         return new Integer[] { ChargeTimeType.SPECIFIED_DUE_DATE.getValue(), ChargeTimeType.SAVINGS_ACTIVATION.getValue(),
                 ChargeTimeType.SAVINGS_CLOSURE.getValue(), ChargeTimeType.WITHDRAWAL_FEE.getValue(), ChargeTimeType.ANNUAL_FEE.getValue(),
-                ChargeTimeType.MONTHLY_FEE.getValue(), ChargeTimeType.OVERDRAFT_FEE.getValue(), ChargeTimeType.WEEKLY_FEE.getValue() };
+                ChargeTimeType.MONTHLY_FEE.getValue(), ChargeTimeType.OVERDRAFT_FEE.getValue(), ChargeTimeType.WEEKLY_FEE.getValue(),
+                ChargeTimeType.SAVINGS_NOACTIVITY_FEE.getValue()};
     }
 
     public static Object[] validClientValues() {
@@ -145,6 +147,9 @@ public enum ChargeTimeType {
                 case 18:
                     chargeTimeType = SHARE_REDEEM;
                 break;
+                case 19:
+                	chargeTimeType = SAVINGS_NOACTIVITY_FEE;
+                break;
                 default:
                     chargeTimeType = INVALID;
                 break;
@@ -171,6 +176,10 @@ public enum ChargeTimeType {
 
     public boolean isWithdrawalFee() {
         return this.value.equals(ChargeTimeType.WITHDRAWAL_FEE.getValue());
+    }
+    
+    public boolean isSavingsNoActivityFee() {
+    	return this.value.equals(ChargeTimeType.SAVINGS_NOACTIVITY_FEE.getValue());
     }
 
     public boolean isAnnualFee() {
@@ -213,7 +222,7 @@ public enum ChargeTimeType {
 
     public boolean isAllowedSavingsChargeTime() {
         return isOnSpecifiedDueDate() || isSavingsActivation() || isSavingsClosure() || isWithdrawalFee() || isAnnualFee()
-                || isMonthlyFee() || isWeeklyFee() || isOverdraftFee();
+                || isMonthlyFee() || isWeeklyFee() || isOverdraftFee() || isSavingsNoActivityFee();
     }
 
     public boolean isOverdraftFee() {

@@ -38,10 +38,12 @@ public enum SavingsAccountTransactionType {
     INITIATE_TRANSFER(12, "savingsAccountTransactionType.initiateTransfer"), //
     APPROVE_TRANSFER(13, "savingsAccountTransactionType.approveTransfer"), //
     WITHDRAW_TRANSFER(14, "savingsAccountTransactionType.withdrawTransfer"), //
-    REJECT_TRANSFER(15, "savingsAccountTransactionType.rejectTransfer"), WRITTEN_OFF(16, "savingsAccountTransactionType.writtenoff"), //
+    REJECT_TRANSFER(15, "savingsAccountTransactionType.rejectTransfer"), 
+    WRITTEN_OFF(16, "savingsAccountTransactionType.writtenoff"), //
     OVERDRAFT_INTEREST(17, "savingsAccountTransactionType.overdraftInterest"),
     GUARANTOR_INTEREST_DEPOSIT(18,"savingsAccountTransactionType.guarantorInterestDeposit"), //
-	WITHHOLD_TAX(19, "savingsAccountTransactionType.withholdTax");
+	WITHHOLD_TAX(19, "savingsAccountTransactionType.withholdTax"),
+    ESCHEAT(20, "savingsAccountTransactionType.escheat");
 
     private final Integer value;
     private final String code;
@@ -112,6 +114,9 @@ public enum SavingsAccountTransactionType {
             break;
             case 19:
                 savingsAccountTransactionType = SavingsAccountTransactionType.WITHHOLD_TAX;
+            break;
+            case 20:
+            	savingsAccountTransactionType = SavingsAccountTransactionType.ESCHEAT;
             break;
         }
         return savingsAccountTransactionType;
@@ -188,10 +193,14 @@ public enum SavingsAccountTransactionType {
 
     public boolean isGuarantorInterestDeposit(){
         return this.value.equals(SavingsAccountTransactionType.GUARANTOR_INTEREST_DEPOSIT.getValue());
+	}
+    
+    public boolean isEscheat() {
+        return this.value.equals(SavingsAccountTransactionType.ESCHEAT.getValue());
     }
 
     public boolean isDebit() {
-        return isWithdrawal() || isWithdrawalFee() || isAnnualFee() || isPayCharge() || isIncomeFromInterest() || isWithHoldTax();
+        return isWithdrawal() || isWithdrawalFee() || isAnnualFee() || isPayCharge() || isIncomeFromInterest() || isWithHoldTax() || isEscheat();
     }
 
     public boolean isCredit() {

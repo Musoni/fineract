@@ -98,6 +98,10 @@ public class SavingsProductData {
     private final boolean withHoldTax;
     private final TaxGroupData taxGroup;
     private final Collection<TaxGroupData> taxGroupOptions;
+	private final Boolean isDormancyTrackingActive;
+	private final Long daysToInactive;
+	private final Long daysToDormancy;
+	private final Long daysToEscheat;
 
 
     public static SavingsProductData template(final CurrencyData currency, final EnumOptionData interestCompoundingPeriodType,
@@ -142,6 +146,10 @@ public class SavingsProductData {
         final Collection<ApplyProductChargeToExistingSavingsAccountData> applyProductChargeToExistingSavingsAccount= null;
         final boolean withHoldTax = false;
         final TaxGroupData taxGroup = null;
+        final Boolean isDormancyTrackingActive = false;
+        final Long daysToInactive = null;
+        final Long daysToDormancy = null;
+        final Long daysToEscheat = null;
 
         return new SavingsProductData(id, name, shortName, description, currency, nominalAnnualInterestRate, interestCompoundingPeriodType,
                 interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance,
@@ -153,7 +161,7 @@ public class SavingsProductData {
                 penaltyToIncomeAccountMappings, allowOverdraft, overdraftLimit, minRequiredBalance, enforceMinRequiredBalance,
                 minBalanceForInterestCalculation, nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation,
                 startDate, closeDate, status, productGroup,interestRateCharts,applyProductChargeToExistingSavingsAccount, 
-                withHoldTax, taxGroup, taxGroupOptions);
+                withHoldTax, taxGroup, taxGroupOptions, isDormancyTrackingActive, daysToInactive, daysToDormancy, daysToEscheat);
     }
 
     public static SavingsProductData withCharges(final SavingsProductData product, final Collection<ChargeData> charges) {
@@ -171,7 +179,8 @@ public class SavingsProductData {
                 product.minRequiredBalance, product.enforceMinRequiredBalance, product.minBalanceForInterestCalculation,
                 product.nominalAnnualInterestRateOverdraft, product.minOverdraftForInterestCalculation, product.startDate,
                 product.closeDate, product.status, product.productGroup,null,null, product.withHoldTax, product.taxGroup, 
-                product.taxGroupOptions);
+                product.taxGroupOptions, product.isDormancyTrackingActive, product.daysToInactive, 
+                product.daysToDormancy, product.daysToEscheat);
     }
 
     /**
@@ -203,7 +212,7 @@ public class SavingsProductData {
                 existingProduct.minBalanceForInterestCalculation, existingProduct.nominalAnnualInterestRateOverdraft,
                 existingProduct.minOverdraftForInterestCalculation, existingProduct.startDate, existingProduct.closeDate,
                 existingProduct.status, existingProduct.productGroup, null, null, existingProduct.withHoldTax, existingProduct.taxGroup, 
-                existingProduct.taxGroupOptions);
+                existingProduct.taxGroupOptions, existingProduct.isDormancyTrackingActive, existingProduct.daysToInactive, existingProduct.daysToDormancy, existingProduct.daysToEscheat);
     }
 
     public static SavingsProductData withAccountingDetails(final SavingsProductData existingProduct,
@@ -246,7 +255,8 @@ public class SavingsProductData {
                 existingProduct.minOverdraftForInterestCalculation, existingProduct.startDate, existingProduct.closeDate,
                 existingProduct.status, existingProduct.productGroup, interestRateCharts, 
                 applyProductChargeToExistingSavingsAccount, existingProduct.withHoldTax, existingProduct.taxGroup, 
-                existingProduct.taxGroupOptions);
+                existingProduct.taxGroupOptions, existingProduct.isDormancyTrackingActive, existingProduct.daysToInactive, 
+                existingProduct.daysToDormancy, existingProduct.daysToEscheat);
     }
 
     public static SavingsProductData instance(final Long id, final String name, final String shortName, final String description,
@@ -258,7 +268,8 @@ public class SavingsProductData {
             final BigDecimal minRequiredBalance, final boolean enforceMinRequiredBalance, final BigDecimal minBalanceForInterestCalculation,
             final BigDecimal nominalAnnualInterestRateOverdraft, final BigDecimal minOverdraftForInterestCalculation,
             final LocalDate startDate, final LocalDate closeDate, final String status, final CodeValueData productGroup, 
-            final boolean withHoldTax, final TaxGroupData taxGroup) {
+            final boolean withHoldTax, final TaxGroupData taxGroup, final Boolean isDormancyTrackingActive, 
+            final Long daysToInactive, final Long daysToDormancy, final Long daysToEscheat) {
 
         final Map<String, Object> accountingMappings = null;
         final Collection<PaymentTypeToGLAccountMapper> paymentChannelToFundSourceMappings = null;
@@ -293,7 +304,7 @@ public class SavingsProductData {
                 penaltyToIncomeAccountMappings, allowOverdraft, overdraftLimit, minRequiredBalance, enforceMinRequiredBalance,
                 minBalanceForInterestCalculation, nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation,
                 startDate, closeDate, status, productGroup,interestRateCharts,applyProductChargeToExistingSavingsAccount, 
-                withHoldTax, taxGroup, taxGroupOptions);
+                withHoldTax, taxGroup, taxGroupOptions, isDormancyTrackingActive, daysToInactive, daysToDormancy, daysToEscheat);
     }
 
     public static SavingsProductData lookup(final Long id, final String name) {
@@ -346,6 +357,10 @@ public class SavingsProductData {
         final Collection<InterestRateCharts> interestRateCharts = null;
         final Collection<ApplyProductChargeToExistingSavingsAccountData> applyProductChargeToExistingSavingsAccount = null;
         final Collection<TaxGroupData> taxGroupOptions = null;
+        final Boolean isDormancyTrackingActive = null;
+        final Long daysToInactive = null;
+        final Long daysToDormancy = null;
+        final Long daysToEscheat = null;
 
         return new SavingsProductData(id, name, shortName, description, currency, nominalAnnualInterestRate, interestCompoundingPeriodType,
                 interestPostingPeriodType, interestCalculationType, interestCalculationDaysInYearType, minRequiredOpeningBalance,
@@ -357,7 +372,7 @@ public class SavingsProductData {
                 penaltyToIncomeAccountMappings, allowOverdraft, overdraftLimit, minRequiredBalance, enforceMinRequiredBalance,
                 minBalanceForInterestCalculation, nominalAnnualInterestRateOverdraft, minOverdraftForInterestCalculation,
                 startDate, closeDate, status, productGroup,interestRateCharts,applyProductChargeToExistingSavingsAccount, 
-                withHoldTax, taxGroup, taxGroupOptions);
+                withHoldTax, taxGroup, taxGroupOptions, isDormancyTrackingActive, daysToInactive, daysToDormancy, daysToEscheat);
     }
     public static SavingsProductData withInterestRateCharts(final SavingsProductData product,final Collection<InterestRateCharts> interestRateCharts){
 
@@ -375,7 +390,8 @@ public class SavingsProductData {
                 product.minRequiredBalance, product.enforceMinRequiredBalance, product.minBalanceForInterestCalculation,
                 product.nominalAnnualInterestRateOverdraft, product.minOverdraftForInterestCalculation, product.startDate,
                 product.closeDate, product.status, product.productGroup,interestRateCharts, null, product.withHoldTax, 
-                product.taxGroup, product.taxGroupOptions);
+                product.taxGroup, product.taxGroupOptions, product.isDormancyTrackingActive, product.daysToInactive, 
+                product.daysToDormancy, product.daysToEscheat);
     }
     public static SavingsProductData withProductChargeToExistingAccounts(final SavingsProductData product,final Collection<ApplyProductChargeToExistingSavingsAccountData> applyProductChargeToExistingSavingsAccount){
 
@@ -394,7 +410,8 @@ public class SavingsProductData {
                 product.nominalAnnualInterestRateOverdraft, product.minOverdraftForInterestCalculation, product.startDate,
                 product.closeDate, product.status, product.productGroup,product.interestRateCharts, 
                 applyProductChargeToExistingSavingsAccount, product.withHoldTax, 
-                product.taxGroup, product.taxGroupOptions);
+                product.taxGroup, product.taxGroupOptions, product.isDormancyTrackingActive, product.daysToInactive, 
+                product.daysToDormancy, product.daysToEscheat);
     }
 
 
@@ -422,7 +439,9 @@ public class SavingsProductData {
             final LocalDate startDate, final LocalDate closeDate, final String status, final CodeValueData productGroup,
             final Collection<InterestRateCharts> interestRateCharts, 
             final Collection<ApplyProductChargeToExistingSavingsAccountData> productChargeToExistingSavingsAccounts, 
-            final boolean withHoldTax, final TaxGroupData taxGroup, final Collection<TaxGroupData> taxGroupOptions) {
+            final boolean withHoldTax, final TaxGroupData taxGroup, final Collection<TaxGroupData> taxGroupOptions, 
+            final Boolean isDormancyTrackingActive, final Long daysToInactive, 
+            final Long daysToDormancy, final Long daysToEscheat) {
         this.id = id;
         this.name = name;
         this.shortName = shortName;
@@ -482,6 +501,10 @@ public class SavingsProductData {
         this.taxGroup = taxGroup;
         this.withHoldTax = withHoldTax;
         this.taxGroupOptions = taxGroupOptions;
+        this.isDormancyTrackingActive = isDormancyTrackingActive;
+        this.daysToInactive = daysToInactive;
+        this.daysToDormancy = daysToDormancy;
+        this.daysToEscheat = daysToEscheat;
     }
 
     public boolean hasAccountingEnabled() {
