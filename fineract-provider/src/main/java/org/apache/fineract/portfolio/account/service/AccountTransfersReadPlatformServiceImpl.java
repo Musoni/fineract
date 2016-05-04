@@ -26,7 +26,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -46,6 +45,9 @@ import org.apache.fineract.portfolio.account.exception.AccountTransferNotFoundEx
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,6 +68,8 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 
     // pagination
     private final PaginationHelper<AccountTransferData> paginationHelper = new PaginationHelper<>();
+    private final DateTimeFormatter formatter = DateTimeFormat
+    		.forPattern("yyyy-MM-dd");
 
     @Autowired
     public AccountTransfersReadPlatformServiceImpl(final RoutingDataSource dataSource,
@@ -567,4 +571,22 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
                 toOfficeOptions, toClientOptions, toAccountTypeOptions, toAccountOptions);
     }
 
+    @Override
+	public BigDecimal getTotalTransactionAmount(Long accountId,
+			Integer accountType, LocalDate transactionDate) {
+		StringBuilder sqlBuilder = new StringBuilder(
+				" select sum(trans.amount) as totalTransactionAmount ");
+		sqlBuilder.append(" from m_account_transfer_details as det ");
+		sqlBuilder
+				.append(" inner join m_account_transfer_transaction as trans ");
+		sqlBuilder.append(" on det.id = trans.account_transfer_details_id ");
+		sqlBuilder.append(" where trans.is_reversed = 0 ");
+		sqlBuilder.append(" and trans.transaction_date = ? ");
+		sqlBuilder
+				.append(" and IF(1=?, det.from_loan_account_id = ?, det.from_savings_account_id = ?) ");
+
+		return this.jdbcTemplate.queryForObject(sqlBuilder.toString(),
+				new Object[] { this.formatter.print(transactionDate),
+						accountType, accountId, accountId }, BigDecimal.class);
+    }
 }

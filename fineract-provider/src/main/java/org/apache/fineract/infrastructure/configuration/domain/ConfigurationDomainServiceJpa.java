@@ -314,4 +314,18 @@ public class ConfigurationDomainServiceJpa implements ConfigurationDomainService
         final GlobalConfigurationProperty property = this.globalConfigurationRepository.findOneByNameWithNotFoundDetection(propertyName);
         return property.isEnabled();
     }
+
+	@Override
+	public boolean isDailyTPTLimitEnabled() {
+        final String propertyName = "daily-tpt-limit";
+        final GlobalConfigurationProperty property = this.globalConfigurationRepository.findOneByNameWithNotFoundDetection(propertyName);
+        return property.isEnabled();
+	}
+
+	@Override
+	public Long getDailyTPTLimit() {
+        final String propertyName = "daily-tpt-limit";
+        final GlobalConfigurationProperty property = this.globalConfigurationRepository.findOneByNameWithNotFoundDetection(propertyName);
+        return property.getValue();
+	}
 }
