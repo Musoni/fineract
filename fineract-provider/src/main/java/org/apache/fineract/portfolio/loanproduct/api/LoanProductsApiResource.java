@@ -310,6 +310,10 @@ public class LoanProductsApiResource {
         final List<EnumOptionData> rescheduleStrategyTypeOptions = dropdownReadPlatformService.retrieveRescheduleStrategyTypeOptions();
         final List<EnumOptionData> interestRecalculationFrequencyTypeOptions = dropdownReadPlatformService
                 .retrieveInterestRecalculationFrequencyTypeOptions();
+        final List<EnumOptionData> interestRecalculationNthDayTypeOptions = dropdownReadPlatformService
+                .retrieveInterestRecalculationNthDayTypeOptions();
+        final List<EnumOptionData> interestRecalculationDayOfWeekTypeOptions = dropdownReadPlatformService
+                .retrieveInterestRecalculationDayOfWeekTypeOptions();
         final List<EnumOptionData> preCloseInterestCalculationStrategyOptions = dropdownReadPlatformService
                 .retrivePreCloseInterestCalculationStrategyOptions();
         final List<FloatingRateData> floatingRateOptions = this.floatingRateReadPlatformService.retrieveLookupActive();
@@ -320,7 +324,8 @@ public class LoanProductsApiResource {
                 interestRateFrequencyTypeOptions, fundOptions, transactionProcessingStrategyOptions, accountOptions,
                 accountingRuleTypeOptions, loanCycleValueConditionTypeOptions, daysInMonthTypeOptions, daysInYearTypeOptions,
                 interestRecalculationCompoundingTypeOptions, rescheduleStrategyTypeOptions, interestRecalculationFrequencyTypeOptions,
-                preCloseInterestCalculationStrategyOptions, floatingRateOptions, creditCheckOptions, false, productGroupOptions);
+                preCloseInterestCalculationStrategyOptions, floatingRateOptions, creditCheckOptions, false, productGroupOptions, 
+                interestRecalculationNthDayTypeOptions,  interestRecalculationDayOfWeekTypeOptions);
     }
 
 }

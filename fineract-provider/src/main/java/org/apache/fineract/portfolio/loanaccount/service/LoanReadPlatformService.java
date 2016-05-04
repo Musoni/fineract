@@ -139,4 +139,6 @@ public interface LoanReadPlatformService {
     Collection<LoanScheduleSuspendedAccruedIncomeData> retrieveLoanScheduleForNPASuspendedIncome(Long loanId);
 
     boolean doesLoanHaveSuspendedIncomeAndIsNpa(Long loanId);
+
+    Collection<Long> retrieveLoanIdsWithPendingIncomePostingTransactions();
 }

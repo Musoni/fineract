@@ -32,9 +32,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
@@ -81,6 +78,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.DefaultLoanLifecycleStat
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanAccountDomainService;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanInterestRecalcualtionAdditionalDetails;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanLifecycleStateMachine;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallmentRepository;
@@ -110,6 +108,9 @@ import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductMinimumRepaymentScheduleRelatedDetail;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -406,6 +407,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
                         loanCalendar, floatingRateDTO, loan.charges(), isSkipRepaymentOnFirstMonth, numberOfDays);
 
                 final Collection<LoanRescheduleModelRepaymentPeriod> periods = loanRescheduleModel.getPeriods();
+                
                 List<LoanRepaymentScheduleInstallment> currentRepaymentScheduleInstallments = loan.getRepaymentScheduleInstallments();
                 List<LoanRepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<>();
                 Collection<LoanRescheduleRepaymentPeriodChargeData> waiveLoanCharges = new ArrayList<>();
@@ -413,6 +415,8 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
                 for (LoanRepaymentScheduleInstallment installment : currentRepaymentScheduleInstallments) {
                 	repaymentScheduleInstallments.add(installment);
                 }
+
+                final List<LoanInterestRecalcualtionAdditionalDetails> compoundingDetails = null;
 
                 for (LoanRescheduleModelRepaymentPeriod period : periods) {
 
@@ -423,8 +427,8 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
                         		period.getPrincipalCharged());
                     	
                         LoanRepaymentScheduleInstallment repaymentScheduleInstallment = new LoanRepaymentScheduleInstallment(loan,
-                                period.getNumber(), period.getFromDate(), period.getDueDate(), principalCharged,
-                                interestCharged, BigDecimal.ZERO, BigDecimal.ZERO, false);
+                        		period.getNumber(), period.getFromDate(), period.getDueDate(), principalCharged,
+                                interestCharged, BigDecimal.ZERO, BigDecimal.ZERO, false, compoundingDetails);
 
                         repaymentScheduleInstallments.add(repaymentScheduleInstallment);
                     }

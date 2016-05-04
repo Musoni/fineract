@@ -31,4 +31,5 @@ public interface LoanAccrualWritePlatformService {
 
     void reverseInterestAccruedOnNPALoans();
 
+    void addIncomeAndAccrualTransactions(Long loanId) throws Exception;
 }

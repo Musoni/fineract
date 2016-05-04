@@ -401,6 +401,17 @@ public class LoansApiResource {
             loanBasicDetails = LoanAccountData.withInterestRecalculationCalendarData(loanBasicDetails, calendarData,
                     compoundingCalendarData);
         }
+        if (loanBasicDetails.isMonthlyRepaymentFrequencyType()) {
+        	Collection<CalendarData> loanCalendarDatas = this.calendarReadPlatformService
+                    .retrieveCalendarsByEntity(loanId,
+                            CalendarEntityType.LOANS.getValue(), null);
+            CalendarData calendarData = null;
+            if (!CollectionUtils.isEmpty(loanCalendarDatas)) {
+                calendarData = loanCalendarDatas.iterator().next();
+            }
+            if(calendarData != null)
+            	loanBasicDetails = LoanAccountData.withLoanCalendarData(loanBasicDetails, calendarData);
+        }
 
         Collection<InterestRatePeriodData> interestRatesPeriods = this.loanReadPlatformService.retrieveLoanInterestRatePeriodData(loanId);
 
@@ -532,6 +543,8 @@ public class LoansApiResource {
         LoanProductData product = null;
         Collection<EnumOptionData> loanTermFrequencyTypeOptions = null;
         Collection<EnumOptionData> repaymentFrequencyTypeOptions = null;
+        Collection<EnumOptionData> repaymentFrequencyNthDayTypeOptions = null;
+        Collection<EnumOptionData> repaymentFrequencyDayOfWeekTypeOptions = null;
         Collection<TransactionProcessingStrategyData> repaymentStrategyOptions = null;
         Collection<EnumOptionData> interestRateFrequencyTypeOptions = null;
         Collection<EnumOptionData> amortizationTypeOptions = null;
@@ -554,6 +567,8 @@ public class LoansApiResource {
             loanBasicDetails.setProduct(product);
             loanTermFrequencyTypeOptions = this.dropdownReadPlatformService.retrieveLoanTermFrequencyTypeOptions();
             repaymentFrequencyTypeOptions = this.dropdownReadPlatformService.retrieveRepaymentFrequencyTypeOptions();
+            repaymentFrequencyNthDayTypeOptions = this.dropdownReadPlatformService.retrieveRepaymentFrequencyOptionsForNthDayOfMonth();
+            repaymentFrequencyDayOfWeekTypeOptions = this.dropdownReadPlatformService.retrieveRepaymentFrequencyOptionsForDaysOfWeek();
             interestRateFrequencyTypeOptions = this.dropdownReadPlatformService.retrieveInterestRateFrequencyTypeOptions();
 
             amortizationTypeOptions = this.dropdownReadPlatformService.retrieveLoanAmortizationTypeOptions();
@@ -607,7 +622,7 @@ public class LoansApiResource {
 
         final LoanAccountData loanAccount = LoanAccountData.associationsAndTemplate(loanBasicDetails, repaymentSchedule, loanRepayments,
                 charges, collateral, guarantors, meeting, productOptions, loanTermFrequencyTypeOptions, repaymentFrequencyTypeOptions,
-                null, null, repaymentStrategyOptions, interestRateFrequencyTypeOptions, amortizationTypeOptions, interestTypeOptions,
+                repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions, repaymentStrategyOptions, interestRateFrequencyTypeOptions, amortizationTypeOptions, interestTypeOptions,
                 interestCalculationPeriodTypeOptions, fundOptions, chargeOptions, chargeTemplate, allowedLoanOfficers, loanPurposeOptions,
                 loanCollateralOptions, calendarOptions, notes, accountLinkingOptions, linkedAccount, disbursementData, emiAmountVariations,
                 overdueCharges, paidInAdvanceTemplate, interestRatesPeriods, loanCreditCheckDataList, groupLoanMembersAllocationList);

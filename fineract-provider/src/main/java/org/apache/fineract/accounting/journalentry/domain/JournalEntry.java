@@ -178,6 +178,9 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
         return this.amount;
     }
 
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
     public void setReversalJournalEntry(final JournalEntry reversalJournalEntry) {
         this.reversalJournalEntry = reversalJournalEntry;
     }

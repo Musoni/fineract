@@ -29,25 +29,28 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
-import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
+import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
 import org.apache.fineract.portfolio.loanaccount.data.LoanChargeData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanInstallmentChargeData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleAccrualData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionEnumData;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
+import org.apache.fineract.portfolio.loanaccount.exception.LoanNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
 import org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations;
+import org.apache.fineract.useradministration.domain.AppUserRepositoryWrapper;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -62,17 +65,23 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
     private final DataSource dataSource;
     private final JournalEntryWritePlatformService journalEntryWritePlatformService;
     private LoanAssembler loanAssembler;
-    private ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
+    private final AppUserRepositoryWrapper userRepository;
+    private final LoanRepository loanRepository;
+    private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
 
     @Autowired
     public LoanAccrualWritePlatformServiceImpl(final RoutingDataSource dataSource, final LoanReadPlatformService loanReadPlatformService,
             final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final LoanChargeReadPlatformService loanChargeReadPlatformService) {
+            final LoanChargeReadPlatformService loanChargeReadPlatformService, final AppUserRepositoryWrapper userRepository,
+            final LoanRepository loanRepository, final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository) {
         this.loanReadPlatformService = loanReadPlatformService;
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
         this.journalEntryWritePlatformService = journalEntryWritePlatformService;
         this.loanChargeReadPlatformService = loanChargeReadPlatformService;
+        this.userRepository = userRepository;
+        this.loanRepository = loanRepository;
+        this.applicationCurrencyRepository = applicationCurrencyRepository;
     }
 
     @Override
@@ -503,10 +512,23 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
             }
         }
     }
+    @Transactional
+    public void addIncomeAndAccrualTransactions(Long loanId) throws Exception {
+        if (loanId != null) {
+            Loan loan = this.loanRepository.findOne(loanId);
+            if (loan == null) { throw new LoanNotFoundException(loanId); }
+            final List<Long> existingTransactionIds = new ArrayList<>();
+            final List<Long> existingReversedTransactionIds = new ArrayList<>();
+            existingTransactionIds.addAll(loan.findExistingTransactionIds());
+            existingReversedTransactionIds.addAll(loan.findExistingReversedTransactionIds());
+            loan.processIncomeTransactions(this.userRepository.fetchSystemUser());
+            this.loanRepository.saveAndFlush(loan);
+            postJournalEntries(loan, existingTransactionIds, existingReversedTransactionIds);
+        }
+    }
 
     private void postJournalEntries(final Loan loan, final List<Long> existingTransactionIds,
-                                    final List<Long> existingReversedTransactionIds) {
-
+              final List<Long> existingReversedTransactionIds) {
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
         boolean isAccountTransfer = false;

@@ -25,14 +25,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
 import org.apache.fineract.portfolio.loanproduct.domain.AmortizationMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 /**
  * <p>
@@ -72,7 +70,6 @@ public class DecliningBalanceInterestLoanScheduleGenerator extends AbstractLoanS
 
         LocalDate interestStartDate = periodStartDate;
         Money interestForThisInstallment = totalCumulativePrincipal.zero();
-        Money compoundedMoney = totalCumulativePrincipal.zero();
         Money compoundedInterest = totalCumulativePrincipal.zero();
         Money balanceForInterestCalculation = outstandingBalance;
         Money cumulatingInterestDueToGrace = cumulatingInterestPaymentDueToGrace;
@@ -91,13 +88,6 @@ public class DecliningBalanceInterestLoanScheduleGenerator extends AbstractLoanS
             }
         }
         if (principalVariation != null) {
-            // identifies rest date after current date for reducing all
-            // compounding
-            // values
-            LocalDate compoundingEndDate = principalVariation.ceilingKey(DateUtils.getLocalDateOfTenant());
-            if (compoundingEndDate == null) {
-                compoundingEndDate = DateUtils.getLocalDateOfTenant();
-            }
 
             for (Map.Entry<LocalDate, Money> principal : principalVariation.entrySet()) {
 
@@ -122,7 +112,7 @@ public class DecliningBalanceInterestLoanScheduleGenerator extends AbstractLoanS
                         }
                         // fee compounding will be done after calculation
                         compoundFee = compoundingMap.get(principal.getKey());
-                        compoundedMoney = compoundedMoney.plus(interestToBeCompounded).plus(compoundFee);
+                        compoundingMap.put(principal.getKey(), interestToBeCompounded.plus(compoundFee));
                     }
                     balanceForInterestCalculation = balanceForInterestCalculation.plus(principal.getValue()).plus(compoundFee);
                     if (interestRates.containsKey(principal.getKey())) {
@@ -130,14 +120,6 @@ public class DecliningBalanceInterestLoanScheduleGenerator extends AbstractLoanS
                     }
                 }
 
-            }
-            if (!periodEndDate.isBefore(compoundingEndDate)) {
-                balanceForInterestCalculation = balanceForInterestCalculation.minus(compoundedMoney);
-                compoundingMap.clear();
-            } else if (compoundedMoney.isGreaterThanZero()) {
-                compoundingMap.put(periodEndDate, compoundedMoney);
-                compoundingMap.put(compoundingEndDate, compoundedMoney.negated());
-                clearMapDetails(periodEndDate, compoundingMap);
             }
         }
 
