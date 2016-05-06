@@ -3411,6 +3411,7 @@ public class Loan extends AbstractPersistable<Long> {
                 this.loanTransactions.add(finalAccrual);
             }
         }
+        updateLoanOutstandingBalaces();
     }
 
     private void determineCumulativeIncomeFromInstallments(HashMap<String, BigDecimal> cumulativeIncomeFromInstallments) {
