@@ -1840,7 +1840,7 @@ public class Loan extends AbstractPersistable<Long> {
     public void updateDisbursementDetails(final JsonCommand jsonCommand, final Map<String, Object> actualChanges) {
 
         List<Long> disbursementList = fetchDisbursementIds();
-        List<Long> loanChargeIds = fetchLoanChargeIds();
+        List<Long> loanChargeIds = fetchLoanTrancheChargeIds();
         int chargeIdLength = loanChargeIds.size();
         String chargeIds = null;
         // From modify application page, if user removes all charges, we should
@@ -1964,10 +1964,12 @@ public class Loan extends AbstractPersistable<Long> {
         }
     }
 
-    private List<Long> fetchLoanChargeIds() {
+    private List<Long> fetchLoanTrancheChargeIds() {
         List<Long> list = new ArrayList<>();
         for (LoanCharge charge : this.charges) {
-            list.add(charge.getId());
+            if (charge.isTrancheDisbursementCharge() && charge.isActive()) {
+                list.add(charge.getId());
+            }
         }
         return list;
     }
