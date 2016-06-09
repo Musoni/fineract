@@ -152,6 +152,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTrancheDisbursementC
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionRepository;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
+import org.apache.fineract.portfolio.loanaccount.exception.DateMismatchException;
 import org.apache.fineract.portfolio.loanaccount.exception.ExceedingTrancheCountException;
 import org.apache.fineract.portfolio.loanaccount.exception.GuarantorInterestAllocationException;
 import org.apache.fineract.portfolio.loanaccount.exception.InvalidPaidInAdvanceAmountException;
@@ -346,7 +347,17 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.loanEventApiJsonValidator.validateDisbursement(command.json(), isAccountTransfer);
 
         final Loan loan = this.loanAssembler.assembleFrom(loanId);
+
         final Long productId = loan.getLoanProduct().getId();
+
+        
+        final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
+        
+        // validate ActualDisbursement Date Against Expected Disbursement Date
+        LoanProduct loanProduct = loan.loanProduct();
+        if(loanProduct.syncExpectedWithDisbursementDate()){
+        	syncExpectedDateWithActualDisbursementDate(loan, actualDisbursementDate);
+        }
 
         checkClientOrGroupActive(loan);
 
@@ -357,10 +368,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         // check for product mix validations
         checkForProductMixRestrictions(loan);
-        
-        // Recalculate first repayment date based in actual disbursement date.
-        final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
-        
+
         LocalDate recalculateFrom = null;
         ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
 
@@ -385,8 +393,10 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final PaymentDetail paymentDetail = this.paymentDetailWritePlatformService.createAndPersistPaymentDetail(command, changes);
 
-        final Boolean isPaymentTypeApplicableForDisbursementCharge = configurationDomainService.isPaymentTypeApplicableforDisbursementCharge();
-        
+        final Boolean isPaymentTypeApplicableForDisbursementCharge = configurationDomainService
+                .isPaymentTypeApplicableforDisbursementCharge();
+
+        // Recalculate first repayment date based in actual disbursement date.
         updateLoanCounters(loan, actualDisbursementDate);
         Money amountBeforeAdjust = loan.getPrincpal();
         loan.validateAccountStatus(LoanEvent.LOAN_DISBURSED);
@@ -651,6 +661,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             final SingleDisbursalCommand singleLoanDisbursalCommand = disbursalCommand[i];
 
             final Loan loan = this.loanAssembler.assembleFrom(singleLoanDisbursalCommand.getLoanId());
+            final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
+            
+            // validate ActualDisbursement Date Against Expected Disbursement Date
+            LoanProduct loanProduct = loan.loanProduct();
+            if(loanProduct.syncExpectedWithDisbursementDate()){
+            	syncExpectedDateWithActualDisbursementDate(loan, actualDisbursementDate);
+            }
             checkClientOrGroupActive(loan);
             this.businessEventNotifierService.notifyBusinessEventToBeExecuted(BUSINESS_EVENTS.LOAN_DISBURSAL,
                     constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
@@ -666,7 +683,6 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             // disbursement date and next available meeting dates
             // assuming repayment schedule won't regenerate because expected
             // disbursement and actual disbursement happens on same date
-            final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
             loan.validateAccountStatus(LoanEvent.LOAN_DISBURSED);
             updateLoanCounters(loan, actualDisbursementDate);
             boolean canDisburse = loan.canDisburse(actualDisbursementDate);
@@ -3243,4 +3259,12 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         return new CommandProcessingResultBuilder().withLoanId(loanId).build();
 
     }
+    
+    private void syncExpectedDateWithActualDisbursementDate(final Loan loan, LocalDate actualDisbursementDate){
+	   	if(!loan.getExpectedDisbursedOnLocalDate().equals(actualDisbursementDate)){
+	   		throw new DateMismatchException(actualDisbursementDate, 
+	   				loan.getExpectedDisbursedOnLocalDate());
+	   	}
+	   	
+	   }
 }
