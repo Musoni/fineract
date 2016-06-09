@@ -6338,8 +6338,13 @@ public class Loan extends AbstractPersistable<Long> {
         }
         return amount;
     }
+
     
     public void updateWriteOffReason(CodeValue writeOffReason) {
         this.writeOffReason = writeOffReason;
     }
+
+	public Group getGroup() {
+		return group;
+	}
 }

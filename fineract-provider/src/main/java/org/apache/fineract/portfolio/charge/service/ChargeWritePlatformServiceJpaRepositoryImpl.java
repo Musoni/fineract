@@ -113,8 +113,8 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
             // check if the office specific products are enabled. If yes, then
             // save this savings product against a specific office
             // i.e. this savings product is specific for this office.
-            FineractEntityAccessUtil.checkConfigurationAndAddProductResrictionsForUserOffice(FineractEntityAccessType.OFFICE_ACCESS_TO_CHARGES,
-                    FineractEntityType.CHARGE, charge.getId());
+            FineractEntityAccessUtil.checkConfigurationAndAddProductResrictionsForUserOffice(
+                    FineractEntityAccessType.OFFICE_ACCESS_TO_CHARGES, charge.getId());
 
             return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(charge.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
