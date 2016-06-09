@@ -40,6 +40,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -403,6 +404,9 @@ public class Loan extends AbstractPersistable<Long> {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true)
     private Set<GroupLoanMemberAllocation> groupLoanMemberAllocations = new HashSet<>();
+    
+    @JoinColumn(name = "writeoff_reason_cv_id", nullable = true)
+    private CodeValue writeOffReason;
 
     public static Loan newIndividualLoanApplication(final String accountNo, final Client client, final Integer loanType,
             final LoanProduct loanProduct, final Fund fund, final Staff officer, final CodeValue loanPurpose,
@@ -6333,5 +6337,9 @@ public class Loan extends AbstractPersistable<Long> {
             amount = getPrincpal().getAmount();
         }
         return amount;
+    }
+    
+    public void updateWriteOffReason(CodeValue writeOffReason) {
+        this.writeOffReason = writeOffReason;
     }
 }

@@ -21,11 +21,12 @@ package org.apache.fineract.portfolio.loanaccount.data;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
+import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.account.data.AccountTransferData;
 import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing a loan transaction.
@@ -64,6 +65,8 @@ public class LoanTransactionData {
 
     // templates
     final Collection<PaymentTypeData> paymentTypeOptions;
+    
+    private  Collection<CodeValueData> writeOffReasonOptions = null;
 
     public static LoanTransactionData templateOnTop(final LoanTransactionData loanTransactionData,
             final Collection<PaymentTypeData> paymentTypeOptions) {
@@ -238,5 +241,9 @@ public class LoanTransactionData {
      */
     public boolean isReversed() {
         return this.isReversed;
+    }
+    
+    public void setWriteOffReasonOptions(Collection<CodeValueData> writeOffReasonOptions){
+    	this.writeOffReasonOptions = writeOffReasonOptions;
     }
 }
