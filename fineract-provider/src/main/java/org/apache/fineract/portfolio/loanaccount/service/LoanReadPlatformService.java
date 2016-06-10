@@ -141,4 +141,6 @@ public interface LoanReadPlatformService {
     boolean doesLoanHaveSuspendedIncomeAndIsNpa(Long loanId);
 
     Collection<Long> retrieveLoanIdsWithPendingIncomePostingTransactions();
+
+    LoanTransactionData retrieveLoanForeclosureTemplate(final Long loanId, final LocalDate transactionDate);
 }

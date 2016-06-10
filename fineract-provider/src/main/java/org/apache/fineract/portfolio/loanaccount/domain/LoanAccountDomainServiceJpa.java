@@ -19,11 +19,17 @@
 package org.apache.fineract.portfolio.loanaccount.domain;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -61,12 +67,14 @@ import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleAccrualData;
 import org.apache.fineract.portfolio.loanaccount.data.ScheduleGeneratorDTO;
 import org.apache.fineract.portfolio.loanaccount.service.LoanAccrualPlatformService;
 import org.apache.fineract.portfolio.loanaccount.service.LoanAssembler;
-import org.apache.fineract.portfolio.loanaccount.service.LoanUtilService;
 import org.apache.fineract.portfolio.loanaccount.service.LoanSuspendAccruedIncomeWritePlatformService;
+import org.apache.fineract.portfolio.loanaccount.service.LoanUtilService;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -605,6 +613,114 @@ public class LoanAccountDomainServiceJpa implements LoanAccountDomainService {
                 .withGroupId(loan.getGroupId()); //
 
         return newRefundTransaction;
+    }
+
+    @Override
+    public Map<String, Object> foreCloseLoan(final Loan loan, final LocalDate foreClosureDate, final String noteText) {
+        MonetaryCurrency currency = loan.getCurrency();
+        LocalDateTime createdDate = DateUtils.getLocalDateTimeOfTenant();
+        final Map<String, Object> changes = new LinkedHashMap<>();
+        List<LoanTransaction> newTransactions = new ArrayList<>();
+
+        final List<Long> existingTransactionIds = new ArrayList<>();
+        final List<Long> existingReversedTransactionIds = new ArrayList<>();
+        existingTransactionIds.addAll(loan.findExistingTransactionIds());
+        existingReversedTransactionIds.addAll(loan.findExistingReversedTransactionIds());
+        final LoanRepaymentScheduleInstallment foreCloseDetail = loan.fetchLoanForeclosureDetail(foreClosureDate);
+        if (loan.isPeriodicAccrualAccountingEnabledOnLoanProduct()
+                && (loan.getAccruedTill() == null || !foreClosureDate.isEqual(loan.getAccruedTill()))) {
+            Money[] accruedReceivables = loan.getReceivableIncome(foreClosureDate);
+            Money interestPortion = foreCloseDetail.getInterestCharged(currency).minus(accruedReceivables[0]);
+            Money feePortion = foreCloseDetail.getFeeChargesCharged(currency).minus(accruedReceivables[1]);
+            Money penaltyPortion = foreCloseDetail.getPenaltyChargesCharged(currency).minus(accruedReceivables[2]);
+            Money total = interestPortion.plus(feePortion).plus(penaltyPortion);
+            if (total.isGreaterThanZero()) {
+                LoanTransaction accrualTransaction = LoanTransaction.accrual(loan, loan.getOffice(), total, interestPortion, feePortion,
+                        penaltyPortion, foreClosureDate);
+                LocalDate fromDate = loan.getDisbursementDate();
+                if (loan.getAccruedTill() != null) {
+                    fromDate = loan.getAccruedTill();
+                }
+                LoanRepaymentScheduleInstallment installment = fetchLoanRepaymentScheduleInstallment(fromDate, loan);
+                installment.updateAccrualPortion(interestPortion, feePortion, penaltyPortion);
+                accrualTransaction.updateCreatedDate(createdDate.toDate());
+                createdDate = createdDate.plusSeconds(1);
+                newTransactions.add(accrualTransaction);
+                Set<LoanChargePaidBy> accrualCharges = accrualTransaction.getLoanChargesPaid();
+                for (LoanCharge loanCharge : loan.charges()) {
+                    if (loanCharge.isActive()
+                            && !loanCharge.isPaid()
+                            && (loanCharge.isDueForCollectionFromAndUpToAndIncluding(fromDate, foreClosureDate) || loanCharge
+                                    .isInstalmentFee())) {
+                        final LoanChargePaidBy loanChargePaidBy = new LoanChargePaidBy(accrualTransaction, loanCharge, loanCharge
+                                .getAmountOutstanding(currency).getAmount(), null);
+                        accrualCharges.add(loanChargePaidBy);
+                    }
+                }
+            }
+        }
+
+        Money interestPayable = foreCloseDetail.getInterestCharged(currency);
+
+        Money feePayable = foreCloseDetail.getFeeChargesCharged(currency);
+        Money penaltyPayable = foreCloseDetail.getPenaltyChargesCharged(currency);
+
+        Money payPrincipal = foreCloseDetail.getPrincipal(currency);
+
+        LoanTransaction payment = null;
+        if (payPrincipal.plus(interestPayable).plus(feePayable).plus(penaltyPayable).isGreaterThanZero()) {
+            AppUser appUser = null;
+            final PaymentDetail paymentDetail = null;
+            String externalId = null;
+            final LocalDateTime currentDateTime = DateUtils.getLocalDateTimeOfTenant();
+            payment = LoanTransaction.repayment(loan.getOffice(), payPrincipal.plus(interestPayable).plus(feePayable).plus(penaltyPayable),
+                    paymentDetail, foreClosureDate, externalId, currentDateTime, appUser);
+            createdDate = createdDate.plusSeconds(1);
+            payment.updateCreatedDate(createdDate.toDate());
+            payment.updateComponents(payPrincipal, interestPayable, feePayable, penaltyPayable);
+            payment.updateLoan(loan);
+            newTransactions.add(payment);
+        }
+        List<Long> transactionIds = new ArrayList<>();
+        loan.handleForeClosureTransactions(newTransactions, foreClosureDate, defaultLoanLifecycleStateMachine());
+        for (LoanTransaction newTransaction : newTransactions) {
+            saveLoanTransactionWithDataIntegrityViolationChecks(newTransaction);
+            transactionIds.add(newTransaction.getId());
+        }
+        changes.put("transactions", transactionIds);
+        changes.put("eventAmount", payPrincipal.getAmount().negate());
+
+        /***
+         * TODO Vishwas Batch save is giving me a
+         * HibernateOptimisticLockingFailureException, looping and saving for
+         * the time being, not a major issue for now as this loop is entered
+         * only in edge cases (when a payment is made before the latest payment
+         * recorded against the loan)
+         ***/
+
+        saveAndFlushLoanWithDataIntegrityViolationChecks(loan);
+
+        if (StringUtils.isNotBlank(noteText)) {
+            changes.put("note", noteText);
+            final Note note = Note.loanNote(loan, noteText);
+            this.noteRepository.save(note);
+        }
+
+        postJournalEntries(loan, existingTransactionIds, existingReversedTransactionIds, false);
+
+        return changes;
+
+    }
+
+    private LoanRepaymentScheduleInstallment fetchLoanRepaymentScheduleInstallment(LocalDate fromDate, final Loan loan) {
+        LoanRepaymentScheduleInstallment installment = null;
+        for (LoanRepaymentScheduleInstallment loanRepaymentScheduleInstallment : loan.getRepaymentScheduleInstallments()) {
+            if (fromDate.equals(loanRepaymentScheduleInstallment.getFromDate())) {
+                installment = loanRepaymentScheduleInstallment;
+                break;
+            }
+        }
+        return installment;
     }
 
     private Map<BUSINESS_ENTITY, Object> constructEntityMap(final BUSINESS_ENTITY entityEvent, Object entity) {

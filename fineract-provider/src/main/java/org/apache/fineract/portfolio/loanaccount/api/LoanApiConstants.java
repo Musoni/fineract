@@ -134,4 +134,7 @@ public interface LoanApiConstants {
             IS_ACTIVE_PARAM_NAME, CREDIT_CHECK_DATA_OPTIONS_PARAM_NAME, TIMELINE_PARAM_NAME));
     
     public static final String groupMemberAllocationParamName = "groupMemberAllocation";
+    // fore closure constants
+    public static final String transactionDateParamName = "transactionDate";
+    public static final String noteParamName = "note";
 }

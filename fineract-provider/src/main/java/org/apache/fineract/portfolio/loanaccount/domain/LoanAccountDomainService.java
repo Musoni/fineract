@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.loanaccount.domain;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -56,7 +57,10 @@ public interface LoanAccountDomainService {
 
     void saveLoanWithDataIntegrityViolationChecks(Loan loan);
 
+
     void disableStandingInstructionsLinkedToClosedLoan(Loan loan);
     
     void disableStandingInstructions(Loan loan);
+
+    Map<String, Object> foreCloseLoan(final Loan loan, final LocalDate foreClourseDate, String noteText);
 }

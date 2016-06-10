@@ -114,5 +114,6 @@ public interface LoanWritePlatformService {
 	LoanCharge addLoanCharge(Loan loan, Charge charge, JsonCommand command, LoanCharge loanCharge);
 
     CommandProcessingResult splitInterestAmongGuarantors(Long loanId);
+    CommandProcessingResult forecloseLoan(final Long loanId, JsonCommand command);
 
 }
