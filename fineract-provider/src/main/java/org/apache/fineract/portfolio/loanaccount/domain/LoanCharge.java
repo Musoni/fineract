@@ -1105,4 +1105,8 @@ public class LoanCharge extends AbstractPersistable<Long> {
             this.dueDate = dueDate.toDate();
         }
     }
+    
+    public boolean isDueDateCharge() {
+        return this.dueDate != null;
+    }
 }
