@@ -1220,7 +1220,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
 
     private void saveAndFlushLoanWithDataIntegrityViolationChecks(final Loan loan) {
         try {
-            List<LoanRepaymentScheduleInstallment> installments = loan.fetchRepaymentScheduleInstallments();
+            List<LoanRepaymentScheduleInstallment> installments = loan.getRepaymentScheduleInstallments();
             for (LoanRepaymentScheduleInstallment installment : installments) {
                 if (installment.getId() == null) {
                     this.repaymentScheduleInstallmentRepository.save(installment);

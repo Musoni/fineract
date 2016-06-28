@@ -22,8 +22,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
@@ -58,8 +58,7 @@ import org.apache.fineract.organisation.provisioning.service.ProvisioningCriteri
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -68,8 +67,6 @@ import com.google.gson.JsonObject;
 
 @Service
 public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements ProvisioningEntriesWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl.class);
 
     private final ProvisioningEntriesReadPlatformService provisioningEntriesReadPlatformService;
     private final ProvisioningCriteriaReadPlatformService provisioningCriteriaReadPlatformService ;
@@ -192,7 +189,7 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
         AppUser currentUser = this.platformSecurityContext.authenticatedUser();
         AppUser lastModifiedBy = null;
         Date lastModifiedDate = null;
-        Collection<LoanProductProvisioningEntry> nullEntries = null;
+        Set<LoanProductProvisioningEntry> nullEntries = null;
         ProvisioningEntry requestedEntry = new ProvisioningEntry(currentUser, date, lastModifiedBy, lastModifiedDate, nullEntries);
         Collection<LoanProductProvisioningEntry> entries = generateLoanProvisioningEntry(requestedEntry, date);
         requestedEntry.setProvisioningEntries(entries);

@@ -42,9 +42,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
@@ -56,6 +53,7 @@ import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
 import org.apache.fineract.portfolio.charge.exception.LoanChargeWithoutMandatoryFieldException;
 import org.apache.fineract.portfolio.loanaccount.command.LoanChargeCommand;
 import org.apache.fineract.portfolio.loanaccount.data.LoanChargePaidDetail;
+import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -122,8 +120,7 @@ public class LoanCharge extends AbstractPersistable<Long> {
     @Column(name = "max_cap", scale = 6, precision = 19, nullable = true)
     private BigDecimal maxCap;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loancharge", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loancharge", orphanRemoval = true, fetch=FetchType.EAGER)
     private final Set<LoanInstallmentCharge> loanInstallmentCharge = new HashSet<>();
 
     @Column(name = "is_active", nullable = false)

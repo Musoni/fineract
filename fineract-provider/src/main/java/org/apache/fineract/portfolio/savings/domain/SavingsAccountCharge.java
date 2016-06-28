@@ -18,19 +18,18 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.joda.time.LocalDate;
-import org.joda.time.MonthDay;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.apache.fineract.organisation.monetary.domain.Money;
-import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
-import org.apache.fineract.portfolio.charge.domain.Charge;
-import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
-import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
-import org.apache.fineract.portfolio.charge.exception.SavingsAccountChargeWithoutMandatoryFieldException;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.amountParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dateFormatParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dueAsOfDateParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeIntervalParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeOnMonthDayParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.localeParamName;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,19 +38,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.amountParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dateFormatParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dueAsOfDateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeIntervalParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeOnMonthDayParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.localeParamName;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
+import org.apache.fineract.organisation.monetary.domain.Money;
+import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
+import org.apache.fineract.portfolio.charge.domain.Charge;
+import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
+import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
+import org.apache.fineract.portfolio.charge.exception.SavingsAccountChargeWithoutMandatoryFieldException;
+import org.joda.time.LocalDate;
+import org.joda.time.MonthDay;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
  * @author dv6
@@ -708,7 +708,7 @@ public class SavingsAccountCharge extends AbstractPersistable<Long> {
     public int hashCode() {
         return new HashCodeBuilder(3, 5) //
                 .append(getId()) //
-                .append(this.charge.getId()) //
+                //.append(this.charge.getId()) //
                 .append(this.amount).append(getDueLocalDate()) //
                 .toHashCode();
     }

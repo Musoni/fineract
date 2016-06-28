@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -69,8 +70,7 @@ public class AccountingRule extends AbstractPersistable<Long> {
     @Column(name = "system_defined", nullable = false)
     private Boolean systemDefined;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountingRule", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountingRule", orphanRemoval = true, fetch=FetchType.EAGER)
     private final List<AccountingTagRule> accountingTagRules = new ArrayList<>();
 
     @Column(name = "allow_multiple_credits", nullable = false)

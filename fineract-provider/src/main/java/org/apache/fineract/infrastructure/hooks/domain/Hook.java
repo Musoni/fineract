@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.hooks.domain;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -30,6 +31,7 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
+
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,12 +49,10 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hook", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hook", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<HookResource> events = new HashSet<>();
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hook", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hook", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<HookConfiguration> config = new HashSet<>();
 
     @ManyToOne(optional = true)

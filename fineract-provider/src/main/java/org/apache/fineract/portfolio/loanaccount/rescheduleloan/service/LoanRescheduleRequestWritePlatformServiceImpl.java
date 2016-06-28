@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -416,7 +417,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
                 	repaymentScheduleInstallments.add(installment);
                 }
 
-                final List<LoanInterestRecalcualtionAdditionalDetails> compoundingDetails = null;
+                final Set<LoanInterestRecalcualtionAdditionalDetails> compoundingDetails = null;
 
                 for (LoanRescheduleModelRepaymentPeriod period : periods) {
 
@@ -430,6 +431,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
                         		period.getNumber(), period.getFromDate(), period.getDueDate(), principalCharged,
                                 interestCharged, BigDecimal.ZERO, BigDecimal.ZERO, false, compoundingDetails);
 
+                        loan.addLoanRepaymentScheduleInstallment(repaymentScheduleInstallment);
                         repaymentScheduleInstallments.add(repaymentScheduleInstallment);
                     }
 

@@ -18,31 +18,13 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormatter;
-import org.apache.fineract.infrastructure.codes.domain.CodeValue;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.ApiParameterError;
-import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
-import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.dataqueries.domain.EntityDatatableChecks;
-import org.apache.fineract.infrastructure.documentmanagement.domain.Image;
-import org.apache.fineract.infrastructure.security.service.RandomPasswordGenerator;
-import org.apache.fineract.organisation.office.domain.Office;
-import org.apache.fineract.organisation.staff.domain.Staff;
-import org.apache.fineract.portfolio.client.api.ClientApiConstants;
-import org.apache.fineract.portfolio.client.data.ClientData;
-import org.apache.fineract.portfolio.client.exception.InvalidClientStateTransitionException;
-import org.apache.fineract.portfolio.group.domain.Group;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
-import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,13 +39,29 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.fineract.infrastructure.codes.domain.CodeValue;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.ApiParameterError;
+import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.documentmanagement.domain.Image;
+import org.apache.fineract.infrastructure.security.service.RandomPasswordGenerator;
+import org.apache.fineract.organisation.office.domain.Office;
+import org.apache.fineract.organisation.staff.domain.Staff;
+import org.apache.fineract.portfolio.client.api.ClientApiConstants;
+import org.apache.fineract.portfolio.client.data.ClientData;
+import org.apache.fineract.portfolio.client.exception.InvalidClientStateTransitionException;
+import org.apache.fineract.portfolio.group.domain.Group;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
+import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
+import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_client", uniqueConstraints = { @UniqueConstraint(columnNames = { "account_no" }, name = "account_no_UNIQUE"), //
@@ -139,8 +137,7 @@ public final class Client extends AbstractPersistable<Long> {
     @JoinColumn(name = "staff_id")
     private Staff staff;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "m_group_client", joinColumns = @JoinColumn(name = "client_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups;
 

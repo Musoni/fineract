@@ -27,13 +27,11 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.joda.time.DateTime;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
@@ -41,6 +39,7 @@ import org.apache.fineract.organisation.provisioning.constants.ProvisioningCrite
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCriteriaDefinitionData;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.DateTime;
 
 @Entity
 @Table(name = "m_provisioning_criteria", uniqueConstraints = { @UniqueConstraint(columnNames = { "criteria_name" }, name = "criteria_name") })
@@ -49,12 +48,10 @@ public class ProvisioningCriteria extends AbstractAuditableCustom<AppUser, Long>
     @Column(name = "criteria_name", nullable = false)
     private String criteriaName;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criteria", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criteria", orphanRemoval = true, fetch=FetchType.EAGER)
     Set<ProvisioningCriteriaDefinition> provisioningCriteriaDefinition = new HashSet<>();
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criteria", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "criteria", orphanRemoval = true, fetch=FetchType.EAGER)
     Set<LoanProductProvisionCriteria> loanProductMapping = new HashSet<>();
 
     public String getCriteriaName() {

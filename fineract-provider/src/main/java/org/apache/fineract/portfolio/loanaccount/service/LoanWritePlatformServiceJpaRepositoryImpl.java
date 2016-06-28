@@ -407,7 +407,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 LoanTransaction disbursementTransaction = LoanTransaction.disbursement(loan.getOffice(), disburseAmount, paymentDetail,
                         actualDisbursementDate, txnExternalId, new LocalDateTime(), currentUser);
                 disbursementTransaction.updateLoan(loan);
-                loan.getLoanTransactions().add(disbursementTransaction);
+                loan.addLoanTransaction(disbursementTransaction);
             }
 
             regenerateScheduleOnDisbursement(command, loan, recalculateSchedule, scheduleGeneratorDTO, nextPossibleRepaymentDate, rescheduledRepaymentDate);
@@ -588,7 +588,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
     private void saveAndFlushLoanWithDataIntegrityViolationChecks(final Loan loan) {
         try {
-            List<LoanRepaymentScheduleInstallment> installments = loan.fetchRepaymentScheduleInstallments();
+            List<LoanRepaymentScheduleInstallment> installments = loan.getRepaymentScheduleInstallments();
             for (LoanRepaymentScheduleInstallment installment : installments) {
                 if (installment.getId() == null) {
                     this.repaymentScheduleInstallmentRepository.save(installment);
@@ -609,7 +609,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
     private void saveLoanWithDataIntegrityViolationChecks(final Loan loan) {
         try {
-            List<LoanRepaymentScheduleInstallment> installments = loan.fetchRepaymentScheduleInstallments();
+            List<LoanRepaymentScheduleInstallment> installments = loan.getRepaymentScheduleInstallments();
             for (LoanRepaymentScheduleInstallment installment : installments) {
                 if (installment.getId() == null) {
                     this.repaymentScheduleInstallmentRepository.save(installment);
@@ -687,7 +687,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     LoanTransaction disbursementTransaction = LoanTransaction.disbursement(loan.getOffice(), disburseAmount, paymentDetail,
                             actualDisbursementDate, txnExternalId, new LocalDateTime(), currentUser);
                     disbursementTransaction.updateLoan(loan);
-                    loan.getLoanTransactions().add(disbursementTransaction);
+                    loan.addLoanTransaction(disbursementTransaction);
                 }
                 LocalDate recalculateFrom = null;
                 final ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
@@ -1006,7 +1006,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             for (final Map.Entry<Long, LoanTransaction> mapEntry : changedTransactionDetail.getNewTransactionMappings().entrySet()) {
                 this.loanTransactionRepository.save(mapEntry.getValue());
                 // update loan with references to the newly created transactions
-                loan.getLoanTransactions().add(mapEntry.getValue());
+                loan.addLoanTransaction(mapEntry.getValue());
                 this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
             }
         }
@@ -1132,7 +1132,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             for (final Map.Entry<Long, LoanTransaction> mapEntry : changedTransactionDetail.getNewTransactionMappings().entrySet()) {
                 this.loanTransactionRepository.save(mapEntry.getValue());
                 // update loan with references to the newly created transactions
-                loan.getLoanTransactions().add(mapEntry.getValue());
+                loan.addLoanTransaction(mapEntry.getValue());
                 this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
             }
         }
@@ -1461,7 +1461,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     this.loanTransactionRepository.save(mapEntry.getValue());
                     // update loan with references to the newly created
                     // transactions
-                    loan.getLoanTransactions().add(mapEntry.getValue());
+                    loan.addLoanTransaction(mapEntry.getValue());
                     this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
                 }
             }
@@ -1613,7 +1613,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         if (changedTransactionDetail != null) {
         	for (final Map.Entry<Long, LoanTransaction> mapEntry : changedTransactionDetail.getNewTransactionMappings().entrySet()) {
         		this.loanTransactionRepository.save(mapEntry.getValue());
-        		loan.getLoanTransactions().add(mapEntry.getValue());
+        		loan.addLoanTransaction(mapEntry.getValue());
         		this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
         	}
         }
@@ -1899,7 +1899,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final LoanTransaction newTransferTransaction = LoanTransaction.initiateTransfer(loan.getOffice(), loan, transferDate,
                 DateUtils.getLocalDateTimeOfTenant(), currentUser);
-        loan.getLoanTransactions().add(newTransferTransaction);
+        loan.addLoanTransaction(newTransferTransaction);
         loan.setLoanStatus(LoanStatus.TRANSFER_IN_PROGRESS.getValue());
 
         this.loanTransactionRepository.save(newTransferTransaction);
@@ -1934,7 +1934,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
             final LoanTransaction newTransferAcceptanceTransaction = LoanTransaction.approveTransfer(acceptedInOffice, loan, transferDate,
                     DateUtils.getLocalDateTimeOfTenant(), currentUser);
-            loan.getLoanTransactions().add(newTransferAcceptanceTransaction);
+            loan.addLoanTransaction(newTransferAcceptanceTransaction);
 
             if (loan.getTotalOverpaid() != null && loan.getTotalOverpaid().compareTo(BigDecimal.ZERO) == 1) {
                 loan.setLoanStatus(LoanStatus.OVERPAID.getValue());
@@ -1970,7 +1970,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final LoanTransaction newTransferAcceptanceTransaction = LoanTransaction.withdrawTransfer(loan.getOffice(), loan, transferDate,
                 DateUtils.getLocalDateTimeOfTenant(), currentUser);
-        loan.getLoanTransactions().add(newTransferAcceptanceTransaction);
+        loan.addLoanTransaction(newTransferAcceptanceTransaction);
         loan.setLoanStatus(LoanStatus.ACTIVE.getValue());
 
         this.loanTransactionRepository.save(newTransferAcceptanceTransaction);
@@ -2521,7 +2521,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                         this.loanTransactionRepository.save(mapEntry.getValue());
                         // update loan with references to the newly created
                         // transactions
-                        loan.getLoanTransactions().add(mapEntry.getValue());
+                        loan.addLoanTransaction(mapEntry.getValue());
                         this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
                     }
                 }
@@ -2542,7 +2542,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
     private void addInstallmentIfPenaltyAppliedAfterLastDueDate(Loan loan, LocalDate lastChargeDate) {
         if (lastChargeDate != null) {
-            List<LoanRepaymentScheduleInstallment> installments = loan.fetchRepaymentScheduleInstallments();
+            List<LoanRepaymentScheduleInstallment> installments = loan.getRepaymentScheduleInstallments();
             LoanRepaymentScheduleInstallment lastInstallment = loan.fetchRepaymentScheduleInstallment(installments.size());
             if (lastChargeDate.isAfter(lastInstallment.getDueDate())) {
                 if (lastInstallment.isRecalculatedInterestComponent()) {
@@ -2554,7 +2554,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 BigDecimal interest = BigDecimal.ZERO;
                 BigDecimal feeCharges = BigDecimal.ZERO;
                 BigDecimal penaltyCharges = BigDecimal.ONE;
-                final List<LoanInterestRecalcualtionAdditionalDetails> compoundingDetails = null;
+                final Set<LoanInterestRecalcualtionAdditionalDetails> compoundingDetails = null;
                 LoanRepaymentScheduleInstallment newEntry = new LoanRepaymentScheduleInstallment(loan, installments.size() + 1,
                         lastInstallment.getDueDate(), lastChargeDate, principal, interest, feeCharges, penaltyCharges,
                         recalculatedInterestComponent, compoundingDetails);
@@ -2925,7 +2925,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 this.loanTransactionRepository.save(mapEntry.getValue());
                 // update loan with references to the newly created
                 // transactions
-                loan.getLoanTransactions().add(mapEntry.getValue());
+                loan.addLoanTransaction(mapEntry.getValue());
                 this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
             }
         }
@@ -3203,7 +3203,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     this.loanTransactionRepository.save(mapEntry.getValue());
                     // update loan with references to the newly created
                     // transactions
-                    loan.getLoanTransactions().add(mapEntry.getValue());
+                    loan.addLoanTransaction(mapEntry.getValue());
                     this.accountTransfersWritePlatformService.updateLoanTransaction(mapEntry.getKey(), mapEntry.getValue());
                 }
             }

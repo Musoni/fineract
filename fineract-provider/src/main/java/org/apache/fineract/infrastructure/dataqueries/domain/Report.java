@@ -28,13 +28,12 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -74,8 +73,7 @@ public final class Report extends AbstractPersistable<Long> {
     @Column(name = "report_sql")
     private String reportSql;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "report", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "report", orphanRemoval = true, fetch=FetchType.EAGER)
     private final Set<ReportParameterUsage> reportParameterUsages = new HashSet<>();
 
     public static Report fromJson(final JsonCommand command) {

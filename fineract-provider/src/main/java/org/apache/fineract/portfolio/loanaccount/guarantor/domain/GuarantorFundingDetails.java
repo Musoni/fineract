@@ -27,6 +27,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -66,8 +67,7 @@ public class GuarantorFundingDetails extends AbstractPersistable<Long> {
     @Column(name = "amount_transfered_derived", scale = 6, precision = 19, nullable = true)
     private BigDecimal amountTransfered;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "guarantorFundingDetails", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "guarantorFundingDetails", orphanRemoval = true, fetch=FetchType.EAGER)
     private final List<GuarantorFundingTransaction> guarantorFundingTransactions = new ArrayList<>();
 
     protected GuarantorFundingDetails() {}

@@ -27,6 +27,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -101,8 +102,7 @@ public class Guarantor extends AbstractPersistable<Long> {
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "guarantor", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "guarantor", orphanRemoval = true, fetch=FetchType.EAGER)
     private final List<GuarantorFundingDetails> guarantorFundDetails = new ArrayList<>();
 
     protected Guarantor() {

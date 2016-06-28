@@ -23,8 +23,8 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.amountParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargeIdParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dueAsOfDateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withdrawBalanceParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withHoldTaxParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withdrawBalanceParamName;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -760,7 +760,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
 
         final SavingsAccountTransaction newTransferTransaction = SavingsAccountTransaction.initiateTransfer(savingsAccount,
                 savingsAccount.office(), transferDate, user);
-        savingsAccount.getTransactions().add(newTransferTransaction);
+        savingsAccount.addTransaction(newTransferTransaction);
         savingsAccount.setStatus(SavingsAccountStatusType.TRANSFER_IN_PROGRESS.getValue());
         final MathContext mc = MathContext.DECIMAL64;
         boolean isInterestTransfer = false;
@@ -793,7 +793,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
 
         final SavingsAccountTransaction withdrawtransferTransaction = SavingsAccountTransaction.withdrawTransfer(savingsAccount,
                 savingsAccount.office(), transferDate, user);
-        savingsAccount.getTransactions().add(withdrawtransferTransaction);
+        savingsAccount.addTransaction(withdrawtransferTransaction);
         savingsAccount.setStatus(SavingsAccountStatusType.ACTIVE.getValue());
         final MathContext mc = MathContext.DECIMAL64;
         boolean isInterestTransfer = false;
@@ -840,7 +840,7 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
 
             final SavingsAccountTransaction acceptTransferTransaction = SavingsAccountTransaction.approveTransfer(savingsAccount,
                     acceptedInOffice, transferDate, user);
-            savingsAccount.getTransactions().add(acceptTransferTransaction);
+            savingsAccount.addTransaction(acceptTransferTransaction);
             savingsAccount.setStatus(SavingsAccountStatusType.ACTIVE.getValue());
 
             boolean isInterestTransfer = false;
