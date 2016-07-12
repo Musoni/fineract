@@ -21,12 +21,12 @@ package org.apache.fineract.portfolio.account.data;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing a savings account.

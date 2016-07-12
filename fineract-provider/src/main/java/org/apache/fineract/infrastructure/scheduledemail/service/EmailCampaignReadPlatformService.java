@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
+import java.util.Collection;
+
 import org.apache.fineract.infrastructure.scheduledemail.data.EmailBusinessRulesData;
 import org.apache.fineract.infrastructure.scheduledemail.data.EmailCampaignData;
-
-import java.util.Collection;
 
 public interface EmailCampaignReadPlatformService {
 

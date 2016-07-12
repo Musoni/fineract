@@ -18,7 +18,8 @@
  */
 package org.apache.fineract.commands.provider;
 
-import com.google.common.base.Preconditions;
+import java.util.HashMap;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.annotation.CommandType;
@@ -32,8 +33,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
-import java.util.HashMap;
+import com.google.common.base.Preconditions;
 
 /**
  * {@link CommandHandlerProvider} provides {@link NewCommandSourceHandler}s for a given entity and action.<br/>
@@ -68,8 +68,7 @@ public class CommandHandlerProvider implements ApplicationContextAware {
      * @param entity the entity to lookup the handler, must be given.
      * @param action the action to lookup the handler, must be given.
      */
-    @Nonnull
-    public NewCommandSourceHandler getHandler (@Nonnull final String entity, @Nonnull final String action) {
+    public NewCommandSourceHandler getHandler (final String entity, final String action) {
         Preconditions.checkArgument(StringUtils.isNoneEmpty(entity), "An entity must be given!");
         Preconditions.checkArgument(StringUtils.isNoneEmpty(action), "An action must be given!");
 

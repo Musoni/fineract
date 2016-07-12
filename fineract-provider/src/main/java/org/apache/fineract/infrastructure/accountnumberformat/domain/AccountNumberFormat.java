@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.infrastructure.accountnumberformat.domain;
 
-import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations.AccountNumberPrefixType;
-import org.apache.fineract.infrastructure.accountnumberformat.service.AccountNumberFormatConstants;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations.AccountNumberPrefixType;
+import org.apache.fineract.infrastructure.accountnumberformat.service.AccountNumberFormatConstants;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = AccountNumberFormatConstants.ACCOUNT_NUMBER_FORMAT_TABLE_NAME, uniqueConstraints = { @UniqueConstraint(columnNames = { AccountNumberFormatConstants.ACCOUNT_TYPE_ENUM_COLUMN_NAME }, name = AccountNumberFormatConstants.ACCOUNT_TYPE_UNIQUE_CONSTRAINT_NAME) })

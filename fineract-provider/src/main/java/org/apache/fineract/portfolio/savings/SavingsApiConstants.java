@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings;
 
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +27,6 @@ import java.util.Set;
 import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountData;
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
-
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
 
 public class SavingsApiConstants {
 

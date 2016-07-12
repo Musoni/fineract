@@ -20,8 +20,8 @@ package org.apache.fineract.accounting.journalentry.data;
 
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
+import org.joda.time.LocalDate;
 
 public class OfficeOpeningBalancesData {
 

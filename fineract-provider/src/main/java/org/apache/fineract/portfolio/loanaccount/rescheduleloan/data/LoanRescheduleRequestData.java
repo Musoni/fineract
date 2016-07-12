@@ -21,8 +21,8 @@ package org.apache.fineract.portfolio.loanaccount.rescheduleloan.data;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing loan reschedule request data.

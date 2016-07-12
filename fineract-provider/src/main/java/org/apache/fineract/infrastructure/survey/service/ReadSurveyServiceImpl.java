@@ -23,13 +23,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
-import org.apache.fineract.infrastructure.dataqueries.data.MetaDataResultSet;
 import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnHeaderData;
 import org.apache.fineract.infrastructure.dataqueries.service.GenericDataService;
 import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
@@ -37,6 +34,7 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.infrastructure.survey.data.ClientScoresOverview;
 import org.apache.fineract.infrastructure.survey.data.LikelihoodStatus;
 import org.apache.fineract.infrastructure.survey.data.SurveyDataTableData;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;

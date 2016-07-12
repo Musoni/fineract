@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDate;
 import org.apache.fineract.accounting.closure.data.GLClosureData;
 import org.apache.fineract.accounting.closure.exception.GLClosureNotFoundException;
 import org.apache.fineract.accounting.closure.storeglaccountbalance.api.StoreGLAccountBalanceResource;
@@ -30,6 +29,7 @@ import org.apache.fineract.accounting.closure.storeglaccountbalance.helper.UriQu
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
 
 @Component

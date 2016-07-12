@@ -44,7 +44,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -59,6 +58,7 @@ import org.apache.fineract.template.domain.TemplateEntity;
 import org.apache.fineract.template.domain.TemplateType;
 import org.apache.fineract.template.service.TemplateDomainService;
 import org.apache.fineract.template.service.TemplateMergeService;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

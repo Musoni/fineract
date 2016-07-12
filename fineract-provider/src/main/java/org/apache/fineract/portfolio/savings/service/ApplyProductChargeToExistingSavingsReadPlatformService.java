@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import org.apache.fineract.portfolio.savings.data.ApplyProductChargeToExistingSavingsAccountData;
-
 import java.util.Collection;
+
+import org.apache.fineract.portfolio.savings.data.ApplyProductChargeToExistingSavingsAccountData;
 
 public interface ApplyProductChargeToExistingSavingsReadPlatformService {
     Collection<ApplyProductChargeToExistingSavingsAccountData> retrieveAll(Long productId);

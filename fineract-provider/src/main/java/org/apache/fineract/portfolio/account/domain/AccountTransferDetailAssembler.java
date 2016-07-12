@@ -18,6 +18,16 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromClientIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromGroupIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromOfficeIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toClientIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toGroupIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toOfficeIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.transferTypeParamName;
+
 import java.util.Locale;
 
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -27,7 +37,6 @@ import org.apache.fineract.organisation.office.domain.OfficeRepository;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.group.domain.Group;
-import org.apache.fineract.portfolio.group.domain.GroupRepository;
 import org.apache.fineract.portfolio.group.domain.GroupRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.service.LoanAssembler;
@@ -37,8 +46,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonElement;
-
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
 
 @Service
 public class AccountTransferDetailAssembler {

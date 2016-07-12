@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
+import java.util.List;
+
 import org.apache.fineract.infrastructure.dataqueries.data.EntityDataTableChecksData;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityDataTableChecksTemplateData;
-
-import java.util.List;
 
 public interface EntityDatatableChecksReadService {
 

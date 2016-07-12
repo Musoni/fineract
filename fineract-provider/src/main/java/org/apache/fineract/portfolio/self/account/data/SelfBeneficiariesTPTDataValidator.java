@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.portfolio.self.account.data;
 
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.RESOURCE_NAME;
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_NUMBER_PARAM_NAME;
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_TYPE_PARAM_NAME;
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.CREATE_REQUEST_DATA_PARAMETERS;
 import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.NAME_PARAM_NAME;
 import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.OFFICE_NAME_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_TYPE_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_NUMBER_PARAM_NAME;
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.RESOURCE_NAME;
 import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.TRANSFER_LIMIT_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.CREATE_REQUEST_DATA_PARAMETERS;
 import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.UPDATE_REQUEST_DATA_PARAMETERS;
 
 import java.lang.reflect.Type;

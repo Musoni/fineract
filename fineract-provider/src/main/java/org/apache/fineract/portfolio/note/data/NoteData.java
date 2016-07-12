@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.note.data;
 
-import org.joda.time.DateTime;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.joda.time.DateTime;
 
 /**
  * Immutable data object represent note or case information about a client, loan

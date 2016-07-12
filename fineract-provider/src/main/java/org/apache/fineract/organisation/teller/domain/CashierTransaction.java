@@ -19,19 +19,25 @@
 package org.apache.fineract.organisation.teller.domain;
 
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.organisation.office.domain.Office;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.organisation.office.domain.Office;
+import org.joda.time.LocalDate;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_cashier_transactions")

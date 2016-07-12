@@ -28,8 +28,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.fineract.accounting.closure.storeglaccountbalance.service.GLClosureJournalEntryBalanceReadPlatformService;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;

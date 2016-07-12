@@ -18,10 +18,14 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name="m_savings_product_add_charge_to_existing_accounts")

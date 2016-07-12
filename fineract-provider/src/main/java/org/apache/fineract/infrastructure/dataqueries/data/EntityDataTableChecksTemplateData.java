@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
-import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 
 /**
  * Immutable data object for role data.

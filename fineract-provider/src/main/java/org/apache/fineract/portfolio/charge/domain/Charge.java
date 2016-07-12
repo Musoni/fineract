@@ -34,7 +34,6 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.joda.time.MonthDay;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -51,9 +50,9 @@ import org.apache.fineract.portfolio.charge.exception.ChargeLoanReschedulingFeeC
 import org.apache.fineract.portfolio.charge.exception.ChargeMustBePenaltyException;
 import org.apache.fineract.portfolio.charge.exception.ChargeParameterUpdateNotSupportedException;
 import org.apache.fineract.portfolio.charge.service.ChargeEnumerations;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
+import org.joda.time.MonthDay;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity

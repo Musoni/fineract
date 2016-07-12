@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.apache.fineract.infrastructure.hooks.processor.data.SmsProviderData;
 
+import com.google.gson.JsonObject;
+
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -30,8 +32,6 @@ import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
-
-import com.google.gson.JsonObject;
 
 public interface WebHookService {
 

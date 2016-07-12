@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
-import org.apache.fineract.infrastructure.scheduledemail.data.EmailConfigurationData;
-
 import java.util.Collection;
+
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailConfigurationData;
 
 public interface EmailConfigurationReadPlatformService {
 	

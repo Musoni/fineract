@@ -18,15 +18,15 @@
  */
 package org.apache.fineract.organisation.teller.service;
 
+import java.util.Collection;
+import java.util.Date;
+
 import org.apache.fineract.organisation.teller.data.CashierData;
 import org.apache.fineract.organisation.teller.data.CashierTransactionData;
 import org.apache.fineract.organisation.teller.data.CashierTransactionsWithSummaryData;
 import org.apache.fineract.organisation.teller.data.TellerData;
 import org.apache.fineract.organisation.teller.data.TellerJournalData;
 import org.apache.fineract.organisation.teller.data.TellerTransactionData;
-
-import java.util.Collection;
-import java.util.Date;
 
 public interface TellerManagementReadPlatformService {
 

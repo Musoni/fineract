@@ -18,22 +18,6 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.Page;
-import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
-import org.apache.fineract.infrastructure.scheduledemail.exception.EmailNotFoundException;
-import org.apache.fineract.infrastructure.scheduledemail.data.EmailData;
-import org.apache.fineract.infrastructure.scheduledemail.domain.EmailMessageEnumerations;
-import org.apache.fineract.infrastructure.scheduledemail.domain.EmailMessageStatusType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -41,6 +25,22 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.PaginationHelper;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailData;
+import org.apache.fineract.infrastructure.scheduledemail.domain.EmailMessageEnumerations;
+import org.apache.fineract.infrastructure.scheduledemail.domain.EmailMessageStatusType;
+import org.apache.fineract.infrastructure.scheduledemail.exception.EmailNotFoundException;
+import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EmailReadPlatformServiceImpl implements EmailReadPlatformService {

@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.sms.service;
 
+import java.util.Collection;
+
 import org.apache.fineract.infrastructure.sms.data.SmsBusinessRulesData;
 import org.apache.fineract.infrastructure.sms.data.SmsCampaignData;
-
-import java.util.Collection;
 
 public interface SmsCampaignReadPlatformService {
 

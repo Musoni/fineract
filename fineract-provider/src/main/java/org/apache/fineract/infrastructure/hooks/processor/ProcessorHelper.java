@@ -31,13 +31,13 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.squareup.okhttp.OkHttpClient;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
-
-import com.squareup.okhttp.OkHttpClient;
 
 @SuppressWarnings("unused")
 public class ProcessorHelper {

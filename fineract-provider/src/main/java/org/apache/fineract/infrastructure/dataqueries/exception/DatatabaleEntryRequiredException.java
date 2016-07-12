@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.exception;
 
-import org.apache.fineract.infrastructure.core.data.ApiParameterError;
-import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.fineract.infrastructure.core.data.ApiParameterError;
+import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 
 /**
  * A {@link RuntimeException} thrown when datatable resources are not found.

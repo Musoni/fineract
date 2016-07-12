@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.organisation.staff.domain;
 
+import java.math.BigInteger;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.math.BigInteger;
 
 public interface StaffRepository extends JpaRepository<Staff, Long>, JpaSpecificationExecutor<Staff> {
 

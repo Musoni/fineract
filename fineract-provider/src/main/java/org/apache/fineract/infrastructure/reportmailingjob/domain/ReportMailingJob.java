@@ -32,15 +32,15 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.dataqueries.domain.Report;
+import org.apache.fineract.infrastructure.reportmailingjob.ReportMailingJobConstants;
+import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.dataqueries.domain.Report;
-import org.apache.fineract.infrastructure.reportmailingjob.ReportMailingJobConstants;
-import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @SuppressWarnings("serial")

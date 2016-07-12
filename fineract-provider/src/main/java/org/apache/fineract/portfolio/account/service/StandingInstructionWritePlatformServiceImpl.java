@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountTypeParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromClientIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromGroupIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountTypeParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.statusParamName;
 
 import java.math.BigDecimal;
@@ -26,7 +29,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -59,6 +61,7 @@ import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.ScheduledDa
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
 import org.apache.fineract.portfolio.savings.exception.InsufficientAccountBalanceException;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

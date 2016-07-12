@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
@@ -37,6 +36,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.Loa
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanScheduleDTO;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanRescheduleModel;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanRescheduleRequest;
+import org.joda.time.LocalDate;
 
 public interface LoanScheduleGenerator {
 

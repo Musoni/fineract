@@ -36,8 +36,25 @@ import static org.apache.fineract.portfolio.savings.DepositsApiConstants.minDepo
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalApplicableParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalInterestOnTypeIdParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalInterestParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.currencyCodeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.descriptionParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.digitsAfterDecimalParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.idParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.inMultiplesOfParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCalculationDaysInYearTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCalculationTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCompoundingPeriodTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestPostingPeriodTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.lockinPeriodFrequencyParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.lockinPeriodFrequencyTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.minBalanceForInterestCalculationParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nameParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nominalAnnualInterestRateParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.productGroupIdParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.shortNameParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.taxGroupIdParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withHoldTaxParamName;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

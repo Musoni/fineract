@@ -37,7 +37,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDate;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -60,6 +59,7 @@ import org.apache.fineract.portfolio.meeting.attendance.service.ClientAttendance
 import org.apache.fineract.portfolio.meeting.data.MeetingData;
 import org.apache.fineract.portfolio.meeting.exception.MeetingNotSupportedResourceException;
 import org.apache.fineract.portfolio.meeting.service.MeetingReadPlatformService;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

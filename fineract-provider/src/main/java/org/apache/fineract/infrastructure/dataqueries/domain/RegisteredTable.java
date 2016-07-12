@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "x_registered_table")

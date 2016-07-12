@@ -2,7 +2,6 @@ description = '''\
 Run as:
 gradle clean tomcatrunwar
 '''
-
 buildscript {
   repositories {
   	 jcenter()
@@ -52,9 +51,12 @@ repositories {
 }
 
 configurations {
+	hibernateDependencies
 	providedRuntime // needed for Spring Boot executable WAR
     providedCompile
-	compile
+	compile() {
+		exclude module: 'hibernate-entitymanager'		
+	}
 	runtime
 	all*.exclude group: 'commons-logging'
 }
@@ -137,6 +139,11 @@ task deployPentahoReports() {
 war {
     it.dependsOn deployPentahoReports
     war.finalizedBy(bootRepackage)
+	if (project.hasProperty('buildType') && project.getProperty('buildType') == 'TEST') {
+		from(configurations.hibernateDependencies) { // notice the parens
+        	into "WEB-INF/lib/" // no leading slash
+    }
+	}
 }
 
 license {
@@ -196,6 +203,7 @@ sourceSets {
  integrationTest {
     	compileClasspath += main.output + test.output
         runtimeClasspath += main.output + test.output
+        runtimeClasspath += configurations.hibernateDependencies
     }
 }
 
@@ -211,8 +219,6 @@ task integrationTest(type:Test){
         tomcatRunWar.daemon = true
         tomcatRunWar.execute()
     }
-
-
     testClassesDir = project.sourceSets.integrationTest.output.classesDir
     classpath = project.sourceSets.integrationTest.runtimeClasspath
 }
@@ -228,6 +234,16 @@ configurations {
 }
 dependencies {
     driver 'mysql:mysql-connector-java:5.1.16'
+    hibernateDependencies(
+    [group:'org.springframework.boot', name:'spring-boot-starter-data-jpa', version:'1.1.6.RELEASE'],
+    ) 
+}
+
+test {
+	filter {
+        //includeTestsMatching "org.apache.fineract.infrastructure.configuration.spring.SpringConfigurationTest.*"
+        includeTestsMatching "org.apache.fineract.template.TemplateMergeServiceTest.*"
+    }
 }
 
 URLClassLoader loader = GroovyObject.class.classLoader

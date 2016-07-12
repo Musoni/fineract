@@ -18,11 +18,17 @@
  */
 package org.apache.fineract.commands.service;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.lang.reflect.Type;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
 import org.apache.fineract.commands.data.ProcessingResultLookup;
@@ -53,6 +59,7 @@ import org.apache.fineract.portfolio.savings.service.SavingsProductReadPlatformS
 import org.apache.fineract.useradministration.data.AppUserData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.service.AppUserReadPlatformService;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,15 +67,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Type;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 @Service
 public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {

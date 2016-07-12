@@ -18,20 +18,25 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
-import org.apache.fineract.infrastructure.dataqueries.data.*;
+import org.apache.fineract.infrastructure.dataqueries.data.DatatableCheckStatusData;
+import org.apache.fineract.infrastructure.dataqueries.data.DatatableChecksData;
+import org.apache.fineract.infrastructure.dataqueries.data.EntityDataTableChecksData;
+import org.apache.fineract.infrastructure.dataqueries.data.EntityDataTableChecksTemplateData;
+import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
+import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
 
 @Service
 public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatatableChecksReadService {

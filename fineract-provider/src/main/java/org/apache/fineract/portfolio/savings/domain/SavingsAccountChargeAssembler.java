@@ -25,8 +25,8 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargeId
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargeTimeTypeParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dueAsOfDateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeOnMonthDayParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeIntervalParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.feeOnMonthDayParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.idParamName;
 
 import java.math.BigDecimal;
@@ -36,8 +36,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import org.joda.time.LocalDate;
-import org.joda.time.MonthDay;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -48,6 +46,8 @@ import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
 import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
 import org.apache.fineract.portfolio.charge.exception.ChargeCannotBeAppliedToException;
 import org.apache.fineract.portfolio.charge.exception.SavingsAccountChargeNotFoundException;
+import org.joda.time.LocalDate;
+import org.joda.time.MonthDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

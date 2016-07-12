@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import java.util.Collection;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.Collection;
 
 public interface SavingsProductInterestRateChartRepository extends JpaRepository<SavingsProductInterestRateChart, Long>,
         JpaSpecificationExecutor<SavingsProductInterestRateChart> {

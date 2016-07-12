@@ -18,9 +18,11 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.transferTypeParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.STANDING_INSTRUCTION_RESOURCE_NAME;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.amountParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.instructionTypeParamName;
+import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.maximumIterationsParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.priorityParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.recurrenceFrequencyParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.recurrenceIntervalParamName;
@@ -29,8 +31,6 @@ import static org.apache.fineract.portfolio.account.api.StandingInstructionApiCo
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.statusParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.validFromParamName;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.validTillParamName;
-import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.maximumIterationsParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.transferTypeParamName;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,13 +48,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.joda.time.LocalDate;
-import org.joda.time.MonthDay;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
+import org.joda.time.LocalDate;
+import org.joda.time.MonthDay;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity

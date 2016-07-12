@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
-import org.joda.time.LocalDate;
+import java.math.BigDecimal;
+
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
-
-import java.math.BigDecimal;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable object representing a General Ledger Account

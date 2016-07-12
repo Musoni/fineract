@@ -19,7 +19,6 @@
 package org.apache.fineract.accounting.provisioning.data;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public class LoanProductProvisioningEntryData {
 

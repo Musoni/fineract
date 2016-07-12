@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
+import java.util.Map;
+
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -32,8 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Map;
 
 @Service
 public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePlatformService {

@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.batch.command.internal;
 
+import javax.ws.rs.core.UriInfo;
+
 import org.apache.fineract.batch.command.CommandStrategy;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
@@ -26,8 +28,6 @@ import org.apache.fineract.batch.exception.ErrorInfo;
 import org.apache.fineract.portfolio.loanaccount.guarantor.api.GuarantorsApiResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by ishan on 04/10/16.

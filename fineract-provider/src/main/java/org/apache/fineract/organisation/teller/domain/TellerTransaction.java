@@ -18,12 +18,20 @@
  */
 package org.apache.fineract.organisation.teller.domain;
 
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "m_teller_transactions")

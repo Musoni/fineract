@@ -39,7 +39,6 @@ import static org.apache.fineract.portfolio.savings.DepositsApiConstants.minDepo
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalApplicableParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalInterestOnTypeIdParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalInterestParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withHoldTaxParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.currencyCodeParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.descriptionParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.digitsAfterDecimalParamName;
@@ -58,6 +57,7 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.namePara
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nominalAnnualInterestRateParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.shortNameParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.taxGroupIdParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withHoldTaxParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withdrawalFeeForTransfersParamName;
 
 import java.lang.reflect.Type;
@@ -68,7 +68,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.MonthDay;
 import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -83,6 +82,7 @@ import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYea
 import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
+import org.joda.time.MonthDay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

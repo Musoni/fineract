@@ -23,9 +23,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
+import org.joda.time.LocalDate;
 
 public class FlatInterestLoanScheduleGenerator extends AbstractLoanScheduleGenerator {
 

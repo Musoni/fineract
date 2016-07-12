@@ -30,7 +30,6 @@ import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJson
 import org.apache.fineract.infrastructure.core.serialization.FromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.client.command.ClientIdentifierCommand;
-import org.apache.fineract.portfolio.client.domain.ClientIdentifierStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

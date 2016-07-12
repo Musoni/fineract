@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import org.apache.fineract.portfolio.savings.data.InterestRateCharts;
-
 import java.util.Collection;
+
+import org.apache.fineract.portfolio.savings.data.InterestRateCharts;
 
 public interface SavingsProductInterestRateChartReadPlatformService {
 

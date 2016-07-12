@@ -65,9 +65,13 @@ import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYea
 import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
 import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
 import org.apache.fineract.portfolio.savings.data.ApplyProductChargeToExistingSavingsAccountData;
-import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.portfolio.savings.data.InterestRateCharts;
-import org.apache.fineract.portfolio.savings.service.*;
+import org.apache.fineract.portfolio.savings.data.SavingsProductData;
+import org.apache.fineract.portfolio.savings.service.ApplyProductChargeToExistingSavingsReadPlatformService;
+import org.apache.fineract.portfolio.savings.service.SavingsDropdownReadPlatformService;
+import org.apache.fineract.portfolio.savings.service.SavingsEnumerations;
+import org.apache.fineract.portfolio.savings.service.SavingsProductInterestRateChartReadPlatformService;
+import org.apache.fineract.portfolio.savings.service.SavingsProductReadPlatformService;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
 import org.apache.fineract.portfolio.tax.service.TaxReadPlatformService;
 import org.springframework.beans.factory.annotation.Autowired;

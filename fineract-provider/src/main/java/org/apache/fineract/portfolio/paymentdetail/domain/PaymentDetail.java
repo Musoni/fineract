@@ -18,13 +18,7 @@
  */
 package org.apache.fineract.portfolio.paymentdetail.domain;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.portfolio.paymentdetail.PaymentDetailConstants;
-import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
-import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
-import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +26,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.portfolio.paymentdetail.PaymentDetailConstants;
+import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
+import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
+import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_payment_detail")

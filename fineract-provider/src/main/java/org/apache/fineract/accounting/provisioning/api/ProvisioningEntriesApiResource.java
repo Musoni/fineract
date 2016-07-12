@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.accounting.provisioning.api;
 
-import java.util.Collection;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,7 +32,6 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.fineract.accounting.provisioning.constant.ProvisioningEntriesApiConstants;
 import org.apache.fineract.accounting.provisioning.data.LoanProductProvisioningEntryData;
 import org.apache.fineract.accounting.provisioning.data.ProvisioningEntryData;
-import org.apache.fineract.accounting.provisioning.domain.LoanProductProvisioningEntry;
 import org.apache.fineract.accounting.provisioning.service.ProvisioningEntriesReadPlatformService;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;

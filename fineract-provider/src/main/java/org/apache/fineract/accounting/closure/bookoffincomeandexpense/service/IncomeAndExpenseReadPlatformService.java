@@ -19,10 +19,10 @@
 package org.apache.fineract.accounting.closure.bookoffincomeandexpense.service;
 
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.accounting.closure.bookoffincomeandexpense.data.IncomeAndExpenseJournalEntryData;
-
 import java.util.List;
+
+import org.apache.fineract.accounting.closure.bookoffincomeandexpense.data.IncomeAndExpenseJournalEntryData;
+import org.joda.time.LocalDate;
 
 public interface IncomeAndExpenseReadPlatformService {
     List<IncomeAndExpenseJournalEntryData> retrieveAllIncomeAndExpenseJournalEntryData(Long officeId,LocalDate date,String currencyCode);

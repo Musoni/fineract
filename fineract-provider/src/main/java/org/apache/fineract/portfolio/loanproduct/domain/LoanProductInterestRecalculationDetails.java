@@ -26,7 +26,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 import org.springframework.data.jpa.domain.AbstractPersistable;

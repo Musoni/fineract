@@ -18,14 +18,19 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain;
 
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.loanaccount.data.GroupLoanMembersAllocationData;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "m_group_loan_member_allocation")

@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.organisation.staff.data.StaffData;
@@ -40,6 +39,7 @@ import org.apache.fineract.portfolio.loanaccount.data.RepaymentScheduleRelatedLo
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanScheduleData;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.OverdueLoanScheduleData;
+import org.joda.time.LocalDate;
 
 public interface LoanReadPlatformService {
 

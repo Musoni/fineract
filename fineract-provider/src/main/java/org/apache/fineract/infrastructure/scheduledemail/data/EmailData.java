@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.data;
 
-import org.joda.time.LocalDate;
+import java.util.List;
+
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
-
-import java.util.List;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing a SMS message.

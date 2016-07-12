@@ -19,9 +19,9 @@
 package org.apache.fineract.portfolio.collectionsheet.service;
 
 import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.calendarIdParamName;
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.transactionDateParamName;
 import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.officeIdParamName;
 import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.staffIdParamName;
+import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.transactionDateParamName;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -34,8 +34,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
@@ -67,11 +65,11 @@ import org.apache.fineract.portfolio.group.service.GroupReadPlatformService;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.fineract.portfolio.meeting.attendance.service.AttendanceDropdownReadPlatformService;
 import org.apache.fineract.portfolio.meeting.attendance.service.AttendanceEnumerations;
-import org.apache.fineract.portfolio.paymentdetail.PaymentDetailConstants;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;

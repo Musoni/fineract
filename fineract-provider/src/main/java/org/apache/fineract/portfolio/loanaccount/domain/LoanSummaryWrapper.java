@@ -21,9 +21,9 @@ package org.apache.fineract.portfolio.loanaccount.domain;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
 
 /**

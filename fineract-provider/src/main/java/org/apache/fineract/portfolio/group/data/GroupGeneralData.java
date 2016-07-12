@@ -20,13 +20,13 @@ package org.apache.fineract.portfolio.group.data;
 
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.staff.data.StaffData;
 import org.apache.fineract.portfolio.calendar.data.CalendarData;
 import org.apache.fineract.portfolio.client.data.ClientData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing a general group (so may or may not have a

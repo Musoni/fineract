@@ -19,27 +19,21 @@
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
 
-import org.apache.xmlbeans.impl.tool.XMLBean;
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+
+import javax.mail.internet.MimeMessage;
+
 import org.apache.fineract.infrastructure.configuration.data.SMTPCredentialsData;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesPropertiesReadPlatformService;
-import org.apache.fineract.infrastructure.scheduledemail.EmailApiConstants;
 import org.apache.fineract.infrastructure.scheduledemail.data.EmailMessageWithAttachmentData;
-import org.apache.fineract.infrastructure.scheduledemail.domain.EmailConfiguration;
-import org.apache.fineract.infrastructure.scheduledemail.domain.EmailConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Nullable;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
 
 @Service
 public class EmailMessageJobEmailServiceImpl implements EmailMessageJobEmailService {

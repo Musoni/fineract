@@ -18,7 +18,15 @@
  */
 package org.apache.fineract.accounting.closure.service;
 
-import org.joda.time.LocalDate;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
 import org.apache.fineract.accounting.closure.bookoffincomeandexpense.data.IncomeAndExpenseJournalEntryData;
 import org.apache.fineract.accounting.closure.bookoffincomeandexpense.domain.IncomeAndExpenseBooking;
@@ -50,21 +58,13 @@ import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepository;
 import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosureWritePlatformService {

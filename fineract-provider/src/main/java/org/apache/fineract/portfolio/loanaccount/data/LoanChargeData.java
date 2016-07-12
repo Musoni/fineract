@@ -21,12 +21,12 @@ package org.apache.fineract.portfolio.loanaccount.data;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.charge.domain.ChargePaymentMode;
 import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object for loan charge data.

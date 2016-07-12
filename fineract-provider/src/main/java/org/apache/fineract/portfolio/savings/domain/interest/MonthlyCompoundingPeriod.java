@@ -23,11 +23,11 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
 import org.apache.fineract.portfolio.savings.SavingsCompoundingInterestPeriodType;
 import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
+import org.joda.time.LocalDate;
 
 public class MonthlyCompoundingPeriod implements CompoundingPeriod {
 

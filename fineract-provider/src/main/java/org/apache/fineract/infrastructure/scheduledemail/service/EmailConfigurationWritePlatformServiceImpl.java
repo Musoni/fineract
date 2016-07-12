@@ -18,11 +18,13 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
-import com.google.gson.JsonElement;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.apache.fineract.infrastructure.scheduledemail.data.EmailConfigurationData;
 import org.apache.fineract.infrastructure.scheduledemail.data.EmailConfigurationValidator;
 import org.apache.fineract.infrastructure.scheduledemail.domain.EmailConfiguration;
 import org.apache.fineract.infrastructure.scheduledemail.domain.EmailConfigurationRepository;
@@ -31,11 +33,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 @Service
 public class EmailConfigurationWritePlatformServiceImpl implements EmailConfigurationWritePlatformService {

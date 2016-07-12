@@ -18,6 +18,17 @@
  */
 package org.apache.fineract.portfolio.account.data;
 
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountTypeParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromClientIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromGroupIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromOfficeIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountTypeParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toClientIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toGroupIdParamName;
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.toOfficeIdParamName;
+
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -25,8 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonElement;
-
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
 
 @Component
 public class AccountTransfersDetailDataValidator {

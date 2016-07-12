@@ -18,6 +18,11 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
@@ -27,11 +32,6 @@ import org.apache.fineract.accounting.journalentry.data.LoanTransactionDTO;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Component
 public class CashBasedAccountingProcessorForLoan implements AccountingProcessorForLoan {

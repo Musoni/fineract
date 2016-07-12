@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.calendar.data.CalendarData;
 

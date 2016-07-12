@@ -18,9 +18,14 @@
  */
 package org.apache.fineract.spm.domain;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_survey_components")

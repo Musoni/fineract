@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.fineract.portfolio.savings.data.ApplyProductChargeToExistingSavingsAccountData;
 import org.apache.fineract.portfolio.savings.domain.ApplyChargesToExistingSavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.ApplyChargesToExistingSavingsAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Service
 public class ApplyProductChargeToExistingSavingsReadPlatformServiceImpl implements ApplyProductChargeToExistingSavingsReadPlatformService {

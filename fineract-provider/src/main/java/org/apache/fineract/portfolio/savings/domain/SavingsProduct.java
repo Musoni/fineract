@@ -70,6 +70,7 @@ import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -98,8 +99,6 @@ import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
@@ -213,12 +212,10 @@ public class SavingsProduct extends AbstractPersistable<Long> {
     @JoinColumn(name = "product_group")
     private CodeValue productGroup;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingsProduct", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingsProduct", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<SavingsProductInterestRateChart> savingsProductInterestRateCharts = new HashSet<>();
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingsProduct", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingsProduct", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<ApplyChargesToExistingSavingsAccount> applyChargesToExistingSavingsAccounts = new HashSet<>();
 
     @Column(name = "withhold_tax", nullable = false)

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
-import org.apache.fineract.portfolio.client.data.ClientData;
-
 import java.math.BigDecimal;
+
+import org.apache.fineract.portfolio.client.data.ClientData;
 
 /**
  * Immutable data object for loan charge data.

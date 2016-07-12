@@ -19,12 +19,12 @@
 package org.apache.fineract.portfolio.loanaccount.data;
 
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
-
 import java.math.BigDecimal;
 import java.util.Map;
+
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
+import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
+import org.joda.time.LocalDate;
 
 public class LoanScheduleSuspendedAccruedIncomeData {
     private final Long loanId;

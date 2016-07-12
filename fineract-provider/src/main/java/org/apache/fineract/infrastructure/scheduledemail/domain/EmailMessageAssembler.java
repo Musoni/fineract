@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.domain;
 
-import com.google.gson.JsonElement;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.scheduledemail.EmailApiConstants;
@@ -31,6 +30,8 @@ import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.portfolio.group.domain.GroupRepositoryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.google.gson.JsonElement;
 
 @Component
 public class EmailMessageAssembler {

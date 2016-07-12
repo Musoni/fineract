@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormatter;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormatter;
 
 public class SavingsAccountDataDTO {
 

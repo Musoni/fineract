@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.portfolio.paymentdetail.data;
 
-import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 
 /**

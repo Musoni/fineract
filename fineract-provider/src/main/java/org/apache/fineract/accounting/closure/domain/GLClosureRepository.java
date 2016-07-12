@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.accounting.closure.domain;
 
-import org.hibernate.dialect.pagination.LimitHandler;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

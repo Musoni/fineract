@@ -22,6 +22,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
 
+import org.apache.fineract.infrastructure.jobs.service.JobRegisterServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;

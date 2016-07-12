@@ -20,9 +20,9 @@ package org.apache.fineract.infrastructure.reportmailingjob.data;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
+import org.joda.time.DateTime;
 
 /** 
  * Immutable data object representing report mailing job data. 

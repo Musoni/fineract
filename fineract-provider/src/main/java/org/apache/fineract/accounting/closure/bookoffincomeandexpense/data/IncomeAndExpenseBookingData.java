@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.accounting.closure.bookoffincomeandexpense.data;
 
-import org.joda.time.LocalDate;
-
 import java.util.List;
+
+import org.joda.time.LocalDate;
 
 public class IncomeAndExpenseBookingData {
     private final LocalDate bookingDate;

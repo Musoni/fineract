@@ -29,7 +29,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @SuppressWarnings("serial")

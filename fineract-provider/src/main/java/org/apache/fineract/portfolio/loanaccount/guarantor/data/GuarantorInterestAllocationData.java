@@ -19,9 +19,9 @@
 package org.apache.fineract.portfolio.loanaccount.guarantor.data;
 
 
-import org.joda.time.LocalDate;
-
 import java.math.BigDecimal;
+
+import org.joda.time.LocalDate;
 
 public class GuarantorInterestAllocationData {
 

@@ -18,16 +18,16 @@
  */
 package org.apache.fineract.accounting.closure.bookoffincomeandexpense.domain;
 
-import org.apache.fineract.accounting.closure.domain.GLClosure;
-import org.apache.fineract.organisation.office.domain.Office;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import org.apache.fineract.accounting.closure.domain.GLClosure;
+import org.apache.fineract.organisation.office.domain.Office;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "acc_income_and_expense_bookings",uniqueConstraints = { @UniqueConstraint(columnNames = { "journal_entry_transaction_id" }, name = "journal_entry_transaction_id") })

@@ -21,9 +21,9 @@ package org.apache.fineract.portfolio.calendar.service;
 import java.util.Collection;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.portfolio.calendar.data.CalendarData;
 import org.apache.fineract.portfolio.meeting.data.MeetingData;
+import org.joda.time.LocalDate;
 
 public interface CalendarReadPlatformService {
 

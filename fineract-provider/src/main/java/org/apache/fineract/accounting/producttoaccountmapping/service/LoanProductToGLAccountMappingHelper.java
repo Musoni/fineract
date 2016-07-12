@@ -18,7 +18,9 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.service;
 
-import com.google.gson.JsonElement;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.fineract.accounting.common.AccountingConstants.ACCRUAL_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.LOAN_PRODUCT_ACCOUNTING_PARAMS;
@@ -35,8 +37,7 @@ import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.JsonElement;
 
 @Component
 public class LoanProductToGLAccountMappingHelper extends ProductToGLAccountMappingHelper {

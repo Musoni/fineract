@@ -18,12 +18,9 @@
  */
 package org.apache.fineract.accounting.closure.domain;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
-import org.apache.fineract.organisation.office.domain.Office;
-import org.apache.fineract.useradministration.domain.AppUser;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,9 +31,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
+import org.apache.fineract.organisation.office.domain.Office;
+import org.apache.fineract.useradministration.domain.AppUser;
 
 @Entity
 @Table(name = "acc_gl_closure", uniqueConstraints = @UniqueConstraint(columnNames = { "office_id", "closing_date", "is_deleted" }, name = "unique_office_closing_date_is_deleted"))

@@ -62,7 +62,13 @@ import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartDat
 import org.apache.fineract.portfolio.interestratechart.service.InterestRateChartReadPlatformService;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
-import org.apache.fineract.portfolio.savings.*;
+import org.apache.fineract.portfolio.savings.DepositAccountType;
+import org.apache.fineract.portfolio.savings.DepositsApiConstants;
+import org.apache.fineract.portfolio.savings.SavingsApiConstants;
+import org.apache.fineract.portfolio.savings.SavingsCompoundingInterestPeriodType;
+import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYearType;
+import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
+import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
 import org.apache.fineract.portfolio.savings.data.FixedDepositProductData;
 import org.apache.fineract.portfolio.savings.service.DepositProductReadPlatformService;
 import org.apache.fineract.portfolio.savings.service.DepositsDropdownReadPlatformService;

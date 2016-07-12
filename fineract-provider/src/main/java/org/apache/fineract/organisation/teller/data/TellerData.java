@@ -18,16 +18,14 @@
  */
 package org.apache.fineract.organisation.teller.data;
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.organisation.office.data.OfficeData;
-import org.apache.fineract.organisation.staff.data.StaffData;
-import org.apache.fineract.organisation.teller.domain.TellerStatus;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Date;
+
+import org.apache.fineract.organisation.office.data.OfficeData;
+import org.apache.fineract.organisation.staff.data.StaffData;
+import org.apache.fineract.organisation.teller.domain.TellerStatus;
+import org.joda.time.LocalDate;
 
 /**
  * {@code TellerData} represents an immutable data object for teller data.

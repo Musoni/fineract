@@ -43,13 +43,13 @@ import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamE
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailData;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailHistoryData;
 import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
 import org.apache.fineract.infrastructure.jobs.service.SchedulerJobRunnerReadService;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

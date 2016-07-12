@@ -18,10 +18,8 @@
  */
 package org.apache.fineract.batch.command.internal;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.minidev.json.parser.JSONParser;
+import javax.ws.rs.core.UriInfo;
+
 import org.apache.fineract.batch.command.CommandStrategy;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
@@ -31,8 +29,8 @@ import org.apache.fineract.portfolio.loanaccount.api.LoansApiResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.core.UriInfo;
-import java.text.ParseException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Component
 public class CollectLoanTemplateCommandStrategy implements CommandStrategy {

@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.infrastructure.dataexport.domain;
 
-import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
-import org.apache.fineract.useradministration.domain.AppUser;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
+import org.apache.fineract.useradministration.domain.AppUser;
 
 @Entity
 @Table(name = "m_data_export")

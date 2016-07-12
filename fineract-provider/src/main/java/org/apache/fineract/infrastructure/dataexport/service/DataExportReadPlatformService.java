@@ -18,12 +18,13 @@
  */
 package org.apache.fineract.infrastructure.dataexport.service;
 
-import org.apache.fineract.infrastructure.dataexport.data.DataExportData;
-import org.apache.fineract.infrastructure.dataexport.data.DataExportEntityData;
+import java.util.Collection;
 
 import javax.ws.rs.core.Response;
 
-import java.util.Collection;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportData;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportEntityData;
+import org.apache.fineract.infrastructure.dataexport.domain.DataExport;
 
 public interface DataExportReadPlatformService {
     /**

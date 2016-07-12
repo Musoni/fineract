@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.savings.api;
 
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.COMMAND_INACTIVATE_CHARGE;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.COMMAND_PAY_CHARGE;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.COMMAND_WAIVE_CHARGE;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_CHARGES_RESPONSE_DATA_PARAMETERS;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_CHARGE_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.COMMAND_INACTIVATE_CHARGE;
 
 import java.util.Collection;
 

@@ -18,20 +18,26 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.domain;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
-import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+import org.apache.fineract.useradministration.domain.AppUser;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_guarantor_interest_allocation")
@@ -62,8 +68,7 @@ public class GuarantorInterestAllocation extends AbstractPersistable<Long> {
     @Column(name = "created_on_date", nullable = false)
     private  Date createdDate;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "interestAllocation", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "interestAllocation", orphanRemoval = true, fetch=FetchType.EAGER)
     protected final List<GuarantorInterestPayment> guarantorInterestPayments = new ArrayList<>();
 
 

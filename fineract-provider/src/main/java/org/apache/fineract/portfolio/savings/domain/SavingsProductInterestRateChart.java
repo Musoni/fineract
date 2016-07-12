@@ -18,18 +18,24 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
-import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartFields;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.applyToExistingSavingsAccountParamName;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.applyToExistingSavingsAccountParamName;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartFields;
+import org.joda.time.LocalDate;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_savings_product_interest_rate_chart")

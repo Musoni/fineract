@@ -19,27 +19,6 @@
 package org.apache.fineract.portfolio.loanaccount.service;
 
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
-import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
-import org.apache.fineract.portfolio.loanaccount.data.LoanChargeData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleSuspendedAccruedIncomeData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionEnumData;
-import org.apache.fineract.portfolio.loanaccount.domain.*;
-import org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
-
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,6 +28,32 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.sql.DataSource;
+
+import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
+import org.apache.fineract.portfolio.loanaccount.data.LoanChargeData;
+import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleSuspendedAccruedIncomeData;
+import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionEnumData;
+import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallmentRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
+import org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations;
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @Service
 public class LoanSuspendAccruedIncomeWritePlatformServiceImpl implements LoanSuspendAccruedIncomeWritePlatformService {

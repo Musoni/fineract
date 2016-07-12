@@ -18,13 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.apache.fineract.organisation.monetary.domain.Money;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingTransaction;
-import org.apache.fineract.portfolio.savings.DepositAccountOnHoldTransactionType;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,8 +30,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.math.BigDecimal;
-import java.util.Date;
+
+import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
+import org.apache.fineract.organisation.monetary.domain.Money;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingTransaction;
+import org.apache.fineract.portfolio.savings.DepositAccountOnHoldTransactionType;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_deposit_account_on_hold_transaction")

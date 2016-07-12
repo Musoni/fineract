@@ -21,9 +21,9 @@ package org.apache.fineract.accounting.producttoaccountmapping.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SHARES;
 import org.apache.fineract.accounting.common.AccountingConstants.SHARES_PRODUCT_ACCOUNTING_PARAMS;
+import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;

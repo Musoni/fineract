@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.transfer.service;
 
+import java.util.Collection;
+
 import org.apache.fineract.portfolio.transfer.data.UndoTransferClientData;
 import org.apache.fineract.portfolio.transfer.data.UndoTransferGroupData;
-
-import java.util.Collection;
 
 public interface UndoTransferReadPlatformService {
 

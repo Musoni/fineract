@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.loanaccount.guarantor.GuarantorConstants.GUARANTOR_JSON_INPUT_PARAMS;
 import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorType;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable command for creating or updating details of a Guarantor.

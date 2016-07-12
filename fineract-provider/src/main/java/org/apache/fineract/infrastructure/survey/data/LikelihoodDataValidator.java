@@ -18,8 +18,11 @@
  */
 package org.apache.fineract.infrastructure.survey.data;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -31,10 +34,8 @@ import org.apache.fineract.infrastructure.survey.api.LikelihoodApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * Created by Cieyou on 3/12/14.

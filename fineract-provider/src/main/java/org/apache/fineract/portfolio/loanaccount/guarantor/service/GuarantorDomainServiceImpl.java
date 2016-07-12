@@ -20,12 +20,18 @@ package org.apache.fineract.portfolio.loanaccount.guarantor.service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormatter;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -42,7 +48,6 @@ import org.apache.fineract.portfolio.account.domain.AccountTransferDetails;
 import org.apache.fineract.portfolio.account.domain.AccountTransferType;
 import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.account.service.AccountTransfersWritePlatformService;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.common.service.BusinessEventListner;
@@ -51,7 +56,16 @@ import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.guarantor.GuarantorConstants;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.*;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.Guarantor;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingDetails;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingRepository;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingTransaction;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingTransactionRepository;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorInterestAllocation;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorInterestAllocationRepository;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorInterestPayment;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorInterestPaymentRepository;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorRepository;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductGuaranteeDetails;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
@@ -59,12 +73,20 @@ import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetailRepositor
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepository;
 import org.apache.fineract.portfolio.savings.SavingsApiConstants;
-import org.apache.fineract.portfolio.savings.domain.*;
+import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransaction;
+import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransactionRepository;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountAssembler;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountDomainService;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransactionSummaryWrapper;
+import org.apache.fineract.portfolio.savings.domain.SavingsHelper;
 import org.apache.fineract.portfolio.savings.exception.InsufficientAccountBalanceException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GuarantorDomainServiceImpl implements GuarantorDomainService {

@@ -21,9 +21,9 @@ package org.apache.fineract.portfolio.savings.domain.interest;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
+import org.joda.time.LocalDate;
 
 public class CompoundInterestHelper {
 

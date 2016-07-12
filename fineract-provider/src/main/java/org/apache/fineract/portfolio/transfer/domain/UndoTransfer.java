@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.portfolio.transfer.domain;
 
-import org.apache.fineract.organisation.staff.domain.Staff;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.group.domain.Group;
-import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +27,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Date;
+
+import org.apache.fineract.organisation.staff.domain.Staff;
+import org.apache.fineract.portfolio.client.domain.Client;
+import org.apache.fineract.portfolio.group.domain.Group;
+import org.apache.fineract.useradministration.domain.AppUser;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name="m_undo_transfer")

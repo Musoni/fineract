@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.infrastructure.sms.data;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing a SMS message.

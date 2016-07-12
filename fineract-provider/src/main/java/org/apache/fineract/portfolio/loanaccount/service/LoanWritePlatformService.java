@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.loanaccount.service;
 import java.util.Collection;
 import java.util.Map;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
@@ -36,6 +35,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.OverdueLoanScheduleData;
+import org.joda.time.LocalDate;
 
 public interface LoanWritePlatformService {
 

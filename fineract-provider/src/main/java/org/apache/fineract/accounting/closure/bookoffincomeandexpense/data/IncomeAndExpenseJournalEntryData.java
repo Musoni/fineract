@@ -19,10 +19,10 @@
 package org.apache.fineract.accounting.closure.bookoffincomeandexpense.data;
 
 
-import org.joda.time.LocalDate;
-import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
-
 import java.math.BigDecimal;
+
+import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
+import org.joda.time.LocalDate;
 
 public class IncomeAndExpenseJournalEntryData {
 

@@ -20,8 +20,8 @@ package org.apache.fineract.accounting.closure.storeglaccountbalance.data;
 
 import java.math.BigDecimal;
 
-import org.joda.time.LocalDateTime;
 import org.apache.fineract.accounting.closure.storeglaccountbalance.domain.GLClosureJournalEntryBalance;
+import org.joda.time.LocalDateTime;
 
 /**
  * Immutable object representing a {@link GLClosureJournalEntryBalance} entity

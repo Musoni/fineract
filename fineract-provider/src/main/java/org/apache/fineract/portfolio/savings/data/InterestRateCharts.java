@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
-import org.joda.time.LocalDate;
-
 import java.math.BigDecimal;
+
+import org.joda.time.LocalDate;
 
 public class InterestRateCharts {
 

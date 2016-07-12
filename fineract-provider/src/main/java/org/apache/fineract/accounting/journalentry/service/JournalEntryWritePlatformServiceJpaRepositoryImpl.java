@@ -28,10 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDate;
-import org.apache.fineract.accounting.closure.bookoffincomeandexpense.data.SingleDebitOrCreditEntry;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.closure.domain.GLClosureRepository;
 import org.apache.fineract.accounting.common.AccountingConstants;
@@ -80,6 +77,7 @@ import org.apache.fineract.portfolio.client.domain.ClientTransaction;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.portfolio.paymentdetail.service.PaymentDetailWritePlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +85,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 @Service
 public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements JournalEntryWritePlatformService {

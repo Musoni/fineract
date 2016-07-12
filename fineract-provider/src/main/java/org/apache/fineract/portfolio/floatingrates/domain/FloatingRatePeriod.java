@@ -27,11 +27,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateDTO;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity

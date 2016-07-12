@@ -18,12 +18,9 @@
  */
 package org.apache.fineract.infrastructure.sms.data;
 
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-
-import java.util.Map;
 
 public class SmsCampaignData {
 

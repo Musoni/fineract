@@ -23,8 +23,8 @@ import java.util.Collection;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryData;
+import org.joda.time.LocalDate;
 
 public interface GLClosureJournalEntryBalanceReadPlatformService {
     Collection<GLClosureJournalEntryData> retrieveAllJournalEntries(Long officeId, LocalDate maxEntryDate);

@@ -21,11 +21,11 @@ package org.apache.fineract.portfolio.savings.data;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartData;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartSlabData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing a deposit account interest rate chart.

@@ -19,7 +19,6 @@
 package org.apache.fineract.organisation.teller.service;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -27,9 +26,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
@@ -51,6 +47,7 @@ import org.apache.fineract.organisation.teller.data.TellerTransactionData;
 import org.apache.fineract.organisation.teller.domain.CashierTxnType;
 import org.apache.fineract.organisation.teller.domain.TellerStatus;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

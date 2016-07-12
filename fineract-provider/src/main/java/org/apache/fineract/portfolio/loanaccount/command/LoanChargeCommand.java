@@ -20,8 +20,8 @@ package org.apache.fineract.portfolio.loanaccount.command;
 
 import java.math.BigDecimal;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
+import org.joda.time.LocalDate;
 
 /**
  * Java object representation of {@link LoanCharge} API JSON.

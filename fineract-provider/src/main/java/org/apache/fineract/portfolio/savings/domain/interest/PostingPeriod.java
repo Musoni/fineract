@@ -23,14 +23,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.savings.SavingsCompoundingInterestPeriodType;
 import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class PostingPeriod {
 

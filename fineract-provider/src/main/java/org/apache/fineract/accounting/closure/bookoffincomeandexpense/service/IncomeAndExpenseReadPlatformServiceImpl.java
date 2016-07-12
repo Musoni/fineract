@@ -19,22 +19,22 @@
 package org.apache.fineract.accounting.closure.bookoffincomeandexpense.service;
 
 
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.apache.fineract.accounting.closure.bookoffincomeandexpense.data.IncomeAndExpenseJournalEntryData;
-import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.apache.fineract.accounting.closure.bookoffincomeandexpense.data.IncomeAndExpenseJournalEntryData;
+import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
 
 @Service
 public class IncomeAndExpenseReadPlatformServiceImpl implements IncomeAndExpenseReadPlatformService {

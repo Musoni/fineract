@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
+import java.util.List;
+
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -26,7 +28,11 @@ import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
 import org.apache.fineract.infrastructure.dataqueries.domain.EntityDatatableChecks;
 import org.apache.fineract.infrastructure.dataqueries.domain.EntityDatatableChecksRepository;
-import org.apache.fineract.infrastructure.dataqueries.exception.*;
+import org.apache.fineract.infrastructure.dataqueries.exception.DatatabaleEntryRequiredException;
+import org.apache.fineract.infrastructure.dataqueries.exception.DatatableNotFoundException;
+import org.apache.fineract.infrastructure.dataqueries.exception.EntityDatatableCheckNotAllow;
+import org.apache.fineract.infrastructure.dataqueries.exception.EntityDatatableCheckNotSupportedException;
+import org.apache.fineract.infrastructure.dataqueries.exception.EntityDatatableChecksNotFoundException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class EntityDatatableChecksWritePlatformServiceImpl implements EntityDatatableChecksWritePlatformService {

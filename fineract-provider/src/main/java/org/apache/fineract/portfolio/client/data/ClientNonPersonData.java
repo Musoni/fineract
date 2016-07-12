@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.client.data;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
+import org.joda.time.LocalDate;
 
 /**
  * Immutable data object representing the ClientNonPerson

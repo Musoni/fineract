@@ -33,14 +33,14 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
 import org.joda.time.Weeks;
 import org.joda.time.Years;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
-import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 
 @Embeddable
 public class InterestRateChartSlabFields {

@@ -23,8 +23,8 @@ import static org.apache.fineract.portfolio.savings.DepositsApiConstants.deposit
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.depositPeriodFrequencyIdParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.depositPeriodParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.expectedFirstDepositOnDateParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.transferInterestToSavingsParamName;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.localeParamName;
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.transferInterestToSavingsParamName;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -40,16 +40,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Weeks;
-import org.joda.time.Years;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.portfolio.savings.DepositAccountOnClosureType;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.apache.fineract.portfolio.savings.service.SavingsEnumerations;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.Months;
+import org.joda.time.Weeks;
+import org.joda.time.Years;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity

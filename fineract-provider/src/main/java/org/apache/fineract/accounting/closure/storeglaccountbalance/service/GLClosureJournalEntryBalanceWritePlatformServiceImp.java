@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.accounting.closure.bookoffincomeandexpense.domain.IncomeAndExpenseBooking;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryData;
@@ -41,6 +40,7 @@ import org.apache.fineract.accounting.journalentry.service.JournalEntryReadPlatf
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

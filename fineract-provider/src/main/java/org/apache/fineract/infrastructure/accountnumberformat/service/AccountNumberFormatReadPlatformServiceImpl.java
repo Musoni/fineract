@@ -18,6 +18,15 @@
  */
 package org.apache.fineract.infrastructure.accountnumberformat.service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.fineract.infrastructure.accountnumberformat.data.AccountNumberFormatData;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations.AccountNumberPrefixType;
@@ -31,15 +40,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Service
 public class AccountNumberFormatReadPlatformServiceImpl implements AccountNumberFormatReadPlatformService {

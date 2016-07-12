@@ -18,7 +18,14 @@
  */
 package org.apache.fineract.infrastructure.dataexport.helper;
 
-import au.com.bytecode.opencsv.CSVWriter;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.WordUtils;
@@ -32,14 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import au.com.bytecode.opencsv.CSVWriter;
 
 /** 
  * Helper class that provides useful methods to manage CSV files 

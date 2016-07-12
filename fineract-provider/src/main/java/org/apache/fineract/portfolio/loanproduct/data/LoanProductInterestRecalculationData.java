@@ -22,7 +22,6 @@ import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.preCloseInterestCalculationStrategy;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.rescheduleStrategyType;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.loanproduct.domain.InterestRecalculationCompoundingMethod;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanPreClosureInterestCalculationStrategy;

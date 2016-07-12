@@ -20,11 +20,11 @@ package org.apache.fineract.portfolio.account.service;
 
 import java.util.Collection;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.portfolio.account.data.StandingInstructionDTO;
 import org.apache.fineract.portfolio.account.data.StandingInstructionData;
 import org.apache.fineract.portfolio.account.data.StandingInstructionDuesData;
+import org.joda.time.LocalDate;
 
 public interface StandingInstructionReadPlatformService {
 

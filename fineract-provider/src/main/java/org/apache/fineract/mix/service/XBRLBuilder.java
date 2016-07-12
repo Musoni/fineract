@@ -25,14 +25,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.apache.fineract.mix.data.ContextData;
 import org.apache.fineract.mix.data.MixTaxonomyData;
 import org.apache.fineract.mix.data.NamespaceData;
 import org.apache.fineract.mix.data.XBRLData;
 import org.apache.fineract.mix.exception.XBRLMappingInvalidException;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

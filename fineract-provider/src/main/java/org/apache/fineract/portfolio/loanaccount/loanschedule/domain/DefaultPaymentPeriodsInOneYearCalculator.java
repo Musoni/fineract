@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 
 public class DefaultPaymentPeriodsInOneYearCalculator implements PaymentPeriodsInOneYearCalculator {
 

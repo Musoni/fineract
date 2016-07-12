@@ -18,12 +18,6 @@
  */
 package org.apache.fineract.infrastructure.accountnumberformat.domain;
 
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.group.domain.Group;
-import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 
 public class AccountNumberFormatEnumerations {
 

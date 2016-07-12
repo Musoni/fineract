@@ -25,12 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.joda.time.LocalDate;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.RecalculationDetail;
+import org.joda.time.LocalDate;
 
 public class LoanScheduleParams {
 

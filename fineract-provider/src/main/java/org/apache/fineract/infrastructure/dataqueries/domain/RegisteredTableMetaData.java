@@ -18,16 +18,18 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
-import com.google.gson.JsonElement;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.apache.commons.lang.StringUtils;
-import org.apache.fineract.infrastructure.codes.exception.SystemDefinedCodeCannotBeChangedException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-
-import javax.persistence.*;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "x_registered_table_metadata")

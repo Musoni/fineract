@@ -18,15 +18,15 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartFields;
 import org.apache.fineract.portfolio.savings.data.InterestRateCharts;
 import org.apache.fineract.portfolio.savings.domain.SavingsProductInterestRateChart;
 import org.apache.fineract.portfolio.savings.domain.SavingsProductInterestRateChartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Service
 public class SavingsProductInterestRateChartReadPlatformServiceImpl  implements SavingsProductInterestRateChartReadPlatformService{

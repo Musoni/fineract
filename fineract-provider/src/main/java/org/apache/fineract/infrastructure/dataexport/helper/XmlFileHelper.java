@@ -18,18 +18,12 @@
  */
 package org.apache.fineract.infrastructure.dataexport.helper;
 
-//import org.apache.commons.io.FileUtils;
-import org.apache.fineract.infrastructure.dataexport.api.DataExportApiConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class XmlFileHelper {
     public static final String IDENTITIER_TYPE = "MSISDN";

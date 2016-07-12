@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.infrastructure.scheduledemail.service;
 
-import org.apache.fineract.infrastructure.core.service.Page;
-import org.apache.fineract.infrastructure.scheduledemail.data.EmailData;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailData;
 
 public interface EmailReadPlatformService {
 

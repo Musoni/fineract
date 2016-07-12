@@ -33,10 +33,9 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.template.data.TemplateApiConstants;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import com.google.gson.JsonArray;

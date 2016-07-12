@@ -19,9 +19,9 @@
 package org.apache.fineract.portfolio.common.service;
 
 import static org.apache.fineract.portfolio.common.service.CommonEnumerations.conditionType;
-import static org.apache.fineract.portfolio.common.service.CommonEnumerations.termFrequencyType;
 import static org.apache.fineract.portfolio.common.service.CommonEnumerations.daysInMonthType;
 import static org.apache.fineract.portfolio.common.service.CommonEnumerations.daysInYearType;
+import static org.apache.fineract.portfolio.common.service.CommonEnumerations.termFrequencyType;
 
 import java.util.Arrays;
 import java.util.List;

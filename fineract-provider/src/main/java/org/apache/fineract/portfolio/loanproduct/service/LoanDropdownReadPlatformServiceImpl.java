@@ -21,6 +21,8 @@ package org.apache.fineract.portfolio.loanproduct.service;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.amortizationType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestCalculationPeriodType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRateFrequencyType;
+import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRecalculationCompoundingDayOfWeekType;
+import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRecalculationCompoundingNthDayType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRecalculationCompoundingType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRecalculationFrequencyType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestType;
@@ -31,8 +33,6 @@ import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.repaymentFrequencyNthDayType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.repaymentFrequencyType;
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.rescheduleStrategyType;
-import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRecalculationCompoundingNthDayType;
-import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestRecalculationCompoundingDayOfWeekType;
 
 import java.util.ArrayList;
 import java.util.Arrays;

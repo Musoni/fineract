@@ -43,7 +43,6 @@ import javax.persistence.Transient;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.LocalDate;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -61,6 +60,7 @@ import org.apache.fineract.portfolio.group.exception.GroupExistsInCenterExceptio
 import org.apache.fineract.portfolio.group.exception.GroupNotExistsInCenterException;
 import org.apache.fineract.portfolio.group.exception.InvalidGroupStateTransitionException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity

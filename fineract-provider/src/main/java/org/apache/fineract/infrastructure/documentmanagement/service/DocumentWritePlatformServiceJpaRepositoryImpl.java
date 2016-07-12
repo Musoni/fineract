@@ -24,7 +24,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
-import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataServiceImpl;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommandValidator;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepository;

@@ -23,13 +23,6 @@ import java.math.MathContext;
 import java.util.Date;
 import java.util.List;
 
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-import org.joda.time.Weeks;
-import org.joda.time.Years;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
@@ -55,6 +48,13 @@ import org.apache.fineract.portfolio.loanproduct.domain.LoanPreClosureInterestCa
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRelatedDetail;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanRescheduleStrategyMethod;
 import org.apache.fineract.portfolio.loanproduct.domain.RecalculationFrequencyType;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.joda.time.Months;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.Weeks;
+import org.joda.time.Years;
 
 public final class LoanApplicationTerms {
 

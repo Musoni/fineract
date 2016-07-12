@@ -18,10 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import org.apache.fineract.portfolio.collateral.data.CollateralData;
-import org.apache.fineract.portfolio.loanaccount.data.GroupLoanMembersAllocationData;
-
 import java.util.List;
+
+import org.apache.fineract.portfolio.loanaccount.data.GroupLoanMembersAllocationData;
 
 public interface GroupLoanMembersAllocationReadPlatformService {
 

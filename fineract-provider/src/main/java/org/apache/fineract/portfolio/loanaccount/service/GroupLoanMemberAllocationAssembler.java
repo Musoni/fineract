@@ -18,20 +18,23 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.apache.fineract.portfolio.loanaccount.domain.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+
+import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
+import org.apache.fineract.portfolio.client.domain.Client;
+import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
+import org.apache.fineract.portfolio.loanaccount.domain.GroupLoanMemberAllocation;
+import org.apache.fineract.portfolio.loanaccount.domain.GroupLoanMemberAllocationRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 @Service
 public class GroupLoanMemberAllocationAssembler {
