@@ -57,13 +57,10 @@ public class CodeValue extends AbstractPersistable<Long> {
     
     @Column(name = "is_mandatory")
     private boolean isMandatory;
-    
-    @Column(name = "deletion_token")
-    private String deletionToken;
 
     public static CodeValue createNew(final Code code, final String label, final int position, final String description,
             final boolean isActive, final boolean isMandatory) {
-        return new CodeValue(code, label, position, description, isActive, isMandatory, "NA");
+        return new CodeValue(code, label, position, description, isActive, isMandatory);
     }
 
     protected CodeValue() {
@@ -71,14 +68,13 @@ public class CodeValue extends AbstractPersistable<Long> {
     }
 
     private CodeValue(final Code code, final String label, final int position, final String description, final boolean isActive, 
-            final boolean isMandatory, final String deletionToken) {
+            final boolean isMandatory) {
         this.code = code;
         this.label = StringUtils.defaultIfEmpty(label, null);
         this.position = position;
         this.description = description;
         this.isActive = isActive;
         this.isMandatory = isMandatory;
-        this.deletionToken = deletionToken;
     }
 
     public String label() {
@@ -105,7 +101,7 @@ public class CodeValue extends AbstractPersistable<Long> {
         
         final boolean isMandatory = command.booleanPrimitiveValueOfParameterNamed(CODEVALUE_JSON_INPUT_PARAMS.IS_MANDATORY.getValue());
 
-        return new CodeValue(code, label, position.intValue(), description, isActive, isMandatory, "NA");
+        return new CodeValue(code, label, position.intValue(), description, isActive, isMandatory);
     }
 
     public Map<String, Object> update(final JsonCommand command) {
@@ -163,7 +159,9 @@ public class CodeValue extends AbstractPersistable<Long> {
      **/
     public void delete() {
         this.isActive = false;
-        this.deletionToken = UUID.randomUUID().toString();
+        
+        // update the name of the code value
+        this.label = this.label + "_deleted_" + this.getId();
     }
     
     /** 
