@@ -368,7 +368,7 @@ public final class LoanRepaymentScheduleInstallment extends AbstractAuditableCus
         this.obligationsMet = false;
         this.obligationsMetOnDate = null;
     }
-
+    
     public void resetAccrualComponents() {
         this.interestAccrued = null;
         this.feeAccrued = null;

@@ -57,10 +57,11 @@ public interface LoanAccountDomainService {
 
     void saveLoanWithDataIntegrityViolationChecks(Loan loan);
 
-
     void disableStandingInstructionsLinkedToClosedLoan(Loan loan);
     
     void disableStandingInstructions(Loan loan);
 
     Map<String, Object> foreCloseLoan(final Loan loan, final LocalDate foreClourseDate, String noteText);
+
+    void recalculateAccruals(Loan loan, boolean isInterestCalcualtionHappened);
 }
