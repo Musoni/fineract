@@ -279,7 +279,13 @@ public class ClientsApiResource {
         } else if (is(commandParam,"undoTransfer")){
             commandRequest = builder.undoClientTransfer(clientId).build();
             result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
-        }
+        } else if (is(commandParam, "undoRejection")) {
+			commandRequest = builder.undoRejection(clientId).build();
+			result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
+		} else if (is(commandParam, "undoWithdrawal")) {
+			commandRequest = builder.undoWithdrawal(clientId).build();
+			result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
+		}
 
         if (result == null) { throw new UnrecognizedQueryParamException("command", commandParam, new Object[] { "activate",
                 "unassignStaff", "assignStaff", "close", "proposeTransfer", "withdrawTransfer", "acceptTransfer", "rejectTransfer",
