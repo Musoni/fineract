@@ -137,4 +137,11 @@ public interface LoanApiConstants {
     // fore closure constants
     public static final String transactionDateParamName = "transactionDate";
     public static final String noteParamName = "note";
+
+
+    public static final String canUseForTopup = "canUseForTopup";
+    public static final String clientActiveLoanOptions = "clientActiveLoanOptions";
+    public static final String isTopup = "isTopup";
+    public static final String loanIdToClose = "loanIdToClose";
+    public static final String topupAmount = "topupAmount";
 }

@@ -316,14 +316,13 @@ public class AccountTransferDetailAssembler {
                 transferType);
     }
 
-    public AccountTransferDetails assembleLoanToLoanTransfer(final Loan fromLoanAccount, final Loan toLoanAccount,
-                                                             Integer transferType){
+    public AccountTransferDetails assembleLoanToLoanTransfer(Loan fromLoanAccount, Loan toLoanAccount, Integer transferType) {
         final Office fromOffice = fromLoanAccount.getOffice();
         final Client fromClient = fromLoanAccount.client();
         final Office toOffice = toLoanAccount.getOffice();
         final Client toClient = toLoanAccount.client();
 
-        return AccountTransferDetails.loanToLoanTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toLoanAccount,
-                transferType);
+        return AccountTransferDetails.LoanToLoanTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, 
+        		toLoanAccount, transferType);
     }
 }

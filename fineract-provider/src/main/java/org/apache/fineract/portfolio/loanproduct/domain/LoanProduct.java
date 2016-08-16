@@ -196,6 +196,8 @@ public class LoanProduct extends AbstractPersistable<Long> {
     @Column(name = "can_auto_allocate_overpayments")
     private boolean canAutoAllocateOverpayments;
 
+    @Column(name = "can_use_for_topup", nullable = false)
+    private boolean canUseForTopup = false;
 
     public static LoanProduct assembleFromJson(final Fund fund, final LoanTransactionProcessingStrategy loanTransactionProcessingStrategy,
             final List<Charge> productCharges, final JsonCommand command, final AprCalculator aprCalculator, FloatingRate floatingRate, 
@@ -348,6 +350,11 @@ public class LoanProduct extends AbstractPersistable<Long> {
 
         final boolean syncExpectedWithDisbursementDate = command.booleanPrimitiveValueOfParameterNamed("syncExpectedWithDisbursementDate");
         
+        
+		final boolean canUseForTopup = command.parameterExists(LoanProductConstants.canUseForTopup)
+				? command.booleanPrimitiveValueOfParameterNamed(LoanProductConstants.canUseForTopup)
+				: false;
+
         return new LoanProduct(fund, loanTransactionProcessingStrategy, name, shortName, description, currency, principal, minPrincipal,
                 maxPrincipal, interestRatePerPeriod, minInterestRatePerPeriod, maxInterestRatePerPeriod, interestFrequencyType,
                 annualInterestRate, interestMethod, interestCalculationPeriodMethod, allowPartialPeriodInterestCalcualtion, repaymentEvery,
@@ -362,7 +369,7 @@ public class LoanProduct extends AbstractPersistable<Long> {
                 interestRateDifferential, minDifferentialLendingRate, maxDifferentialLendingRate, defaultDifferentialLendingRate,
                 isFloatingInterestRateCalculationAllowed, isVariableInstallmentsAllowed, minimumGapBetweenInstallments,
                 maximumGapBetweenInstallments, creditChecks, reverseOverdueDaysNPAInterest, productGroup, canAutoAllocateOverpayments, 
-                syncExpectedWithDisbursementDate);
+                syncExpectedWithDisbursementDate, canUseForTopup);
     }
 
     public void updateLoanProductInRelatedClasses() {
@@ -577,12 +584,10 @@ public class LoanProduct extends AbstractPersistable<Long> {
             final Integer repayEvery, final PeriodFrequencyType repaymentFrequencyType, final Integer defaultNumberOfInstallments,
             final Integer defaultMinNumberOfInstallments, final Integer defaultMaxNumberOfInstallments,
             final Integer graceOnPrincipalPayment, final Integer recurringMoratoriumOnPrincipalPeriods, final Integer graceOnInterestPayment, final Integer graceOnInterestCharged,
-            final AmortizationMethod amortizationMethod, final BigDecimal inArrearsTolerance, final List<Charge> charges,
-            final AccountingRuleType accountingRuleType, final boolean includeInBorrowerCycle, final LocalDate startDate,
-            final LocalDate closeDate, final String externalId, final boolean useBorrowerCycle,
-            final Set<LoanProductBorrowerCycleVariations> loanProductBorrowerCycleVariations, final boolean multiDisburseLoan,
-            final Integer maxTrancheCount, final BigDecimal outstandingLoanBalance, final Integer graceOnArrearsAgeing,
-            final Integer overdueDaysForNPA, final DaysInMonthType daysInMonthType, final DaysInYearType daysInYearType,
+            final AmortizationMethod amortizationMethod, final BigDecimal inArrearsTolerance, final List<Charge> charges, final AccountingRuleType accountingRuleType,
+            final boolean includeInBorrowerCycle, final LocalDate startDate, final LocalDate closeDate, final String externalId, final boolean useBorrowerCycle,
+            final Set<LoanProductBorrowerCycleVariations> loanProductBorrowerCycleVariations, final boolean multiDisburseLoan, final Integer maxTrancheCount, final BigDecimal outstandingLoanBalance,
+            final Integer graceOnArrearsAgeing, final Integer overdueDaysForNPA, final DaysInMonthType daysInMonthType, final DaysInYearType daysInYearType,
             final boolean isInterestRecalculationEnabled,
             final LoanProductInterestRecalculationDetails productInterestRecalculationDetails,
             final Integer minimumDaysBetweenDisbursalAndFirstRepayment, final boolean holdGuarantorFunds,
@@ -594,7 +599,7 @@ public class LoanProduct extends AbstractPersistable<Long> {
             Boolean isFloatingInterestRateCalculationAllowed, final Boolean isVariableInstallmentsAllowed,
             final Integer minimumGapBetweenInstallments, final Integer maximumGapBetweenInstallments,
             final List<CreditCheck> creditChecks, final boolean reverseOverdueDaysNPAInterest, final CodeValue productGroup,
-            final boolean canAutoAllocateOverpayments, final boolean syncExpectedWithDisbursementDate) {
+            final boolean canAutoAllocateOverpayments, final boolean syncExpectedWithDisbursementDate, final boolean canUseForTopup) {
         this.fund = fund;
         this.transactionProcessingStrategy = transactionProcessingStrategy;
         this.name = name.trim();
@@ -677,6 +682,7 @@ public class LoanProduct extends AbstractPersistable<Long> {
         this.canAutoAllocateOverpayments = canAutoAllocateOverpayments;
         this.syncExpectedWithDisbursementDate = 
         		syncExpectedWithDisbursementDate;
+        this.canUseForTopup = canUseForTopup;
     }
 
     public MonetaryCurrency getCurrency() {
@@ -1115,11 +1121,19 @@ public class LoanProduct extends AbstractPersistable<Long> {
             actualChanges.put("locale", localeAsInput);
             this.installmentAmountInMultiplesOf = newValue;
         }
+
         if (command.isChangeInBooleanParameterNamed(LoanProductConstants.reverseOverdueDaysNPAInterestParameterName, this.reverseOverdueDaysNPAInterest)) {
             final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(LoanProductConstants.reverseOverdueDaysNPAInterestParameterName);
             actualChanges.put(LoanProductConstants.reverseOverdueDaysNPAInterestParameterName, newValue);
             this.reverseOverdueDaysNPAInterest = newValue;
         }
+
+        if (command.isChangeInBooleanParameterNamed(LoanProductConstants.canUseForTopup, this.canUseForTopup)) {
+            final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(LoanProductConstants.canUseForTopup);
+            actualChanges.put(LoanProductConstants.canUseForTopup, newValue);
+            this.canUseForTopup = newValue;
+        }
+
         return actualChanges;
     }
 
@@ -1459,4 +1473,8 @@ public class LoanProduct extends AbstractPersistable<Long> {
     public Integer getOverdueDaysForNPA() {return this.overdueDaysForNPA;}
 
     public CodeValue getProductGroup() { return this.productGroup; }
+
+    public boolean canUseForTopup(){
+        return this.canUseForTopup;
+    }
 }

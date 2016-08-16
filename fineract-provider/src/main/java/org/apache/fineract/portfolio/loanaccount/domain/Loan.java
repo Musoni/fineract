@@ -409,6 +409,14 @@ public class Loan extends AbstractPersistable<Long> {
     @Column(name = "loan_sub_status_id", nullable = true)
     private Integer loanSubStatus;
 
+    @Column(name = "is_topup", nullable = false)
+    private boolean isTopup = false;
+
+//    @OneToOne(cascade = CascadeType.ALL,  orphanRemoval = true, fetch=FetchType.EAGER)
+//    @JoinColumn(name = "loan_id", referencedColumnName= "id" , nullable = true)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "loan", optional = true, orphanRemoval = true, fetch=FetchType.EAGER)
+    private LoanTopupDetails loanTopupDetails;
+
     public static Loan newIndividualLoanApplication(final String accountNo, final Client client, final Integer loanType,
             final LoanProduct loanProduct, final Fund fund, final Staff officer, final CodeValue loanPurpose,
             final LoanTransactionProcessingStrategy transactionProcessingStrategy,
@@ -2977,6 +2985,11 @@ public class Loan extends AbstractPersistable<Long> {
                 }
             }
 
+            if(this.isTopup){
+                this.loanTopupDetails.setAccountTransferDetails(null);
+                this.loanTopupDetails.setTopupAmount(null);
+            }
+
             actualChanges.put("actualDisbursementDate", "");
             
             updateLoanSummaryDerivedFields();
@@ -5049,6 +5062,12 @@ public class Loan extends AbstractPersistable<Long> {
                             defaultUserMessage);
                     dataValidationErrors.add(error);
                 }
+                if(isOpen() && this.isTopup()){
+                    final String defaultUserMessage = "Loan Undo disbursal is not allowed on Topup Loans";
+                    final ApiParameterError error = ApiParameterError.generalError("error.msg.loan.undo.disbursal.not.allowed.on.topup.loan",
+                            defaultUserMessage);
+                    dataValidationErrors.add(error);
+                }
             break;
             case LOAN_REPAYMENT_OR_WAIVER:
                 if (!isOpen()) {
@@ -6701,5 +6720,34 @@ public class Loan extends AbstractPersistable<Long> {
 			}
 		}
         return retData.size()>0?retData:null;
+    }
+
+    public void setIsTopup(final boolean isTopup) {
+        this.isTopup = isTopup;
+    }
+
+    public boolean isTopup() {
+        return this.isTopup;
+    }
+
+    public BigDecimal getFirstDisbursalAmount() {
+        BigDecimal firstDisbursalAmount;
+
+        if(this.isMultiDisburmentLoan()){
+            List<DisbursementData> disbursementData = getDisbursmentData();
+            Collections.sort(disbursementData);
+            firstDisbursalAmount = disbursementData.get(disbursementData.size()-1).amount();
+        }else{
+            firstDisbursalAmount = this.getLoanRepaymentScheduleDetail().getPrincipal().getAmount();
+        }
+        return firstDisbursalAmount;
+    }
+
+    public void setTopupLoanDetails(LoanTopupDetails topupLoanDetails) {
+        this.loanTopupDetails = topupLoanDetails;
+    }
+
+    public LoanTopupDetails getTopupLoanDetails() {
+        return this.loanTopupDetails;
     }
 }
