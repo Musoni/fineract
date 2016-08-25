@@ -21,6 +21,7 @@ package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.fineract.organisation.holiday.domain.Holiday;
 import org.apache.fineract.organisation.holiday.service.HolidayUtil;
 import org.apache.fineract.organisation.workingdays.domain.RepaymentRescheduleType;
 import org.apache.fineract.organisation.workingdays.service.WorkingDaysUtil;
@@ -32,7 +33,9 @@ import org.apache.fineract.portfolio.common.domain.DayOfWeekType;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.apache.fineract.portfolio.loanaccount.data.HolidayDetailDTO;
 import org.joda.time.Days;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.joda.time.Months;
 import org.joda.time.Weeks;
 import org.joda.time.Years;
@@ -61,10 +64,10 @@ public class DefaultScheduledDateGenerator implements ScheduledDateGenerator {
             boolean isFirstRepayment, final HolidayDetailDTO holidayDetailDTO) {
         final LocalDate firstRepaymentPeriodDate = loanApplicationTerms.getCalculatedRepaymentsStartingFromLocalDate();
         LocalDate dueRepaymentPeriodDate = null;
+        Calendar currentCalendar = loanApplicationTerms.getLoanCalendar();
         if (isFirstRepayment && firstRepaymentPeriodDate != null) {
             dueRepaymentPeriodDate = firstRepaymentPeriodDate;
         } else {
-            Calendar currentCalendar = loanApplicationTerms.getLoanCalendar();
             dueRepaymentPeriodDate = getRepaymentPeriodDate(loanApplicationTerms.getRepaymentPeriodFrequencyType(),
                     loanApplicationTerms.getRepaymentEvery(), lastRepaymentDate, null,
                     null);
@@ -100,10 +103,33 @@ public class DefaultScheduledDateGenerator implements ScheduledDateGenerator {
                         loanApplicationTerms.getNumberOfdays());
             }
         }
-        
+        if (currentCalendar == null && holidayDetailDTO.getWorkingDays().getExtendTermForRepaymentsOnHolidays()) {
+            boolean repaymentDateIsOnHoliday = false;
+            // compile the list of holidays into Intervals to see if this date lands on a holiday
+            final List<Interval> holidayInterval = new ArrayList<>();
+            for (Holiday holiday : holidayDetailDTO.getHolidays()) {
+                holidayInterval.add(new Interval(
+                        holiday.getFromDateLocalDate().toDateTimeAtStartOfDay(),
+                        holiday.getToDateLocalDate().toDateTime(LocalTime.parse("23:59:59"))
+                ));
+            }
+            while (intervalListContainsDate(holidayInterval, dueRepaymentPeriodDate)) {
+                LocalDate previousDate = dueRepaymentPeriodDate;
+                dueRepaymentPeriodDate = getRepaymentPeriodDate(loanApplicationTerms.getRepaymentPeriodFrequencyType(),
+                        loanApplicationTerms.getRepaymentEvery(), dueRepaymentPeriodDate, loanApplicationTerms.getNthDay(),
+                        loanApplicationTerms.getWeekDayType());
+            }
+        }
         return dueRepaymentPeriodDate;
     }
-
+    private boolean intervalListContainsDate(List<Interval> intervalList, LocalDate date) {
+        for (Interval interval : intervalList) {
+            if (interval.contains(date.toDateTime(LocalTime.parse("11:59:59")))) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public LocalDate adjustRepaymentDate(final LocalDate dueRepaymentPeriodDate, final LoanApplicationTerms loanApplicationTerms,
             final HolidayDetailDTO holidayDetailDTO, List<LocalDate> adjustedRepaymentDateList) {
