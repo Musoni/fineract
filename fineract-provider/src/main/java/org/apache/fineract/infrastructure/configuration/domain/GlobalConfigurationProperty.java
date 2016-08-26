@@ -26,6 +26,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
 import org.apache.fineract.infrastructure.configuration.exception.GlobalConfigurationPropertyCannotBeModfied;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.security.exception.ForcePasswordResetException;
@@ -145,6 +146,15 @@ public class GlobalConfigurationProperty extends AbstractPersistable<Long> {
 
     public static GlobalConfigurationProperty newSurveyConfiguration(final String name) {
         return new GlobalConfigurationProperty(name, false, null, null, null, false, null);
+    }
+    
+    public GlobalConfigurationPropertyData toData() {
+        return new GlobalConfigurationPropertyData(getName(), isEnabled(), getValue(), getDateValue(), this.getId(), this.description,
+                this.isTrapDoor, this.textValue);
+    }
+    
+    public String getName() {
+        return this.name;
     }
 
 	public Date getDateValue() {

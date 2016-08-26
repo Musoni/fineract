@@ -93,5 +93,7 @@ public interface ConfigurationDomainService {
     boolean isDailyTPTLimitEnabled();
     
     Long getDailyTPTLimit();
+
+    void removeGlobalConfigurationPropertyDataFromCache(String propertyName);
     
 }
