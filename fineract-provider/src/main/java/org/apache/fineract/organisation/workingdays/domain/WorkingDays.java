@@ -27,12 +27,12 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.workingdays.api.WorkingDaysApiConstants;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_working_days")
-public class WorkingDays extends AbstractPersistable<Long> {
+public class WorkingDays extends AbstractPersistableCustom<Long> {
 
     @Column(name = "recurrence", length = 100, nullable = true)
     private String recurrence;

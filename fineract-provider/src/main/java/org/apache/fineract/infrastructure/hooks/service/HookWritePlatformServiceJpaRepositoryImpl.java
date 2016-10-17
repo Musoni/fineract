@@ -35,6 +35,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.persistence.PersistenceException;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -136,8 +139,12 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     .withCommandId(command.commandId())
                     .withEntityId(hook.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
-            handleHookDataIntegrityIssues(command, dve);
+            handleHookDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
             return CommandProcessingResult.empty();
+        }catch (final PersistenceException dve) {
+        	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
+        	handleHookDataIntegrityIssues(command, throwable, dve);
+        	return CommandProcessingResult.empty();
         }
     }
 
@@ -200,8 +207,12 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     .with(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
-            handleHookDataIntegrityIssues(command, dve);
-            return null;
+            handleHookDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
+            return CommandProcessingResult.empty();
+        }catch (final PersistenceException dve) {
+        	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
+        	handleHookDataIntegrityIssues(command, throwable, dve);
+        	return CommandProcessingResult.empty();
         }
     }
 
@@ -211,12 +222,9 @@ public class HookWritePlatformServiceJpaRepositoryImpl
     public CommandProcessingResult deleteHook(final Long hookId) {
 
         this.context.authenticatedUser();
-
         final Hook hook = retrieveHookBy(hookId);
-
         try {
             this.hookRepository.delete(hook);
-            this.hookRepository.flush();
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException(
                     "error.msg.unknown.data.integrity.issue",
@@ -367,9 +375,8 @@ public class HookWritePlatformServiceJpaRepositoryImpl
         }
     }
 
-    private void handleHookDataIntegrityIssues(final JsonCommand command,
-            final DataIntegrityViolationException dve) {
-        final Throwable realCause = dve.getMostSpecificCause();
+    private void handleHookDataIntegrityIssues(final JsonCommand command, final Throwable realCause,
+            final Exception dve) {
         if (realCause.getMessage().contains("hook_name")) {
             final String name = command.stringValueOfParameterNamed("name");
             throw new PlatformDataIntegrityException(

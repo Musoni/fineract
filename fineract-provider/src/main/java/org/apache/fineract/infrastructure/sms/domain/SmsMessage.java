@@ -32,20 +32,20 @@ import javax.persistence.TemporalType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.sms.SmsApiConstants;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "sms_messages_outbound")
-public class SmsMessage extends AbstractPersistable<Long> {
-	
+public class SmsMessage extends AbstractPersistableCustom<Long> {
+
 	@Column(name = "external_id", nullable = true)
 	private Long externalId;
-
+	
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = true)
     private Group group;

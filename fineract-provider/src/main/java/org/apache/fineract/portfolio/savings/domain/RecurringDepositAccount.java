@@ -1216,5 +1216,6 @@ public class RecurringDepositAccount extends SavingsAccount {
     public void loadLazyCollections() {
         this.depositScheduleInstallments.size() ;
         super.loadLazyCollections();
+        this.chart.getId() ;
     }
 }

@@ -820,4 +820,10 @@ public class FixedDepositAccount extends SavingsAccount {
     public BigDecimal minBalanceForInterestCalculation() {
         return null;
     }
+    
+    @Override
+    public void loadLazyCollections() {
+    	super.loadLazyCollections();
+    	this.chart.getId() ;
+    }
 }

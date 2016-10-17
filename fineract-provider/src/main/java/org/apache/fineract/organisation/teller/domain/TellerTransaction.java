@@ -31,11 +31,11 @@ import javax.persistence.TemporalType;
 
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.portfolio.client.domain.Client;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "m_teller_transactions")
-public class TellerTransaction extends AbstractPersistable<Long> {
+public class TellerTransaction extends AbstractPersistableCustom<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id", nullable = false)

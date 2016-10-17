@@ -37,16 +37,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import com.google.gson.JsonArray;
 
 @Entity
 @Table(name = "stretchy_report", uniqueConstraints = { @UniqueConstraint(columnNames = { "report_name" }, name = "unq_report_name") })
-public final class Report extends AbstractPersistable<Long> {
+public final class Report extends AbstractPersistableCustom<Long> {
 
     @Column(name = "report_name", nullable = false, unique = true)
     private String reportName;
@@ -74,7 +74,7 @@ public final class Report extends AbstractPersistable<Long> {
     private String reportSql;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "report", orphanRemoval = true, fetch=FetchType.EAGER)
-    private final Set<ReportParameterUsage> reportParameterUsages = new HashSet<>();
+    private Set<ReportParameterUsage> reportParameterUsages = new HashSet<>();
 
     public static Report fromJson(final JsonCommand command) {
 

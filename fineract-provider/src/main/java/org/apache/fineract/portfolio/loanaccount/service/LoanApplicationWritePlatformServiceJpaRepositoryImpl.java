@@ -26,7 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.PersistenceException;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormat;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatRepositoryWrapper;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
@@ -433,8 +437,12 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
                     .withLoanId(newLoanApplication.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
-            handleDataIntegrityIssues(command, dve);
+            handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
             return CommandProcessingResult.empty();
+        }catch(final PersistenceException dve) {
+        	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
+            handleDataIntegrityIssues(command, throwable, dve);
+         	return CommandProcessingResult.empty();
         }
     }
 
@@ -1020,8 +1028,12 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
                     .withLoanId(existingLoanApplication.getId()) //
                     .with(changes).build();
         } catch (final DataIntegrityViolationException dve) {
-            handleDataIntegrityIssues(command, dve);
+            handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
             return CommandProcessingResult.empty();
+        }catch (final PersistenceException dve) {
+            Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
+            handleDataIntegrityIssues(command, throwable, dve);
+         	return CommandProcessingResult.empty();
         }
     }
 
@@ -1029,16 +1041,14 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
      * Guaranteed to throw an exception no matter what the data integrity issue
      * is.
      */
-    private void handleDataIntegrityIssues(final JsonCommand command, final DataIntegrityViolationException dve) {
-
-        final Throwable realCause = dve.getMostSpecificCause();
-        if (realCause.getMessage().contains("loan_account_no_UNIQUE")) {
+    private void handleDataIntegrityIssues(final JsonCommand command, final Throwable realCause, final Exception dve) {
+    	
+        if (realCause.getMessage().contains("loan_account_no_UNIQUE") || realCause.getCause().getMessage().contains("loan_account_no_UNIQUE")) {
 
             final String accountNo = command.stringValueOfParameterNamed("accountNo");
             throw new PlatformDataIntegrityException("error.msg.loan.duplicate.accountNo", "Loan with accountNo `" + accountNo
                     + "` already exists", "accountNo", accountNo);
-        } else if (realCause.getMessage().contains("loan_externalid_UNIQUE")) {
-
+        } else if (realCause.getMessage().contains("loan_externalid_UNIQUE") || realCause.getCause().getMessage().contains("loan_externalid_UNIQUE")) {
             final String externalId = command.stringValueOfParameterNamed("externalId");
             throw new PlatformDataIntegrityException("error.msg.loan.duplicate.externalId", "Loan with externalId `" + externalId
                     + "` already exists", "externalId", externalId);
@@ -1048,7 +1058,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
         throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue", "Unknown data integrity issue with resource.");
     }
 
-    private void logAsErrorUnexpectedDataIntegrityException(final DataIntegrityViolationException dve) {
+    private void logAsErrorUnexpectedDataIntegrityException(final Exception dve) {
         logger.error(dve.getMessage(), dve);
     }
 

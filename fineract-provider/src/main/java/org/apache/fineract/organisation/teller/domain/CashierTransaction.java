@@ -35,13 +35,13 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_cashier_transactions")
-public class CashierTransaction extends AbstractPersistable<Long> {
+public class CashierTransaction extends AbstractPersistableCustom<Long> {
 
 	@Transient
     private Office office;
@@ -66,10 +66,10 @@ public class CashierTransaction extends AbstractPersistable<Long> {
     @Column(name = "txn_note", nullable = true)
     private String txnNote;
     
-    @Column(name = "entity_type", nullable = false)
+    @Column(name = "entity_type", nullable = true)
     private String entityType;
     
-    @Column(name = "entity_id", nullable = false)
+    @Column(name = "entity_id", nullable = true)
     private Long entityId;
 
     @Temporal(TemporalType.TIMESTAMP)

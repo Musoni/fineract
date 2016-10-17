@@ -58,6 +58,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.JsonParserHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -139,7 +140,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
@@ -151,7 +151,7 @@ import com.google.gson.JsonPrimitive;
 @Component
 @Table(name = "m_loan", uniqueConstraints = { @UniqueConstraint(columnNames = { "account_no" }, name = "loan_account_no_UNIQUE"),
         @UniqueConstraint(columnNames = { "external_id" }, name = "loan_externalid_UNIQUE") })
-public class Loan extends AbstractPersistable<Long> {
+public class Loan extends AbstractPersistableCustom<Long> {
 
     /** Disable optimistic locking till batch jobs failures can be fixed **/
     @Version
@@ -315,14 +315,15 @@ public class Loan extends AbstractPersistable<Long> {
     // http://stackoverflow.com/questions/4334970/hibernate-cannot-simultaneously-fetch-multiple-bags
     @OrderBy(value = "installmentNumber")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
-    private final List<LoanRepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<>();
+    private List<LoanRepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<>();
 
     // see
     // http://stackoverflow.com/questions/4334970/hibernate-cannot-simultaneously-fetch-multiple-bags
     @OrderBy(value = "dateOf, id")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
-    private final List<LoanTransaction> loanTransactions = new ArrayList<>();
-    
+
+    private List<LoanTransaction> loanTransactions = new ArrayList<>();
+
     @Embedded
     private LoanSummary summary;
 
@@ -345,7 +346,7 @@ public class Loan extends AbstractPersistable<Long> {
     @Column(name = "fixed_emi_amount", scale = 6, precision = 19, nullable = true)
     private BigDecimal fixedEmiAmount;
 
-    @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19, nullable = false)
+    @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19, nullable = true)
     private BigDecimal maxOutstandingLoanBalance;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
@@ -354,7 +355,7 @@ public class Loan extends AbstractPersistable<Long> {
 
     @OrderBy(value = "termApplicableFrom, id")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
-    private final List<LoanTermVariations> loanTermVariations = new ArrayList<>();
+    private List<LoanTermVariations> loanTermVariations = new ArrayList<>();
 
     @Column(name = "total_recovered_derived", scale = 6, precision = 19)
     private BigDecimal totalRecovered;

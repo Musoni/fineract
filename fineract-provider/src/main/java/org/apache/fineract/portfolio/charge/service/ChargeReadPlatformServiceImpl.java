@@ -89,7 +89,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     public Collection<ChargeData> retrieveAllCharges() {
         final ChargeMapper rm = new ChargeMapper();
 
-        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=0 ";
+        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false ";
 
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
@@ -102,7 +102,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     public Collection<ChargeData> retrieveAllChargesForCurrency(String currencyCode) {
         final ChargeMapper rm = new ChargeMapper();
 
-        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=0 and c.currency_code='" + currencyCode + "' ";
+        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false and c.currency_code='" + currencyCode + "' ";
 
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
@@ -116,10 +116,11 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         try {
             final ChargeMapper rm = new ChargeMapper();
 
-            String sql = "select " + rm.chargeSchema() + " where c.id = ? and c.is_deleted=0 ";
+            String sql = "select " + rm.chargeSchema() + " where c.id = ? and c.is_deleted=false ";
 
             sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
+            sql = sql + " ;" ;
             return this.jdbcTemplate.queryForObject(sql, rm, new Object[] { chargeId });
         } catch (final EmptyResultDataAccessException e) {
             throw new ChargeNotFoundException(chargeId);
@@ -163,7 +164,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     public Collection<ChargeData> retrieveLoanProductCharges(final Long loanProductId) {
         final ChargeMapper rm = new ChargeMapper();
 
-        String sql = "select " + rm.loanProductChargeSchema() + " where c.is_deleted=0 and c.is_active=1 and plc.product_loan_id=? ";
+        String sql = "select " + rm.loanProductChargeSchema() + " where c.is_deleted=false and c.is_active=true and plc.product_loan_id=? ";
 
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
@@ -176,7 +177,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         final ChargeMapper rm = new ChargeMapper();
 
         String sql = "select " + rm.loanProductChargeSchema()
-                + " where c.is_deleted=0 and c.is_active=1 and plc.product_loan_id=? and c.charge_time_enum=? ";
+                + " where c.is_deleted=false and c.is_active=true and plc.product_loan_id=? and c.charge_time_enum=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
         return this.jdbcTemplate.query(sql, rm, new Object[] { loanProductId, chargeTime.getValue() });
@@ -187,7 +188,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         final ChargeMapper rm = new ChargeMapper();
         Object[] params = new Object[] { ChargeAppliesTo.LOAN.getValue() };
         String sql = "select " + rm.chargeSchema()
-                + " where c.is_deleted=0 and c.is_active=1 and c.is_penalty=0 and c.charge_applies_to_enum=? ";
+                + " where c.is_deleted=false and c.is_active=true and c.is_penalty=false and c.charge_applies_to_enum=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
 
@@ -203,7 +204,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         paramMap.put("chargeAppliesTo", ChargeAppliesTo.LOAN.getValue());
         processChargeExclusionsForLoans(excludeChargeTimes, excludeClause);
         String sql = "select " + rm.chargeSchema() + " join m_loan la on la.currency_code = c.currency_code" + " where la.id=:loanId"
-                + " and c.is_deleted=0 and c.is_active=1 and c.charge_applies_to_enum=:chargeAppliesTo" + excludeClause + " ";
+                + " and c.is_deleted=false and c.is_active=true and c.charge_applies_to_enum=:chargeAppliesTo" + excludeClause + " ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
         return this.namedParameterJdbcTemplate.query(sql, paramMap, rm);
@@ -237,7 +238,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         paramMap.put("chargeAppliesTo", ChargeAppliesTo.LOAN.getValue());
         processChargeExclusionsForLoans(excludeChargeTimes, excludeClause);
         String sql = "select " + rm.chargeSchema() + " join m_product_loan lp on lp.currency_code = c.currency_code"
-                + " where lp.id=:productId" + " and c.is_deleted=0 and c.is_active=1 and c.charge_applies_to_enum=:chargeAppliesTo"
+                + " where lp.id=:productId" + " and c.is_deleted=false and c.is_active=true and c.charge_applies_to_enum=:chargeAppliesTo"
                 + excludeClause + " ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
@@ -250,7 +251,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         final ChargeMapper rm = new ChargeMapper();
 
         String sql = "select " + rm.chargeSchema()
-                + " where c.is_deleted=0 and c.is_active=1 and c.is_penalty=1 and c.charge_applies_to_enum=? ";
+                + " where c.is_deleted=false and c.is_active=true and c.is_penalty=true and c.charge_applies_to_enum=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
         return this.jdbcTemplate.query(sql, rm, new Object[] { ChargeAppliesTo.LOAN.getValue() });
@@ -373,10 +374,10 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     public Collection<ChargeData> retrieveSavingsProductApplicableCharges(final boolean feeChargesOnly) {
         final ChargeMapper rm = new ChargeMapper();
 
-        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=0 and c.is_active=1 and c.charge_applies_to_enum=? ";
+        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false and c.is_active=true and c.charge_applies_to_enum=? ";
         if (feeChargesOnly) {
             sql = "select " + rm.chargeSchema()
-                    + " where c.is_deleted=0 and c.is_active=1 and c.is_penalty=0 and c.charge_applies_to_enum=? ";
+                    + " where c.is_deleted=false and c.is_active=true and c.is_penalty=false and c.charge_applies_to_enum=? ";
         }
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
@@ -389,7 +390,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         final ChargeMapper rm = new ChargeMapper();
 
         String sql = "select " + rm.chargeSchema()
-                + " where c.is_deleted=0 and c.is_active=1 and c.is_penalty=1 and c.charge_applies_to_enum=? ";
+                + " where c.is_deleted=false and c.is_active=true and c.is_penalty=true and c.charge_applies_to_enum=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
         return this.jdbcTemplate.query(sql, rm, new Object[] { ChargeAppliesTo.SAVINGS.getValue() });
@@ -409,7 +410,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     public Collection<ChargeData> retrieveShareProductCharges(final Long shareProductId) {
         final ChargeMapper rm = new ChargeMapper();
 
-        String sql = "select " + rm.shareProductChargeSchema() + " where c.is_deleted=0 and c.is_active=1 and mspc.product_id=? ";
+        String sql = "select " + rm.shareProductChargeSchema() + " where c.is_deleted=false and c.is_active=true and mspc.product_id=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
         return this.jdbcTemplate.query(sql, rm, new Object[] { shareProductId });
@@ -421,7 +422,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         final ChargeMapper rm = new ChargeMapper();
 
         String sql = "select " + rm.chargeSchema() + " join m_savings_account sa on sa.currency_code = c.currency_code"
-                + " where c.is_deleted=0 and c.is_active=1 and c.charge_applies_to_enum=? " + " and sa.id = ?";
+                + " where c.is_deleted=false and c.is_active=true and c.charge_applies_to_enum=? " + " and sa.id = ?";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
         return this.jdbcTemplate.query(sql, rm, new Object[] { ChargeAppliesTo.SAVINGS.getValue(), savingsAccountId });
@@ -431,7 +432,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     @Override
     public Collection<ChargeData> retrieveAllChargesApplicableToClients() {
         final ChargeMapper rm = new ChargeMapper();
-        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=0 and c.is_active=1 and c.charge_applies_to_enum=? ";
+        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false and c.is_active=true and c.charge_applies_to_enum=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
 
@@ -448,7 +449,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
 
     public Collection<ChargeData> retrieveSharesApplicableCharges() {
         final ChargeMapper rm = new ChargeMapper();
-        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=0 and c.is_active=1 and c.charge_applies_to_enum=? ";
+        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false and c.is_active=true and c.charge_applies_to_enum=? ";
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
         sql += " order by c.name ";
 

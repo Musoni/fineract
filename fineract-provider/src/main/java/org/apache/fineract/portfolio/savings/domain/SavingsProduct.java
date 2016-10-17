@@ -87,6 +87,7 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -100,7 +101,6 @@ import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -111,7 +111,7 @@ import com.google.gson.JsonObject;
 @Inheritance
 @DiscriminatorColumn(name = "deposit_type_enum", discriminatorType = DiscriminatorType.INTEGER)
 @DiscriminatorValue("100")
-public class SavingsProduct extends AbstractPersistable<Long> {
+public class SavingsProduct extends AbstractPersistableCustom<Long> {
 
     @Column(name = "name", nullable = false, unique = true)
     protected String name;

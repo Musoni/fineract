@@ -27,6 +27,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -34,16 +36,16 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.template.data.TemplateApiConstants;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 @Entity
 @Table(name = "m_template", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "unq_name")})
-public class Template extends AbstractPersistable<Long> {
+public class Template extends AbstractPersistableCustom<Long> {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
@@ -61,6 +63,10 @@ public class Template extends AbstractPersistable<Long> {
 
     @OrderBy(value = "mapperorder")
     @OneToMany(targetEntity = TemplateMapper.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name="m_template_m_templatemappers",
+        joinColumns={@JoinColumn(name="m_template_id", referencedColumnName="id")},
+        inverseJoinColumns={@JoinColumn(name="mappers_id", referencedColumnName="id", unique=true)}
+    )
     private List<TemplateMapper> mappers;
 
     public Template(final String name, final String text,

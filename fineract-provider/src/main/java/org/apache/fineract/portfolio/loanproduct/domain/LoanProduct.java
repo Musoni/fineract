@@ -64,7 +64,7 @@ import org.apache.fineract.portfolio.fund.domain.Fund;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.AprCalculator;
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -82,7 +82,7 @@ import com.google.gson.JsonObject;
 @Table(name = "m_product_loan", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "unq_name"),
         @UniqueConstraint(columnNames = { "external_id" }, name = "external_id_UNIQUE"),
         @UniqueConstraint(columnNames = { "short_name" }, name = "unq_short_name") })
-public class LoanProduct extends AbstractPersistable<Long> {
+public class LoanProduct extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
     @JoinColumn(name = "fund_id", nullable = true)
@@ -106,7 +106,7 @@ public class LoanProduct extends AbstractPersistable<Long> {
     private List<Charge> charges;
 
     @Embedded
-    private final LoanProductRelatedDetail loanProductRelatedDetail;
+    private LoanProductRelatedDetail loanProductRelatedDetail;
 
     @Embedded
     private LoanProductMinMaxConstraints loanProductMinMaxConstraints;

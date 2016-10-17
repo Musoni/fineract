@@ -38,14 +38,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "m_client_non_person")
-public class ClientNonPerson extends AbstractPersistable<Long> {
+public class ClientNonPerson extends AbstractPersistableCustom<Long> {
 	
 	@OneToOne(optional = false)
     @JoinColumn(name = "client_id", referencedColumnName = "id", nullable = false, unique = true)
