@@ -100,12 +100,13 @@ rat {
 	'**/template.mustache',
 	'**/.classpath',
 	'**/.project',
-	'.idea/**',
+	'**/.idea/**',
 	'**/.settings/**',
 	'**/bin/**',
-	'.git/**',
+	'**/.git/**',
     '**/.gitignore',
     '**/.gitkeep',
+	'**/*.iml',
 		
     // gradle
     '**/.gradle/**',
