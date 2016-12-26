@@ -2306,8 +2306,10 @@ public class Loan extends AbstractPersistableCustom<Long> {
                     updateDisbursementDetails(command, actualChanges);
                 }
             }
+            
+            recalculateAllCharges();
+            
             if (loanProduct.isMultiDisburseLoan()) {
-                recalculateAllCharges();
 
                 if (this.disbursementDetails.isEmpty()) {
                     final String errorMessage = "For this loan product, disbursement details must be provided";
