@@ -79,10 +79,13 @@ public class WorkingDaysReadPlatformServiceImpl implements WorkingDaysReadPlatfo
 
     @Override
     public WorkingDaysData retrieve() {
+    	//Check whether template is enabled or not?
         try {
             final WorkingDaysMapper rm = new WorkingDaysMapper();
             final String sql = " select " + rm.schema();
-            return this.jdbcTemplate.queryForObject(sql, rm, new Object[] {});
+            WorkingDaysData data = this.jdbcTemplate.queryForObject(sql, rm, new Object[] {});
+            Collection<EnumOptionData> repaymentRescheduleOptions = repaymentRescheduleTypeOptions() ;
+            return new WorkingDaysData(data, repaymentRescheduleOptions) ;
         } catch (final EmptyResultDataAccessException e) {
             throw new WorkingDaysNotFoundException();
         }
@@ -90,6 +93,12 @@ public class WorkingDaysReadPlatformServiceImpl implements WorkingDaysReadPlatfo
 
     @Override
     public WorkingDaysData repaymentRescheduleType() {
+    	Collection<EnumOptionData> repaymentRescheduleOptions = repaymentRescheduleTypeOptions();
+
+        return new WorkingDaysData(null, null, null, repaymentRescheduleOptions, null, null);
+    }
+    
+    private Collection<EnumOptionData> repaymentRescheduleTypeOptions() {
     	Collection<EnumOptionData> repaymentRescheduleOptions = new ArrayList<>();
     	
     	for (RepaymentRescheduleType type : RepaymentRescheduleType.values()) {
@@ -98,6 +107,6 @@ public class WorkingDaysReadPlatformServiceImpl implements WorkingDaysReadPlatfo
     		}
     	}
     	
-        return new WorkingDaysData(null, null, null, repaymentRescheduleOptions, null, null);
+    	 return repaymentRescheduleOptions;
     }
 }
