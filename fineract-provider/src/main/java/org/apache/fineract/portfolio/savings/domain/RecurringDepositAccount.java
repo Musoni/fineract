@@ -598,6 +598,7 @@ public class RecurringDepositAccount extends SavingsAccount {
         if (interestPostingUpToDate == null) {
             interestPostingUpToDate = closeDate;
         }
+        this.setClosedOnDate(closeDate);
         final MathContext mc = MathContext.DECIMAL64;
         boolean isInterestTransfer = false;
         LocalDate postInterestOnDate = null;
@@ -640,7 +641,6 @@ public class RecurringDepositAccount extends SavingsAccount {
             // correct.
             recalculateDailyBalances(Money.zero(this.currency), interestPostingUpToDate);
         }
-
         this.summary.updateSummary(this.currency, this.savingsAccountTransactionSummaryWrapper, this.transactions);
     }
 
@@ -1080,8 +1080,7 @@ public class RecurringDepositAccount extends SavingsAccount {
         final Integer lockinPeriodFrequency = this.lockinPeriodFrequency;
         final boolean withdrawalFeeApplicableForTransfer = false;
 
-        LocalDate now = DateUtils.getLocalDateOfTenant();
-
+        LocalDate now = getClosedOnDate();
         newAccountTermAndPreClosure.updateExpectedFirstDepositDate(now);
 
         RecurringDepositAccount rdAccount = RecurringDepositAccount.createNewActivatedAccount(client, group, product, savingsOfficer,
@@ -1116,6 +1115,10 @@ public class RecurringDepositAccount extends SavingsAccount {
         this.lockedInUntilDate = null;
 
         this.activatedOnDate = now.toDate();
+    }
+    
+    public void setClosedOnDate(final LocalDate closedOnDate) {
+        this.closedOnDate = closedOnDate.toDate();
     }
 
     @Override
