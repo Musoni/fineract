@@ -799,6 +799,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final LocalDate date = JdbcSupport.getLocalDate(rs, "transactionDate");
             final LocalDate submittedOnDate = JdbcSupport.getLocalDate(rs, "submittedOnDate");
             final BigDecimal amount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "transactionAmount");
+            final BigDecimal outstandingChargeAmount = null;
             final BigDecimal runningBalance = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "runningBalance");
             final boolean reversed = rs.getBoolean("reversed");
             final boolean manuallyReversed = rs.getBoolean("manuallyReversed");
@@ -867,7 +868,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             }
 
             return SavingsAccountTransactionData.create(id, transactionType, paymentDetailData, savingsId, accountNo, date, currency,
-                    amount, runningBalance, reversed, transfer, submittedOnDate,manuallyReversed);
+                    amount, outstandingChargeAmount, runningBalance, reversed, transfer, submittedOnDate, manuallyReversed);
         }
     }
 

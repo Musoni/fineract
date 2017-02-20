@@ -481,8 +481,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             final String sql = "select " + this.rdTransactionTemplateMapper.schema()
                     + " where sa.id = ? and sa.deposit_type_enum = ? order by mss.installment limit 1";
 
-            return this.jdbcTemplate.queryForObject(sql, this.rdTransactionTemplateMapper, new Object[] { accountId,
-                    DepositAccountType.RECURRING_DEPOSIT.getValue() });
+            return this.jdbcTemplate.queryForObject(sql, this.rdTransactionTemplateMapper, new Object[] { accountId, 
+            		accountId, DepositAccountType.RECURRING_DEPOSIT.getValue() });
         } catch (final EmptyResultDataAccessException e) {
             throw new DepositAccountNotFoundException(DepositAccountType.RECURRING_DEPOSIT, accountId);
         }
@@ -999,6 +999,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             final LocalDate date = JdbcSupport.getLocalDate(rs, "transactionDate");
             final LocalDate submittedOnDate = JdbcSupport.getLocalDate(rs, "submittedOnDate");
             final BigDecimal amount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "transactionAmount");
+            final BigDecimal outstandingChargeAmount = null;
             final BigDecimal runningBalance = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "runningBalance");
             final boolean reversed = rs.getBoolean("reversed");
 
@@ -1054,7 +1055,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             }
 
             return SavingsAccountTransactionData.create(id, transactionType, paymentDetailData, savingsId, accountNo, date, currency,
-                    amount, runningBalance, reversed, transfer,submittedOnDate,false);
+                    amount, outstandingChargeAmount, runningBalance, reversed, transfer,submittedOnDate,false);
         }
     }
 
@@ -1412,9 +1413,16 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             sqlBuilder.append("sa.account_balance_derived as runningBalance, ");
             sqlBuilder
                     .append("mss.duedate as duedate, (mss.deposit_amount - ifnull(mss.deposit_amount_completed_derived,0)) as dueamount ");
+            sqlBuilder.append("IFNULL(sac.amount_outstanding_derived,0.0) AS outstandingChargeAmount ");
             sqlBuilder.append("from m_savings_account sa ");
             sqlBuilder.append("join m_mandatory_savings_schedule mss  on mss.savings_account_id=sa.id and mss.completed_derived = false ");
             sqlBuilder.append("join m_currency curr on curr.code = sa.currency_code ");
+            sqlBuilder.append("LEFT JOIN(SELECT s.savings_account_id AS savings_account_id ");
+            sqlBuilder.append(",SUM(IFNULL(s.amount_outstanding_derived,0.0)) AS amount_outstanding_derived  ");
+            sqlBuilder.append("FROM m_savings_account_charge s  ");
+            sqlBuilder.append("JOIN m_charge c ON c.id = s.charge_id AND c.charge_time_enum = 3 ");
+            sqlBuilder.append("WHERE s.savings_account_id = ? ");
+            sqlBuilder.append("AND s.is_active = TRUE GROUP BY s.savings_account_id)sac ON sac.savings_account_id = sa.id ");
 
             this.schemaSql = sqlBuilder.toString();
         }
@@ -1429,6 +1437,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             final Long savingsId = rs.getLong("id");
             final String accountNo = rs.getString("accountNo");
             final BigDecimal dueamount = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "dueamount");
+            final BigDecimal outstandingChargeAmount = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "outstandingChargeAmount");
             final LocalDate duedate = JdbcSupport.getLocalDate(rs, "duedate");
             final String currencyCode = rs.getString("currencyCode");
             final String currencyName = rs.getString("currencyName");
@@ -1445,7 +1454,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             final BigDecimal runningBalance = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "runningBalance");
             ;
             return SavingsAccountTransactionData.create(savingsId, transactionType, paymentDetailData, savingsId, accountNo, duedate,
-                    currency, dueamount, runningBalance, false, transfer);
+                    currency, dueamount, outstandingChargeAmount, runningBalance, false, transfer);
         }
     }
 
