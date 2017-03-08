@@ -6180,10 +6180,14 @@ public class Loan extends AbstractPersistableCustom<Long> {
         }
         return actualDisbursementDate;
     }
-
-    public void addTrancheLoanCharge(Charge charge) {
-        if (!trancheCharges.contains(charge)) {
-            trancheCharges.add(new LoanTrancheCharge(charge, this));
+    
+    public void addTrancheLoanCharge(final Charge charge) {
+        final List<Charge> appliedCharges = new ArrayList<>(); 
+        for(final LoanTrancheCharge loanTrancheCharge: this.trancheCharges){
+            appliedCharges.add(loanTrancheCharge.getCharge());
+        }
+        if (!appliedCharges.contains(charge)) {
+            this.trancheCharges.add(new LoanTrancheCharge(charge, this));
         }
     }
 
