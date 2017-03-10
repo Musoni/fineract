@@ -22,11 +22,11 @@ public class PortfolioAccountDTO {
 
     private final Integer accountTypeId;
     private final Long clientId;
+    private Long groupId;
     private final String currencyCode;
     private final long[] accountStatus;
     private final Integer depositType;
     private final boolean excludeOverDraftAccounts;
-    private final Long groupId;
 
     public PortfolioAccountDTO(final Integer accountTypeId, final Long clientId, final String currencyCode, final long[] accountStatus,
             final Integer depositType, final boolean excludeOverDraftAccounts) {
@@ -93,7 +93,12 @@ public class PortfolioAccountDTO {
     public boolean isExcludeOverDraftAccounts() {
         return this.excludeOverDraftAccounts;
     }
-
-    public Long getGroupId(){return this.groupId;}
-
+    
+    public Long getGroupId() {
+        return this.groupId;
+    }
+    
+    public void setGroupId(final Long groupId) {
+        this.groupId = groupId;
+    }
 }

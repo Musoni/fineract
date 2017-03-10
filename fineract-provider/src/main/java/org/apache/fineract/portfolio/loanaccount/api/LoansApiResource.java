@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.loanaccount.api;
 
 import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,18 +78,15 @@ import org.apache.fineract.portfolio.charge.service.ChargeReadPlatformService;
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.collateral.data.CollateralData;
 import org.apache.fineract.portfolio.collateral.service.CollateralReadPlatformService;
-import org.apache.fineract.portfolio.creditcheck.CreditCheckConstants;
 import org.apache.fineract.portfolio.floatingrates.data.InterestRatePeriodData;
 import org.apache.fineract.portfolio.fund.data.FundData;
 import org.apache.fineract.portfolio.fund.service.FundReadPlatformService;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
 import org.apache.fineract.portfolio.group.service.GroupReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.data.DisbursementData;
-import org.apache.fineract.portfolio.loanaccount.data.GroupLoanMembersAllocationData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanAccountData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanApprovalData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanChargeData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanCreditCheckData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionData;
 import org.apache.fineract.portfolio.loanaccount.data.PaidInAdvanceData;
@@ -102,9 +100,7 @@ import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanScheduleD
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleModel;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.service.LoanScheduleCalculationPlatformService;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.service.LoanScheduleHistoryReadPlatformService;
-import org.apache.fineract.portfolio.loanaccount.service.GroupLoanMembersAllocationReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.service.LoanChargeReadPlatformService;
-import org.apache.fineract.portfolio.loanaccount.service.LoanCreditCheckReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.service.LoanReadPlatformService;
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
@@ -143,9 +139,7 @@ public class LoansApiResource {
             "termFrequencyTypeOptions", "interestRateFrequencyTypeOptions", "fundOptions", "repaymentStrategyOptions", "chargeOptions",
             "loanOfficerOptions", "loanPurposeOptions", "loanCollateralOptions", "chargeTemplate", "calendarOptions",
             "syncDisbursementWithMeeting", "loanCounter", "loanProductCounter", "notes", "accountLinkingOptions", "linkedAccount",
-            "interestRateDifferential", "isFloatingInterestRate", "interestRatesPeriods", CreditCheckConstants.CREDIT_CHECKS_PARAM_NAME, 
-            "groupMembers", "groupMemberAllocation", LoanApiConstants.canUseForTopup,
-            LoanApiConstants.isTopup, LoanApiConstants.loanIdToClose, LoanApiConstants.topupAmount, LoanApiConstants.clientActiveLoanOptions));
+            "interestRateDifferential", "isFloatingInterestRate", "interestRatesPeriods"));
 
     private final Set<String> LOAN_APPROVAL_DATA_PARAMETERS = new HashSet<>(Arrays.asList("approvalDate", "approvalAmount"));
     private final String resourceNameForPermissions = "LOAN";
@@ -173,8 +167,6 @@ public class LoansApiResource {
     private final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService;
     private final AccountAssociationsReadPlatformService accountAssociationsReadPlatformService;
     private final LoanScheduleHistoryReadPlatformService loanScheduleHistoryReadPlatformService;
-    private final LoanCreditCheckReadPlatformService loanCreditCheckReadPlatformService;
-    private final GroupLoanMembersAllocationReadPlatformService groupLoanMembersAllocationReadPlatformService;
     private final AccountDetailsReadPlatformService accountDetailsReadPlatformService;
 
     @Autowired
@@ -194,9 +186,7 @@ public class LoansApiResource {
             final CalendarReadPlatformService calendarReadPlatformService, final NoteReadPlatformServiceImpl noteReadPlatformService,
             final PortfolioAccountReadPlatformService portfolioAccountReadPlatformServiceImpl,
             final AccountAssociationsReadPlatformService accountAssociationsReadPlatformService,
-            final LoanScheduleHistoryReadPlatformService loanScheduleHistoryReadPlatformService,
-            final LoanCreditCheckReadPlatformService loanCreditCheckReadPlatformService, 
-            final GroupLoanMembersAllocationReadPlatformService groupLoanMembersAllocationReadPlatformService,
+            final LoanScheduleHistoryReadPlatformService loanScheduleHistoryReadPlatformService, 
             final AccountDetailsReadPlatformService accountDetailsReadPlatformService) {
         this.context = context;
         this.loanReadPlatformService = loanReadPlatformService;
@@ -221,8 +211,6 @@ public class LoansApiResource {
         this.portfolioAccountReadPlatformService = portfolioAccountReadPlatformServiceImpl;
         this.accountAssociationsReadPlatformService = accountAssociationsReadPlatformService;
         this.loanScheduleHistoryReadPlatformService = loanScheduleHistoryReadPlatformService;
-        this.loanCreditCheckReadPlatformService = loanCreditCheckReadPlatformService;
-        this.groupLoanMembersAllocationReadPlatformService = groupLoanMembersAllocationReadPlatformService;
         this.accountDetailsReadPlatformService = accountDetailsReadPlatformService;
     }
 
@@ -276,6 +264,7 @@ public class LoansApiResource {
         Collection<CalendarData> calendarOptions = null;
         LoanAccountData newLoanAccount = null;
         Long officeId = null;
+        Collection<PortfolioAccountData> accountLinkingOptions = null;
 
         if (productId != null) {
             newLoanAccount = this.loanReadPlatformService.retrieveLoanProductDetailsTemplate(productId, clientId, groupId);
@@ -290,14 +279,10 @@ public class LoansApiResource {
         } else {
             // for JLG loan both client and group details are required
             if (templateType.equals("individual") || templateType.equals("jlg")) {
-                
-                if(clientId == null)
-                {
+
+                if(clientId == null) {
                     newLoanAccount = newLoanAccount == null ? LoanAccountData.emptyTemplate() : newLoanAccount;
-                }
-                
-                else
-                {
+                } else {
                     final LoanAccountData loanAccountClientDetails = this.loanReadPlatformService.retrieveClientDetailsTemplate(clientId);
 
                     officeId = loanAccountClientDetails.officeId();
@@ -314,11 +299,12 @@ public class LoansApiResource {
 
             } else if (templateType.equals("group")) {
 
-                final LoanAccountData loanAccountGroupData = this.loanReadPlatformService.retrieveGroupAndMembersDetailsTemplate(groupId);
+                final LoanAccountData loanAccountGroupData = this.loanReadPlatformService.retrieveGroupDetailsTemplate(groupId);
                 officeId = loanAccountGroupData.groupOfficeId();
                 calendarOptions = this.loanReadPlatformService.retrieveCalendars(groupId);
                 newLoanAccount = newLoanAccount == null ? loanAccountGroupData : LoanAccountData.populateGroupDefaults(newLoanAccount,
                         loanAccountGroupData);
+                accountLinkingOptions = getaccountLinkingOptions(newLoanAccount, clientId, groupId);
 
             } else if (templateType.equals("jlgbulk")) {
                 // get group details along with members in that group
@@ -330,9 +316,11 @@ public class LoansApiResource {
                 if (productId != null) {
                     Map<Long, Integer> memberLoanCycle = new HashMap<>();
                     Collection<ClientData> members = loanAccountGroupData.groupData().clientMembers();
+                    accountLinkingOptions = new ArrayList<>();
                     for (ClientData clientData : members) {
                         Integer loanCounter = this.loanReadPlatformService.retriveLoanCounter(clientData.id(), productId);
                         memberLoanCycle.put(clientData.id(), loanCounter);
+                        accountLinkingOptions.addAll(getaccountLinkingOptions(newLoanAccount, clientData.id(), groupId));
                     }
                     newLoanAccount = LoanAccountData.associateMemberVariations(newLoanAccount, memberLoanCycle);
                 }
@@ -344,28 +332,8 @@ public class LoansApiResource {
 
             allowedLoanOfficers = this.loanReadPlatformService.retrieveAllowedLoanOfficers(officeId, staffInSelectedOfficeOnly);
 
-            Collection<PortfolioAccountData> accountLinkingOptions = null;
             if (clientId != null) {
-                final CurrencyData currencyData = newLoanAccount.currency();
-                String currencyCode = null;
-                if (currencyData != null) {
-                    currencyCode = currencyData.code();
-                }
-                final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
-                PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(), clientId,
-                        currencyCode, accountStatus, DepositAccountType.SAVINGS_DEPOSIT.getValue());
-                accountLinkingOptions = this.portfolioAccountReadPlatformService.retrieveAllForLookup(portfolioAccountDTO);
-
-            }else if (groupId !=null){
-                String currencyCode = null;
-                final CurrencyData currencyData = newLoanAccount.currency();
-                if (currencyData != null) {
-                    currencyCode = currencyData.code();
-                }
-                final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
-                PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(),
-                        currencyCode, accountStatus, DepositAccountType.SAVINGS_DEPOSIT.getValue(),groupId);
-                accountLinkingOptions = this.portfolioAccountReadPlatformService.retrieveAllForLookup(portfolioAccountDTO);
+            	accountLinkingOptions = getaccountLinkingOptions(newLoanAccount, clientId, groupId);
             }
 
             // add product options, allowed loan officers and calendar options
@@ -375,6 +343,22 @@ public class LoansApiResource {
         }
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.toApiJsonSerializer.serialize(settings, newLoanAccount, this.LOAN_DATA_PARAMETERS);
+    }
+    
+    private Collection<PortfolioAccountData> getaccountLinkingOptions(final LoanAccountData newLoanAccount, final Long clientId,
+            final Long groupId) {
+        final CurrencyData currencyData = newLoanAccount.currency();
+        String currencyCode = null;
+        if (currencyData != null) {
+            currencyCode = currencyData.code();
+        }
+        final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
+        final PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(), clientId, currencyCode,
+                accountStatus, DepositAccountType.SAVINGS_DEPOSIT.getValue());
+        if (groupId != null) {
+            portfolioAccountDTO.setGroupId(groupId);
+        }
+        return this.portfolioAccountReadPlatformService.retrieveAllForLookup(portfolioAccountDTO);
     }
 
     @GET
@@ -431,8 +415,6 @@ public class LoansApiResource {
         PortfolioAccountData linkedAccount = null;
         Collection<DisbursementData> disbursementData = null;
         Collection<LoanTermVariationsData> emiAmountVariations = null;
-        Collection<LoanCreditCheckData> loanCreditCheckDataList = null;
-        Collection<GroupLoanMembersAllocationData> groupLoanMembersAllocationList= null;
 
         final Set<String> mandatoryResponseParameters = new HashSet<>();
         final Set<String> associationParameters = ApiParameterHelper.extractAssociationsForResponseIfProvided(uriInfo.getQueryParameters());
@@ -440,8 +422,7 @@ public class LoansApiResource {
 
             if (associationParameters.contains("all")) {
                 associationParameters.addAll(Arrays.asList("repaymentSchedule", "futureSchedule", "originalSchedule", "transactions",
-                        "charges", "guarantors", "collateral", "notes", "linkedAccount", "multiDisburseDetails", 
-                        CreditCheckConstants.CREDIT_CHECKS_PARAM_NAME));
+                        "charges", "guarantors", "collateral", "notes", "linkedAccount", "multiDisburseDetails"));
             }
 
             ApiParameterHelper.excludeAssociationsForResponseIfProvided(uriInfo.getQueryParameters(), associationParameters);
@@ -508,14 +489,6 @@ public class LoansApiResource {
                     collateral = null;
                 }
             }
-            
-            if (associationParameters.contains("groupMemberAllocation")) {
-                mandatoryResponseParameters.add("groupMemberAllocation");
-                groupLoanMembersAllocationList = this.groupLoanMembersAllocationReadPlatformService.retrieveGroupLoanMembersAllocation(loanId);
-                if (CollectionUtils.isEmpty(groupLoanMembersAllocationList)) {
-                    groupLoanMembersAllocationList= null;
-                }
-            }
 
             if (associationParameters.contains("meeting")) {
                 mandatoryResponseParameters.add("meeting");
@@ -535,14 +508,6 @@ public class LoansApiResource {
                 linkedAccount = this.accountAssociationsReadPlatformService.retriveLoanLinkedAssociation(loanId);
             }
 
-            if (associationParameters.contains(CreditCheckConstants.CREDIT_CHECKS_PARAM_NAME)) {
-                mandatoryResponseParameters.add(CreditCheckConstants.CREDIT_CHECKS_PARAM_NAME);
-                loanCreditCheckDataList = this.loanCreditCheckReadPlatformService.triggerLoanCreditChecks(loanBasicDetails);
-                
-                if (CollectionUtils.isEmpty(loanCreditCheckDataList)) {
-                    loanCreditCheckDataList = null;
-                }
-            }
         }
 
         Collection<LoanProductData> productOptions = null;
@@ -623,8 +588,6 @@ public class LoansApiResource {
             if(loanBasicDetails.product().canUseForTopup() && loanBasicDetails.clientId() != null){
                 clientActiveLoanOptions = this.accountDetailsReadPlatformService.retrieveClientActiveLoanAccountSummary(loanBasicDetails.clientId());
             }
-
-
         }
 
         Collection<ChargeData> overdueCharges = this.chargeReadPlatformService.retrieveLoanProductCharges(loanBasicDetails.loanProductId(),
@@ -634,17 +597,16 @@ public class LoansApiResource {
 
         final LoanAccountData loanAccount = LoanAccountData.associationsAndTemplate(loanBasicDetails, repaymentSchedule, loanRepayments,
                 charges, collateral, guarantors, meeting, productOptions, loanTermFrequencyTypeOptions, repaymentFrequencyTypeOptions,
-                repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions, repaymentStrategyOptions, interestRateFrequencyTypeOptions, amortizationTypeOptions, interestTypeOptions,
-                interestCalculationPeriodTypeOptions, fundOptions, chargeOptions, chargeTemplate, allowedLoanOfficers, loanPurposeOptions,
-                loanCollateralOptions, calendarOptions, notes, accountLinkingOptions, linkedAccount, disbursementData, emiAmountVariations,
-                overdueCharges, paidInAdvanceTemplate, interestRatesPeriods, loanCreditCheckDataList, groupLoanMembersAllocationList, 
-                clientActiveLoanOptions);
+                repaymentFrequencyNthDayTypeOptions, repaymentFrequencyDayOfWeekTypeOptions, repaymentStrategyOptions, 
+                interestRateFrequencyTypeOptions, amortizationTypeOptions, interestTypeOptions, interestCalculationPeriodTypeOptions, 
+                fundOptions, chargeOptions, chargeTemplate, allowedLoanOfficers, loanPurposeOptions, loanCollateralOptions, 
+                calendarOptions, notes, accountLinkingOptions, linkedAccount, disbursementData, emiAmountVariations,
+                overdueCharges, paidInAdvanceTemplate, interestRatesPeriods, null, null, clientActiveLoanOptions);
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters(),
                 mandatoryResponseParameters);
         return this.toApiJsonSerializer.serialize(settings, loanAccount, this.LOAN_DATA_PARAMETERS);
     }
-
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })
@@ -654,17 +616,16 @@ public class LoansApiResource {
             @QueryParam("externalId") final String externalId,
             @QueryParam("officeId") final Long officeId,
             @QueryParam("staffId") final Long staffId,
-            @QueryParam("loanStatus") final Integer loanStatus,
+            @QueryParam("groupId") final Long groupId,
             // @QueryParam("underHierarchy") final String hierarchy,
             @QueryParam("offset") final Integer offset, @QueryParam("limit") final Integer limit,
             @QueryParam("orderBy") final String orderBy, @QueryParam("sortOrder") final String sortOrder,
-            @QueryParam("accountNo") final String accountNo,
-                              @QueryParam("groupId") final Long groupId) {
+            @QueryParam("accountNo") final String accountNo) {
 
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermissions);
 
-        final SearchParameters searchParameters = SearchParameters.forLoans(sqlSearch,officeId, externalId, offset, limit, orderBy, sortOrder,
-                accountNo,staffId,groupId);
+        final SearchParameters searchParameters = SearchParameters.forLoans(sqlSearch, officeId, externalId, offset, limit, orderBy, sortOrder,
+                accountNo, staffId, groupId);
 
         final Page<LoanAccountData> loanBasicDetails = this.loanReadPlatformService.retrieveAll(searchParameters);
 
@@ -770,15 +731,6 @@ public class LoansApiResource {
             result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
         } else if (is(commandParam, "recoverGuarantees")) {
             final CommandWrapper commandRequest = new CommandWrapperBuilder().recoverFromGuarantor(loanId).build();
-            result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
-        }else if(is(commandParam,"undoreject")){
-            final CommandWrapper commandRequest = builder.undoLoanRejectApplication(loanId).build();
-            result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
-        }else if(is(commandParam,"undowithdraw")){
-            final CommandWrapper commandRequest = builder.undoLoanWithdrawnByApplicant(loanId).build();
-            result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
-        }else if(is(commandParam,"splitinterestamongguarantors")){
-            final CommandWrapper commandRequest =  new CommandWrapperBuilder().splitInterestAmongGuarantors(loanId).build();
             result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
         }
 

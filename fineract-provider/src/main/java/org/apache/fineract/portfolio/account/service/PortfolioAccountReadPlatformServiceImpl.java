@@ -104,14 +104,8 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
     @Override
     public Collection<PortfolioAccountData> retrieveAllForLookup(final PortfolioAccountDTO portfolioAccountDTO) {
 
-        List<Object> sqlParams = new ArrayList<>();
-        String clientOrGroupId = "sa.client_id = ? ";
-        if(portfolioAccountDTO.getClientId() != null){
-            sqlParams.add(portfolioAccountDTO.getClientId());
-        }else{
-            sqlParams.add(portfolioAccountDTO.getGroupId());
-            clientOrGroupId = "sa.group_id= ? ";
-        }
+        final List<Object> sqlParams = new ArrayList<>();
+        //sqlParams.add(portfolioAccountDTO.getClientId());
         Collection<PortfolioAccountData> accounts = null;
         String sql = null;
         String defaultAccountStatus = "300";
@@ -126,8 +120,14 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
             case INVALID:
             break;
             case LOAN:
-                sql = "select " + this.loanAccountMapper.schema() + " where la.client_id = ? and la.loan_status_id in ("
-                        + defaultAccountStatus.toString() + ")";
+            	sql = "select " + this.loanAccountMapper.schema() + " where ";
+                if (portfolioAccountDTO.getClientId() != null) {
+                    sql += " la.client_id = ? and la.loan_status_id in (" + defaultAccountStatus.toString() + ") ";
+                    sqlParams.add(portfolioAccountDTO.getClientId());
+                } else {
+                    sql += " la.loan_status_id in (" + defaultAccountStatus.toString() + ") ";
+                }
+                
                 if (portfolioAccountDTO.getCurrencyCode() != null) {
                     sql += " and la.currency_code = ?";
                     sqlParams.add(portfolioAccountDTO.getCurrencyCode());
@@ -136,8 +136,14 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
                 accounts = this.jdbcTemplate.query(sql, this.loanAccountMapper, sqlParams.toArray());
             break;
             case SAVINGS:
-                sql = "select " + this.savingsAccountMapper.schema() + " where "+ clientOrGroupId + " and sa.status_enum in ("
-                        + defaultAccountStatus.toString() + ")";
+            	sql = "select " + this.savingsAccountMapper.schema() + " where ";
+                if (portfolioAccountDTO.getClientId() != null) {
+                    sql += " sa.client_id = ? and sa.status_enum in (" + defaultAccountStatus.toString() + ") ";
+                    sqlParams.add(portfolioAccountDTO.getClientId());
+                } else {
+                    sql += " sa.status_enum in (" + defaultAccountStatus.toString() + ") ";
+                }
+                
                 if (portfolioAccountDTO.getCurrencyCode() != null) {
                     sql += " and sa.currency_code = ?";
                     sqlParams.add(portfolioAccountDTO.getCurrencyCode());
@@ -150,6 +156,11 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
                 
                 if(portfolioAccountDTO.isExcludeOverDraftAccounts()){
                     sql += " and sa.allow_overdraft = 0";
+                }
+                
+                if(portfolioAccountDTO.getClientId() == null && portfolioAccountDTO.getGroupId() != null){
+                    sql += " and sa.group_id = ? ";
+                    sqlParams.add(portfolioAccountDTO.getGroupId());
                 }
 
                 accounts = this.jdbcTemplate.query(sql, this.savingsAccountMapper, sqlParams.toArray());
