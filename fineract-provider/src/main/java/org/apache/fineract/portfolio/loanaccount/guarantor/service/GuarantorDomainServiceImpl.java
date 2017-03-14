@@ -109,7 +109,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
     private final JournalEntryWritePlatformService journalEntryWritePlatformService;
     private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepositoryWrapper;
     private final ConfigurationDomainService configurationDomainService;
-    private final SavingsAccountAssembler savingAccountAssembler;
+    private final SavingsAccountAssembler savingsAccountAssembler;
 
     @Autowired
     public GuarantorDomainServiceImpl(final GuarantorRepository guarantorRepository,
@@ -127,8 +127,8 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
             final JournalEntryWritePlatformService journalEntryWritePlatformService,
             final ApplicationCurrencyRepositoryWrapper  applicationCurrencyRepositoryWrapper,
             final ConfigurationDomainService configurationDomainService,
-            final SavingsAccountAssembler savingAccountAssembler) {
-        this.guarantorRepository = guarantorRepository;
+            final SavingsAccountAssembler savingsAccountAssembler) {
+    	this.guarantorRepository = guarantorRepository;
         this.guarantorFundingRepository = guarantorFundingRepository;
         this.guarantorFundingTransactionRepository = guarantorFundingTransactionRepository;
         this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
@@ -145,7 +145,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
         this.journalEntryWritePlatformService = journalEntryWritePlatformService;
         this.applicationCurrencyRepositoryWrapper = applicationCurrencyRepositoryWrapper;
         this.configurationDomainService = configurationDomainService;
-        this.savingAccountAssembler = savingAccountAssembler;
+        this.savingsAccountAssembler = savingsAccountAssembler;
     }
 
     @PostConstruct
@@ -391,7 +391,17 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
                 final List<GuarantorFundingDetails> fundingDetails = guarantor.getGuarantorFundDetails();
                 for (GuarantorFundingDetails guarantorFundingDetails : fundingDetails) {
                     if (guarantorFundingDetails.getStatus().isActive()) {
-                        SavingsAccount savingsAccount = guarantorFundingDetails.getLinkedSavingsAccount();
+                        final SavingsAccount savingsAccount = guarantorFundingDetails.getLinkedSavingsAccount();
+                        if (loan.isApproved() && !loan.isDisbursed()) {
+                            final List<SavingsAccountTransaction> transactions = new ArrayList<>();
+                            for (final SavingsAccountTransaction transaction : savingsAccount.getTransactions()) {
+                                if (!transaction.getTransactionLocalDate().isAfter(loan.getApprovedOnDate())) {
+                                    transactions.add(transaction);
+                                }
+                            }
+                            this.savingsAccountAssembler.setHelpers(savingsAccount);
+                            savingsAccount.updateSavingsAccountSummary(transactions);
+                        }
                         savingsAccount.holdFunds(guarantorFundingDetails.getAmount());
                         totalGuarantee = totalGuarantee.add(guarantorFundingDetails.getAmount());
                         DepositAccountOnHoldTransaction onHoldTransaction = DepositAccountOnHoldTransaction.hold(savingsAccount,
@@ -405,6 +415,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
                             insufficientBalanceIds.add(savingsAccount.getId());
                             insufficientBalanceClientNames.add(savingsAccount.getClient().getDisplayName());
                         }
+                        savingsAccount.updateSavingsAccountSummary(savingsAccount.getTransactions());
                     }
                 }
             }
@@ -912,7 +923,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
                     final Collection<GuarantorInterestPayment> interestPayments = this.guarantorInterestPaymentRepository.findByInterestAllocationOrderByIdDesc(allocation);
                     for(final GuarantorInterestPayment interestPayment : interestPayments){
 
-                        final SavingsAccount savingsAccount = this.savingAccountAssembler.assembleFrom(interestPayment.getSavingsAccount().getId());
+                        final SavingsAccount savingsAccount = this.savingsAccountAssembler.assembleFrom(interestPayment.getSavingsAccount().getId());
 
 
                         final SavingsAccountTransaction savingsAccountTransaction = interestPayment.getSavingsAccountTransaction();
