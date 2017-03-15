@@ -125,6 +125,13 @@ public final class JsonCommand {
         return this.parsedCommand;
     }
 
+    public JsonElement jsonElement(final String paramName) {
+        if (this.parsedCommand.getAsJsonObject().has(paramName)) {
+            return this.parsedCommand.getAsJsonObject().get(paramName);
+        }
+        return null;
+    }
+    
     public String jsonFragment(final String paramName) {
         String jsonFragment = null;
         if (this.parsedCommand.getAsJsonObject().has(paramName)) {

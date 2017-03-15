@@ -482,7 +482,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             final ClientNonPerson clientNonPersonForUpdate = this.clientNonPersonRepository.findOneByClientId(clientId);
             if(clientNonPersonForUpdate != null)
             {
-            	final JsonElement clientNonPersonElement = this.fromApiJsonHelper.parse(command.jsonFragment(ClientApiConstants.clientNonPersonDetailsParamName));
+            	final JsonElement clientNonPersonElement = command.jsonElement(ClientApiConstants.clientNonPersonDetailsParamName);
             	final Map<String, Object> clientNonPersonChanges = clientNonPersonForUpdate.update(JsonCommand.fromExistingCommand(command, clientNonPersonElement));
                 
                 if (clientNonPersonChanges.containsKey(ClientApiConstants.constitutionIdParamName)) {
@@ -510,8 +510,19 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 }
                 
                 changes.putAll(clientNonPersonChanges);
+            } else {
+                final Integer legalFormParamValue = command.integerValueOfParameterNamed(ClientApiConstants.legalFormIdParamName);
+                boolean isEntity = false;
+                if (legalFormParamValue != null) {
+                    final LegalForm legalForm = LegalForm.fromInt(legalFormParamValue);
+                    if (legalForm != null) {
+                        isEntity = legalForm.isEntity();
+                    }
+                }
+                if (isEntity) {
+                    extractAndCreateClientNonPerson(clientForUpdate, command);
+                }
             }
-
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //
                     .withOfficeId(clientForUpdate.officeId()) //
