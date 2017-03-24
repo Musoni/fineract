@@ -1094,6 +1094,10 @@ public class LoanCharge extends AbstractPersistableCustom<Long> {
         return this.loan;
     }
     
+    public boolean isDisbursementCharge() {
+        return ChargeTimeType.fromInt(this.chargeTime).equals(ChargeTimeType.DISBURSEMENT);
+    }
+    
     public boolean isTrancheDisbursementCharge() {
         return ChargeTimeType.fromInt(this.chargeTime).equals(ChargeTimeType.TRANCHE_DISBURSEMENT);
     }
