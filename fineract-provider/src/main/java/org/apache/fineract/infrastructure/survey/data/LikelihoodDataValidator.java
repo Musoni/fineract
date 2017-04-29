@@ -20,8 +20,11 @@ package org.apache.fineract.infrastructure.survey.data;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -36,7 +39,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-
 /**
  * Created by Cieyou on 3/12/14.
  */
@@ -45,6 +47,8 @@ import com.google.gson.reflect.TypeToken;
 public class LikelihoodDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
+	private static final Set<String> UPDATE_LIKELIHOOD_DATA_PARAMETERS = new HashSet<>(
+			Arrays.asList(LikelihoodApiConstants.ACTIVE));
 
     @Autowired
     public LikelihoodDataValidator(final FromJsonHelper fromApiJsonHelper) {
@@ -56,7 +60,7 @@ public class LikelihoodDataValidator {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }
 
         final Type typeOfMap = new TypeToken<Map<String, Object>>() {}.getType();
-        this.fromApiJsonHelper.checkForUnsupportedParameters(typeOfMap, json, LikelihoodApiConstants.UPDATE_LIKELIHOOD_DATA_PARAMETERS);
+        this.fromApiJsonHelper.checkForUnsupportedParameters(typeOfMap, json, UPDATE_LIKELIHOOD_DATA_PARAMETERS);
 
         final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
         final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource(LikelihoodApiConstants.LIKELIHOOD_RESOURCE_NAME);

@@ -64,20 +64,19 @@ public class SmsCampaignValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
 
-
-    public static final Set<String> supportedParams = new HashSet<String>(Arrays.asList(campaignName, campaignType,localeParamName,dateFormatParamName,
+    protected static final Set<String> supportedParams = new HashSet<String>(Arrays.asList(campaignName, campaignType,localeParamName,dateFormatParamName,
             runReportId,paramValue,message,recurrenceStartDate,activationDateParamName,submittedOnDateParamName,closureDateParamName,recurrenceParamName));
 
-    public static final Set<String> supportedParamsForUpdate = new HashSet<>(Arrays.asList(campaignName, campaignType,localeParamName,dateFormatParamName,
+	protected static final Set<String> supportedParamsForUpdate = new HashSet<>(Arrays.asList(campaignName, campaignType,localeParamName,dateFormatParamName,
             runReportId,paramValue,message,recurrenceStartDate,activationDateParamName,recurrenceParamName));
 
-    public static final Set<String> ACTIVATION_REQUEST_DATA_PARAMETERS = new HashSet<String>(Arrays.asList(localeParamName,
+	protected static final Set<String> ACTIVATION_REQUEST_DATA_PARAMETERS = new HashSet<String>(Arrays.asList(localeParamName,
             dateFormatParamName, activationDateParamName));
 
-    public static final Set<String> CLOSE_REQUEST_DATA_PARAMETERS = new HashSet<String>(Arrays.asList(localeParamName,
+	protected static final Set<String> CLOSE_REQUEST_DATA_PARAMETERS = new HashSet<String>(Arrays.asList(localeParamName,
             dateFormatParamName, closureDateParamName));
 
-    public static final Set<String> PREVIEW_REQUEST_DATA_PARAMETERS= new HashSet<String>(Arrays.asList(paramValue,message));
+	protected static final Set<String> PREVIEW_REQUEST_DATA_PARAMETERS= new HashSet<String>(Arrays.asList(paramValue,message));
 
     @Autowired
     public SmsCampaignValidator(FromJsonHelper fromApiJsonHelper) {

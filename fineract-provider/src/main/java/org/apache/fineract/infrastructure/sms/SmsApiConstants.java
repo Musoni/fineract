@@ -39,6 +39,8 @@ public class SmsApiConstants {
 
     // response parameters
     public static final String statusParamName = "status";
+    
+    public static final String campaignIdParamName = "campaignId";
 
     public static final Set<String> CREATE_REQUEST_DATA_PARAMETERS = new HashSet<>(Arrays.asList(localeParamName,
             dateFormatParamName, groupIdParamName, clientIdParamName, staffIdParamName, messageParamName));
