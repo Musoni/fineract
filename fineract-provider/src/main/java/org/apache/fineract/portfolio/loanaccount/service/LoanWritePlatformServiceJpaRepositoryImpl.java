@@ -375,6 +375,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         checkForProductMixRestrictions(loan);
 
         LocalDate recalculateFrom = null;
+        loan.setActualDisbursementDate(actualDisbursementDate.toDate());
         ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
 
         // validate actual disbursement date against meeting date
@@ -831,6 +832,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
 
         final LocalDate recalculateFrom = null;
+        loan.setActualDisbursementDate(null);
         ScheduleGeneratorDTO scheduleGeneratorDTO = this.loanUtilService.buildScheduleGeneratorDTO(loan, recalculateFrom);
 
         final Map<String, Object> changes = loan.undoDisbursal(scheduleGeneratorDTO, existingTransactionIds,
