@@ -129,8 +129,9 @@ public class LoanProductReadPlatformServiceImpl implements LoanProductReadPlatfo
         String sql = "select " + rm.schema();
 
         if ((inClause != null) && (!(inClause.trim().isEmpty()))) {
-            sql += " where lp.id in ( " + inClause + " ) ";
-            SQLInjectionValidator.validateSQLInput(inClause);
+        	sql += " where lp.id in ("+inClause+") ";
+            //Here no need to check injection as this is internal where clause
+           // SQLInjectionValidator.validateSQLInput(inClause);
         }
 
         return this.jdbcTemplate.query(sql, rm, new Object[] {});
