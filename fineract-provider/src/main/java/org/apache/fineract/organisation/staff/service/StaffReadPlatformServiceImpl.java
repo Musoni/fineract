@@ -164,7 +164,7 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
 
     @Override
     public Collection<StaffData> retrieveAllLoanOfficersInOfficeById(final Long officeId) {
-    	return retrieveAllStaff(" office_id = ? and is_loan_officer=1", officeId);
+        return retrieveAllStaff(" office_id = ? and is_loan_officer=1 and o.hierarchy like ?", officeId);
     }
 
     @Override
