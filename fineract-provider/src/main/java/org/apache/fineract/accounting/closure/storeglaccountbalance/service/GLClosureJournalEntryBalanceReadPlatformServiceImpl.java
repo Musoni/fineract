@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.accounting.closure.storeglaccountbalance.service;
+package org.apache.fineract.accounting.closure.storeglaccountbalance.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,20 +41,20 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mifosplatform.accounting.closure.data.GLClosureData;
-import org.mifosplatform.accounting.closure.service.GLClosureReadPlatformService;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.data.GLClosureAccountBalanceReportData;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.data.GLClosureFileFormat;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryBalanceValidator;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryData;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.helper.UriQueryParameterHelper;
-import org.mifosplatform.accounting.glaccount.domain.GLAccount;
-import org.mifosplatform.accounting.glaccount.domain.GLAccountRepositoryWrapper;
-import org.mifosplatform.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.mifosplatform.infrastructure.core.domain.JdbcSupport;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
-import org.mifosplatform.organisation.office.service.OfficeReadPlatformService;
+import org.apache.fineract.accounting.closure.data.GLClosureData;
+import org.apache.fineract.accounting.closure.service.GLClosureReadPlatformService;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureAccountBalanceReportData;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureFileFormat;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryBalanceValidator;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryData;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.helper.UriQueryParameterHelper;
+import org.apache.fineract.accounting.glaccount.domain.GLAccount;
+import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
+import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
+import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

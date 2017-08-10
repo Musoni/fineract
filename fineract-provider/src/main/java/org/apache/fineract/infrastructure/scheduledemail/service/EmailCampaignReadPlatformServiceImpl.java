@@ -1,25 +1,38 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.scheduledemail.service;
+package org.apache.fineract.infrastructure.scheduledemail.service;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifosplatform.infrastructure.core.data.EnumOptionData;
-import org.mifosplatform.infrastructure.core.domain.JdbcSupport;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.dataqueries.data.ReportData;
-import org.mifosplatform.infrastructure.scheduledemail.data.ScheduledEmailEnumerations;
-import org.mifosplatform.infrastructure.scheduledemail.exception.EmailBusinessRuleNotFound;
-import org.mifosplatform.infrastructure.scheduledemail.exception.EmailCampaignNotFound;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailBusinessRulesData;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailCampaignData;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailCampaignTimeLine;
-import org.mifosplatform.infrastructure.scheduledemail.domain.EmailCampaignStatus;
-import org.mifosplatform.infrastructure.scheduledemail.domain.EmailCampaignStatusEnumerations;
-import org.mifosplatform.infrastructure.scheduledemail.domain.EmailCampaignType;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
+import org.apache.fineract.infrastructure.scheduledemail.data.ScheduledEmailEnumerations;
+import org.apache.fineract.infrastructure.scheduledemail.exception.EmailBusinessRuleNotFound;
+import org.apache.fineract.infrastructure.scheduledemail.exception.EmailCampaignNotFound;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailBusinessRulesData;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailCampaignData;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailCampaignTimeLine;
+import org.apache.fineract.infrastructure.scheduledemail.domain.EmailCampaignStatus;
+import org.apache.fineract.infrastructure.scheduledemail.domain.EmailCampaignStatusEnumerations;
+import org.apache.fineract.infrastructure.scheduledemail.domain.EmailCampaignType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;

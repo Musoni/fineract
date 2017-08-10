@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.portfolio.creditcheck.domain;
+package org.apache.fineract.portfolio.creditcheck.domain;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,12 +28,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.mifosplatform.infrastructure.core.api.JsonCommand;
-import org.mifosplatform.infrastructure.core.data.EnumOptionData;
-import org.mifosplatform.infrastructure.dataqueries.domain.Report;
-import org.mifosplatform.portfolio.creditcheck.CreditCheckConstants;
-import org.mifosplatform.portfolio.creditcheck.data.CreditCheckData;
-import org.mifosplatform.portfolio.creditcheck.data.CreditCheckEnumerations;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.dataqueries.domain.Report;
+import org.apache.fineract.portfolio.creditcheck.CreditCheckConstants;
+import org.apache.fineract.portfolio.creditcheck.data.CreditCheckData;
+import org.apache.fineract.portfolio.creditcheck.data.CreditCheckEnumerations;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @SuppressWarnings("serial")

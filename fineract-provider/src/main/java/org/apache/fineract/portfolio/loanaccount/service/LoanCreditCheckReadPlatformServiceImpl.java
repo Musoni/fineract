@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.portfolio.loanaccount.service;
+package org.apache.fineract.portfolio.loanaccount.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,29 +24,29 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.mifosplatform.infrastructure.core.data.EnumOptionData;
-import org.mifosplatform.infrastructure.core.domain.JdbcSupport;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.dataqueries.data.GenericResultsetData;
-import org.mifosplatform.infrastructure.dataqueries.data.ReportData;
-import org.mifosplatform.infrastructure.dataqueries.data.ResultsetRowData;
-import org.mifosplatform.infrastructure.dataqueries.service.GenericDataService;
-import org.mifosplatform.infrastructure.dataqueries.service.ReadReportingService;
-import org.mifosplatform.infrastructure.security.service.PlatformSecurityContext;
-import org.mifosplatform.portfolio.creditcheck.data.CreditCheckData;
-import org.mifosplatform.portfolio.creditcheck.data.CreditCheckEnumerations;
-import org.mifosplatform.portfolio.creditcheck.service.CreditCheckDropdownReadPlatformService;
-import org.mifosplatform.portfolio.creditcheck.service.CreditCheckReadPlatformService;
-import org.mifosplatform.portfolio.creditcheck.service.CreditCheckReportParamReadPlatformService;
-import org.mifosplatform.portfolio.loanaccount.data.LoanAccountData;
-import org.mifosplatform.portfolio.loanaccount.data.LoanCreditCheckData;
-import org.mifosplatform.portfolio.loanaccount.data.LoanCreditCheckGenericResultsetData;
-import org.mifosplatform.portfolio.loanaccount.data.LoanStatusEnumData;
-import org.mifosplatform.portfolio.loanaccount.domain.Loan;
-import org.mifosplatform.portfolio.loanaccount.domain.LoanCreditCheckHelper;
-import org.mifosplatform.portfolio.loanaccount.domain.LoanStatus;
-import org.mifosplatform.portfolio.loanaccount.exception.LoanCreditCheckNotFoundException;
-import org.mifosplatform.useradministration.domain.AppUser;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
+import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
+import org.apache.fineract.infrastructure.dataqueries.data.ResultsetRowData;
+import org.apache.fineract.infrastructure.dataqueries.service.GenericDataService;
+import org.apache.fineract.infrastructure.dataqueries.service.ReadReportingService;
+import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.portfolio.creditcheck.data.CreditCheckData;
+import org.apache.fineract.portfolio.creditcheck.data.CreditCheckEnumerations;
+import org.apache.fineract.portfolio.creditcheck.service.CreditCheckDropdownReadPlatformService;
+import org.apache.fineract.portfolio.creditcheck.service.CreditCheckReadPlatformService;
+import org.apache.fineract.portfolio.creditcheck.service.CreditCheckReportParamReadPlatformService;
+import org.apache.fineract.portfolio.loanaccount.data.LoanAccountData;
+import org.apache.fineract.portfolio.loanaccount.data.LoanCreditCheckData;
+import org.apache.fineract.portfolio.loanaccount.data.LoanCreditCheckGenericResultsetData;
+import org.apache.fineract.portfolio.loanaccount.data.LoanStatusEnumData;
+import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanCreditCheckHelper;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
+import org.apache.fineract.portfolio.loanaccount.exception.LoanCreditCheckNotFoundException;
+import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

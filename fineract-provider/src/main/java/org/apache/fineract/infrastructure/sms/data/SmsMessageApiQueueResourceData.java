@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.sms.data;
+package org.apache.fineract.infrastructure.sms.data;
 
 import com.google.gson.Gson;
 
@@ -13,7 +26,7 @@ import com.google.gson.Gson;
  **/
 public class SmsMessageApiQueueResourceData {
 	private Long internalId;
-	private String mifosTenantIdentifier;
+	private String fineractTenantIdentifier;
 	private String createdOnDate;
 	private String sourceAddress;
 	private String mobileNumber;
@@ -22,10 +35,10 @@ public class SmsMessageApiQueueResourceData {
 	/** 
 	 * SmsMessageApiQueueResourceData constructor
 	 **/
-	private SmsMessageApiQueueResourceData(Long internalId, String mifosTenantIdentifier, String createdOnDate, 
+	private SmsMessageApiQueueResourceData(Long internalId, String fineractTenantIdentifier, String createdOnDate, 
 			String sourceAddress, String mobileNumber, String message) {
 		this.internalId = internalId;
-		this.mifosTenantIdentifier = mifosTenantIdentifier;
+		this.fineractTenantIdentifier = fineractTenantIdentifier;
 		this.createdOnDate = createdOnDate;
 		this.sourceAddress = sourceAddress;
 		this.mobileNumber = mobileNumber;
@@ -40,10 +53,10 @@ public class SmsMessageApiQueueResourceData {
 	/** 
 	 * @return a new instance of the SmsMessageApiQueueResourceData class 
 	 **/
-	public static final SmsMessageApiQueueResourceData instance(Long internalId, String mifosTenantIdentifier, String createdOnDate, 
+	public static final SmsMessageApiQueueResourceData instance(Long internalId, String fineractTenantIdentifier, String createdOnDate, 
 			String sourceAddress, String mobileNumber, String message) {
 		
-		return new SmsMessageApiQueueResourceData(internalId, mifosTenantIdentifier, createdOnDate, sourceAddress, 
+		return new SmsMessageApiQueueResourceData(internalId, fineractTenantIdentifier, createdOnDate, sourceAddress, 
 				mobileNumber, message);
 	}
 	
@@ -55,10 +68,10 @@ public class SmsMessageApiQueueResourceData {
 	}
 	
 	/**
-	 * @return the mifosTenantIdentifier
+	 * @return the fineractTenantIdentifier
 	 */
-	public String getMifosTenantIdentifier() {
-		return mifosTenantIdentifier;
+	public String getFineractTenantIdentifier() {
+		return fineractTenantIdentifier;
 	}
 	
 	/**

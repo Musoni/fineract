@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.integrationtests;
+package org.apache.fineract.integrationtests;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,23 +35,23 @@ import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifosplatform.integrationtests.common.ClientHelper;
-import org.mifosplatform.integrationtests.common.SchedulerJobHelper;
-import org.mifosplatform.integrationtests.common.Utils;
-import org.mifosplatform.integrationtests.common.accounting.Account;
-import org.mifosplatform.integrationtests.common.accounting.AccountHelper;
-import org.mifosplatform.integrationtests.common.accounting.JournalEntry;
-import org.mifosplatform.integrationtests.common.accounting.JournalEntryHelper;
-import org.mifosplatform.integrationtests.common.accounting.PeriodicAccrualAccountingHelper;
-import org.mifosplatform.integrationtests.common.charges.ChargesHelper;
-import org.mifosplatform.integrationtests.common.loans.LoanApplicationTestBuilder;
-import org.mifosplatform.integrationtests.common.loans.LoanProductTestBuilder;
-import org.mifosplatform.integrationtests.common.loans.LoanStatusChecker;
-import org.mifosplatform.integrationtests.common.loans.LoanTransactionHelper;
-import org.mifosplatform.integrationtests.common.savings.AccountTransferHelper;
-import org.mifosplatform.integrationtests.common.savings.SavingsAccountHelper;
-import org.mifosplatform.integrationtests.common.savings.SavingsProductHelper;
-import org.mifosplatform.integrationtests.common.savings.SavingsStatusChecker;
+import org.apache.fineract.integrationtests.common.ClientHelper;
+import org.apache.fineract.integrationtests.common.SchedulerJobHelper;
+import org.apache.fineract.integrationtests.common.Utils;
+import org.apache.fineract.integrationtests.common.accounting.Account;
+import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
+import org.apache.fineract.integrationtests.common.accounting.JournalEntry;
+import org.apache.fineract.integrationtests.common.accounting.JournalEntryHelper;
+import org.apache.fineract.integrationtests.common.accounting.PeriodicAccrualAccountingHelper;
+import org.apache.fineract.integrationtests.common.charges.ChargesHelper;
+import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
+import org.apache.fineract.integrationtests.common.loans.LoanProductTestBuilder;
+import org.apache.fineract.integrationtests.common.loans.LoanStatusChecker;
+import org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper;
+import org.apache.fineract.integrationtests.common.savings.AccountTransferHelper;
+import org.apache.fineract.integrationtests.common.savings.SavingsAccountHelper;
+import org.apache.fineract.integrationtests.common.savings.SavingsProductHelper;
+import org.apache.fineract.integrationtests.common.savings.SavingsStatusChecker;
 
 import com.google.gson.JsonObject;
 import com.jayway.restassured.builder.RequestSpecBuilder;
@@ -4400,7 +4413,7 @@ public class ClientLoanIntegrationTest {
     }
 
     /***
-     * Test case to verify Mifos Style payment strategy
+     * Test case to verify Fineract Style payment strategy
      */
     @Test
     public void testLoanRefundByCashCashBasedAccounting() {
@@ -4512,7 +4525,7 @@ public class ClientLoanIntegrationTest {
 
         // Make refund of 20
         // max 2290 to refund. Pay 20 means only principal
-        // mifos style refund order(principal, interest, fees and penalties
+        // fineract style refund order(principal, interest, fees and penalties
         // paid: principal 2000, interest 240, fees 50, penalty 0
         // refund 20 means paid: principal 1980, interest 240, fees 50, penalty
         // 0
@@ -4555,7 +4568,7 @@ public class ClientLoanIntegrationTest {
     }
 
     /***
-     * Test case to verify Mifos style payment strategy
+     * Test case to verify Fineract style payment strategy
      */
     @Test
     public void testLoanRefundByCashAccrualBasedAccounting() {
@@ -4671,7 +4684,7 @@ public class ClientLoanIntegrationTest {
 
         // Make refund of 20
         // max 2290 to refund. Pay 20 means only principal
-        // mifos style refund order(principal, interest, fees and penalties
+        // fineract style refund order(principal, interest, fees and penalties
         // paid: principal 2000, interest 240, fees 50, penalty 0
         // refund 20 means paid: principal 1980, interest 240, fees 50, penalty
         // 0
@@ -4844,7 +4857,7 @@ public class ClientLoanIntegrationTest {
 
         // Make refund of 20
         // max 2290 to refund. Pay 20 means only principal
-        // mifos style refund order(principal, interest, fees and penalties
+        // fineract style refund order(principal, interest, fees and penalties
         // paid: principal 2000, interest 240, fees 50, penalty 0
         // refund 20 means paid: principal 1980, interest 240, fees 50, penalty
         // 0

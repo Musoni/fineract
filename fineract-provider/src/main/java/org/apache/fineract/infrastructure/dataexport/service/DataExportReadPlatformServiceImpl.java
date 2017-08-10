@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.dataexport.service;
+package org.apache.fineract.infrastructure.dataexport.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,31 +29,31 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.mifosplatform.infrastructure.codes.data.CodeValueData;
-import org.mifosplatform.infrastructure.codes.service.CodeValueReadPlatformService;
-import org.mifosplatform.infrastructure.core.domain.JdbcSupport;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.dataexport.api.DataExportApiConstants;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportBaseEntity;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCoreColumn;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCoreDatatable;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCoreTable;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportData;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportEntityData;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportFileData;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportFileFormat;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportTimelineData;
-import org.mifosplatform.infrastructure.dataexport.data.EntityColumnMetaData;
-import org.mifosplatform.infrastructure.dataexport.domain.DataExport;
-import org.mifosplatform.infrastructure.dataexport.domain.DataExportRepository;
-import org.mifosplatform.infrastructure.dataexport.exception.DataExportNotFoundException;
-import org.mifosplatform.infrastructure.dataexport.helper.DataExportUtils;
-import org.mifosplatform.infrastructure.dataexport.helper.FileHelper;
-import org.mifosplatform.infrastructure.dataqueries.data.DatatableData;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTable;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTableRepository;
-import org.mifosplatform.useradministration.data.AppUserData;
-import org.mifosplatform.useradministration.service.AppUserReadPlatformService;
+import org.apache.fineract.infrastructure.codes.data.CodeValueData;
+import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.dataexport.api.DataExportApiConstants;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportBaseEntity;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCoreColumn;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCoreDatatable;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCoreTable;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportData;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportEntityData;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportFileData;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportFileFormat;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportTimelineData;
+import org.apache.fineract.infrastructure.dataexport.data.EntityColumnMetaData;
+import org.apache.fineract.infrastructure.dataexport.domain.DataExport;
+import org.apache.fineract.infrastructure.dataexport.domain.DataExportRepository;
+import org.apache.fineract.infrastructure.dataexport.exception.DataExportNotFoundException;
+import org.apache.fineract.infrastructure.dataexport.helper.DataExportUtils;
+import org.apache.fineract.infrastructure.dataexport.helper.FileHelper;
+import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTable;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTableRepository;
+import org.apache.fineract.useradministration.data.AppUserData;
+import org.apache.fineract.useradministration.service.AppUserReadPlatformService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

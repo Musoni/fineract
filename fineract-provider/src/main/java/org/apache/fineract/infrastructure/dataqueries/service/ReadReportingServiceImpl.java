@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.dataqueries.service;
+package org.apache.fineract.infrastructure.dataqueries.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -28,23 +41,23 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifosplatform.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.mifosplatform.infrastructure.core.domain.JdbcSupport;
-import org.mifosplatform.infrastructure.core.domain.MifosPlatformTenant;
-import org.mifosplatform.infrastructure.core.domain.MifosPlatformTenantConnection;
-import org.mifosplatform.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.core.service.ThreadLocalContextUtil;
-import org.mifosplatform.infrastructure.dataqueries.data.GenericResultsetData;
-import org.mifosplatform.infrastructure.dataqueries.data.ReportData;
-import org.mifosplatform.infrastructure.dataqueries.data.ReportParameterData;
-import org.mifosplatform.infrastructure.dataqueries.data.ReportParameterJoinData;
-import org.mifosplatform.infrastructure.dataqueries.data.ResultsetColumnHeaderData;
-import org.mifosplatform.infrastructure.dataqueries.data.ResultsetRowData;
-import org.mifosplatform.infrastructure.dataqueries.exception.ReportNotFoundException;
-import org.mifosplatform.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
-import org.mifosplatform.infrastructure.security.service.PlatformSecurityContext;
-import org.mifosplatform.useradministration.domain.AppUser;
+import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
+import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
+import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
+import org.apache.fineract.infrastructure.dataqueries.data.ReportParameterData;
+import org.apache.fineract.infrastructure.dataqueries.data.ReportParameterJoinData;
+import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnHeaderData;
+import org.apache.fineract.infrastructure.dataqueries.data.ResultsetRowData;
+import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
+import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
+import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.useradministration.domain.AppUser;
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot;
 import org.pentaho.reporting.engine.classic.core.DefaultReportEnvironment;
 import org.pentaho.reporting.engine.classic.core.MasterReport;
@@ -359,7 +372,7 @@ public class ReadReportingServiceImpl implements ReadReportingService {
             /*
              * only allow integer, long, date and string parameter types and
              * assume all mandatory - could go more detailed like Pawel did in
-             * Mifos later and could match incoming and pentaho parameters
+             * Fineract later and could match incoming and pentaho parameters
              * better... currently assuming they come in ok... and if not an
              * error
              */
@@ -395,8 +408,8 @@ public class ReadReportingServiceImpl implements ReadReportingService {
             // data scoping
             final Connection connection = this.dataSource.getConnection();
 
-            final MifosPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
-            final MifosPlatformTenantConnection tenantConnection = tenant.getConnection();
+            final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
+            final FineractPlatformTenantConnection tenantConnection = tenant.getConnection();
 
             String tenantUrl;
             String tenantdb;

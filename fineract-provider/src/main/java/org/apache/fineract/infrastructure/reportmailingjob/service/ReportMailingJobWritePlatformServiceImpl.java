@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.reportmailingjob.service;
+package org.apache.fineract.infrastructure.reportmailingjob.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,36 +34,36 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mifosplatform.infrastructure.core.api.JsonCommand;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResult;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.mifosplatform.infrastructure.core.domain.MifosPlatformTenant;
-import org.mifosplatform.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.mifosplatform.infrastructure.core.service.DateUtils;
-import org.mifosplatform.infrastructure.core.service.ThreadLocalContextUtil;
-import org.mifosplatform.infrastructure.dataqueries.domain.Report;
-import org.mifosplatform.infrastructure.dataqueries.domain.ReportRepositoryWrapper;
-import org.mifosplatform.infrastructure.dataqueries.service.ReadReportingService;
-import org.mifosplatform.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
-import org.mifosplatform.infrastructure.jobs.annotation.CronTarget;
-import org.mifosplatform.infrastructure.jobs.exception.JobExecutionException;
-import org.mifosplatform.infrastructure.jobs.service.JobName;
-import org.mifosplatform.infrastructure.reportmailingjob.ReportMailingJobConstants;
-import org.mifosplatform.infrastructure.reportmailingjob.data.ReportMailingJobEmailData;
-import org.mifosplatform.infrastructure.reportmailingjob.data.ReportMailingJobValidator;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJob;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobEmailAttachmentFileFormat;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobPreviousRunStatus;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobRepository;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobRepositoryWrapper;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobRunHistory;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobRunHistoryRepository;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobStretchyReportParamDateOption;
-import org.mifosplatform.infrastructure.reportmailingjob.helper.IPv4Helper;
-import org.mifosplatform.infrastructure.reportmailingjob.helper.ReportMailingJobStretchyReportDateHelper;
-import org.mifosplatform.infrastructure.security.service.PlatformSecurityContext;
-import org.mifosplatform.portfolio.calendar.service.CalendarUtils;
-import org.mifosplatform.useradministration.domain.AppUser;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import org.apache.fineract.infrastructure.dataqueries.domain.Report;
+import org.apache.fineract.infrastructure.dataqueries.domain.ReportRepositoryWrapper;
+import org.apache.fineract.infrastructure.dataqueries.service.ReadReportingService;
+import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
+import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
+import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
+import org.apache.fineract.infrastructure.jobs.service.JobName;
+import org.apache.fineract.infrastructure.reportmailingjob.ReportMailingJobConstants;
+import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobEmailData;
+import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobValidator;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJob;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobEmailAttachmentFileFormat;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobPreviousRunStatus;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRepository;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRepositoryWrapper;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRunHistory;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRunHistoryRepository;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobStretchyReportParamDateOption;
+import org.apache.fineract.infrastructure.reportmailingjob.helper.IPv4Helper;
+import org.apache.fineract.infrastructure.reportmailingjob.helper.ReportMailingJobStretchyReportDateHelper;
+import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
+import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -411,9 +424,9 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
         try {
             final ByteArrayOutputStream byteArrayOutputStream = this.readReportingService.generatePentahoReportAsOutputStream(reportName, 
                     emailAttachmentFileFormat.getValue(), reportParams, null, reportMailingJob.getRunAsUser(), errorLog);
-            final MifosPlatformTenant mifosPlatformTenant = ThreadLocalContextUtil.getTenant();
+            final FineractPlatformTenant fineractPlatformTenant = ThreadLocalContextUtil.getTenant();
             final String fileLocation = FileSystemContentRepository.MIFOSX_BASE_DIR + File.separator + 
-            		mifosPlatformTenant.getTenantIdentifier() + File.separator + "reportmailingjob";
+            		fineractPlatformTenant.getTenantIdentifier() + File.separator + "reportmailingjob";
             final String fileNameWithoutExtension = fileLocation + File.separator + reportName;
             
             // check if file directory exists, if not create directory

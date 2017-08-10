@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.dataexport.service;
+package org.apache.fineract.infrastructure.dataexport.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,33 +30,33 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.mutable.MutableInt;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
-import org.mifosplatform.infrastructure.core.api.JsonCommand;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResult;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.mifosplatform.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.mifosplatform.infrastructure.core.serialization.FromJsonHelper;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.dataexport.api.DataExportApiConstants;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportBaseEntity;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCoreColumn;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCoreDatatable;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCoreTable;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportCreateRequestData;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportEntityData;
-import org.mifosplatform.infrastructure.dataexport.data.DataExportSqlJoin;
-import org.mifosplatform.infrastructure.dataexport.data.EntityColumnMetaData;
-import org.mifosplatform.infrastructure.dataexport.data.ExportDataValidator;
-import org.mifosplatform.infrastructure.dataexport.domain.DataExport;
-import org.mifosplatform.infrastructure.dataexport.domain.DataExportRepository;
-import org.mifosplatform.infrastructure.dataexport.exception.DataExportNotFoundException;
-import org.mifosplatform.infrastructure.dataexport.helper.DataExportUtils;
-import org.mifosplatform.infrastructure.dataexport.helper.FileHelper;
-import org.mifosplatform.infrastructure.dataexport.jdbc.SQL;
-import org.mifosplatform.infrastructure.dataqueries.data.DatatableData;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTableMetaData;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTableMetaDataRepository;
-import org.mifosplatform.portfolio.loanaccount.domain.LoanTransactionType;
-import org.mifosplatform.portfolio.savings.SavingsAccountTransactionType;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.dataexport.api.DataExportApiConstants;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportBaseEntity;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCoreColumn;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCoreDatatable;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCoreTable;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportCreateRequestData;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportEntityData;
+import org.apache.fineract.infrastructure.dataexport.data.DataExportSqlJoin;
+import org.apache.fineract.infrastructure.dataexport.data.EntityColumnMetaData;
+import org.apache.fineract.infrastructure.dataexport.data.ExportDataValidator;
+import org.apache.fineract.infrastructure.dataexport.domain.DataExport;
+import org.apache.fineract.infrastructure.dataexport.domain.DataExportRepository;
+import org.apache.fineract.infrastructure.dataexport.exception.DataExportNotFoundException;
+import org.apache.fineract.infrastructure.dataexport.helper.DataExportUtils;
+import org.apache.fineract.infrastructure.dataexport.helper.FileHelper;
+import org.apache.fineract.infrastructure.dataexport.jdbc.SQL;
+import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTableMetaData;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTableMetaDataRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
+import org.apache.fineract.portfolio.savings.SavingsAccountTransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

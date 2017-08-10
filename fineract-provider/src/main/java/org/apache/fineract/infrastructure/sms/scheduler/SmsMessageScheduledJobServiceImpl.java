@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.sms.scheduler;
+package org.apache.fineract.infrastructure.sms.scheduler;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,30 +38,30 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mifosplatform.infrastructure.configuration.data.ExternalServicesPropertiesData;
-import org.mifosplatform.infrastructure.configuration.service.ExternalServicesConstants;
-import org.mifosplatform.infrastructure.configuration.service.ExternalServicesPropertiesReadPlatformService;
-import org.mifosplatform.infrastructure.core.domain.MifosPlatformTenant;
-import org.mifosplatform.infrastructure.core.service.ThreadLocalContextUtil;
-import org.mifosplatform.infrastructure.jobs.annotation.CronTarget;
-import org.mifosplatform.infrastructure.jobs.service.JobName;
-import org.mifosplatform.infrastructure.reportmailingjob.helper.IPv4Helper;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailMessageWithAttachmentData;
-import org.mifosplatform.infrastructure.scheduledemail.service.EmailMessageJobEmailService;
-import org.mifosplatform.infrastructure.sms.data.SmsConfigurationData;
-import org.mifosplatform.infrastructure.sms.data.SmsData;
-import org.mifosplatform.infrastructure.sms.data.SmsMessageApiQueueResourceData;
-import org.mifosplatform.infrastructure.sms.data.SmsMessageApiReportResourceData;
-import org.mifosplatform.infrastructure.sms.data.SmsMessageApiResponseData;
-import org.mifosplatform.infrastructure.sms.data.SmsMessageDeliveryReportData;
-import org.mifosplatform.infrastructure.sms.data.TenantSmsConfiguration;
-import org.mifosplatform.infrastructure.sms.domain.SmsConfiguration;
-import org.mifosplatform.infrastructure.sms.domain.SmsConfigurationRepository;
-import org.mifosplatform.infrastructure.sms.domain.SmsMessage;
-import org.mifosplatform.infrastructure.sms.domain.SmsMessageRepository;
-import org.mifosplatform.infrastructure.sms.domain.SmsMessageStatusType;
-import org.mifosplatform.infrastructure.sms.service.SmsConfigurationReadPlatformService;
-import org.mifosplatform.infrastructure.sms.service.SmsReadPlatformService;
+import org.apache.fineract.infrastructure.configuration.data.ExternalServicesPropertiesData;
+import org.apache.fineract.infrastructure.configuration.service.ExternalServicesConstants;
+import org.apache.fineract.infrastructure.configuration.service.ExternalServicesPropertiesReadPlatformService;
+import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
+import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
+import org.apache.fineract.infrastructure.jobs.service.JobName;
+import org.apache.fineract.infrastructure.reportmailingjob.helper.IPv4Helper;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailMessageWithAttachmentData;
+import org.apache.fineract.infrastructure.scheduledemail.service.EmailMessageJobEmailService;
+import org.apache.fineract.infrastructure.sms.data.SmsConfigurationData;
+import org.apache.fineract.infrastructure.sms.data.SmsData;
+import org.apache.fineract.infrastructure.sms.data.SmsMessageApiQueueResourceData;
+import org.apache.fineract.infrastructure.sms.data.SmsMessageApiReportResourceData;
+import org.apache.fineract.infrastructure.sms.data.SmsMessageApiResponseData;
+import org.apache.fineract.infrastructure.sms.data.SmsMessageDeliveryReportData;
+import org.apache.fineract.infrastructure.sms.data.TenantSmsConfiguration;
+import org.apache.fineract.infrastructure.sms.domain.SmsConfiguration;
+import org.apache.fineract.infrastructure.sms.domain.SmsConfigurationRepository;
+import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
+import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
+import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
+import org.apache.fineract.infrastructure.sms.service.SmsConfigurationReadPlatformService;
+import org.apache.fineract.infrastructure.sms.service.SmsReadPlatformService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,7 +213,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
 	        final String apiBaseUrl = tenantSmsConfiguration.getApiBaseUrl();
 	        final String sourceAddress = tenantSmsConfiguration.getSourceAddress();
 	        final String countryCallingCode = tenantSmsConfiguration.getCountryCallingCode();
-	        final MifosPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
+	        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
 	        final int httpEntityLimit = 500;
 	        final int httpEntityLimitMinusOne = httpEntityLimit - 1;
 	        
@@ -359,7 +372,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
 	        final String apiAuthUsername = tenantSmsConfiguration.getApiAuthUsername();
 	        final String apiAuthPassword = tenantSmsConfiguration.getApiAuthPassword();
 	        final String apiBaseUrl = tenantSmsConfiguration.getApiBaseUrl();
-	        final MifosPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
+	        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
 	        
 	        try{
 	            List<Long> smsMessageExternalIds = this.smsReadPlatformService.retrieveExternalIdsOfAllSent(0);

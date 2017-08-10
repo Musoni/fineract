@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.dataqueries.service;
+package org.apache.fineract.infrastructure.dataqueries.service;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -33,33 +46,33 @@ import org.hibernate.exception.GenericJDBCException;
 import org.hibernate.exception.SQLGrammarException;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.mifosplatform.infrastructure.codes.service.CodeReadPlatformService;
-import org.mifosplatform.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.mifosplatform.infrastructure.core.api.JsonCommand;
-import org.mifosplatform.infrastructure.core.data.ApiParameterError;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResult;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.mifosplatform.infrastructure.core.data.DataValidatorBuilder;
-import org.mifosplatform.infrastructure.core.exception.GeneralPlatformDomainRuleException;
-import org.mifosplatform.infrastructure.core.exception.PlatformApiDataValidationException;
-import org.mifosplatform.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.mifosplatform.infrastructure.core.exception.PlatformServiceUnavailableException;
-import org.mifosplatform.infrastructure.core.serialization.DatatableCommandFromApiJsonDeserializer;
-import org.mifosplatform.infrastructure.core.serialization.FromJsonHelper;
-import org.mifosplatform.infrastructure.core.serialization.JsonParserHelper;
-import org.mifosplatform.infrastructure.core.service.DateUtils;
-import org.mifosplatform.infrastructure.core.service.RoutingDataSource;
-import org.mifosplatform.infrastructure.dataqueries.api.DataTableApiConstant;
-import org.mifosplatform.infrastructure.dataqueries.data.*;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTable;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTableMetaData;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTableMetaDataRepository;
-import org.mifosplatform.infrastructure.dataqueries.domain.RegisteredTableRepository;
-import org.mifosplatform.infrastructure.dataqueries.exception.DataTableIsSystemDefined;
-import org.mifosplatform.infrastructure.dataqueries.exception.DatatableNotFoundException;
-import org.mifosplatform.infrastructure.dataqueries.exception.DatatableSystemErrorException;
-import org.mifosplatform.infrastructure.security.service.PlatformSecurityContext;
-import org.mifosplatform.useradministration.domain.AppUser;
+import org.apache.fineract.infrastructure.codes.service.CodeReadPlatformService;
+import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.ApiParameterError;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
+import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.exception.PlatformServiceUnavailableException;
+import org.apache.fineract.infrastructure.core.serialization.DatatableCommandFromApiJsonDeserializer;
+import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
+import org.apache.fineract.infrastructure.core.serialization.JsonParserHelper;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
+import org.apache.fineract.infrastructure.dataqueries.data.*;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTable;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTableMetaData;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTableMetaDataRepository;
+import org.apache.fineract.infrastructure.dataqueries.domain.RegisteredTableRepository;
+import org.apache.fineract.infrastructure.dataqueries.exception.DataTableIsSystemDefined;
+import org.apache.fineract.infrastructure.dataqueries.exception.DatatableNotFoundException;
+import org.apache.fineract.infrastructure.dataqueries.exception.DatatableSystemErrorException;
+import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1058,7 +1071,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
      *            Name of data table
      * @param column
      *            JSON encoded array of column properties
-     * @see       https://mifosforge.jira.com/browse/MIFOSX-1145
+     * @see       https://fineractforge.jira.com/browse/MIFOSX-1145
      **/
     private void removeNullValuesFromStringColumn(final String datatableName, final JsonObject column,
             final Map<String, ResultsetColumnHeaderData> mapColumnNameDefinition) {

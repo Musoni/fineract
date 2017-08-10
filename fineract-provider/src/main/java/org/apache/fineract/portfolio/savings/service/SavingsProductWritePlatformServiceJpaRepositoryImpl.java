@@ -1,13 +1,26 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.portfolio.savings.service;
+package org.apache.fineract.portfolio.savings.service;
 
-import static org.mifosplatform.portfolio.savings.SavingsApiConstants.accountingRuleParamName;
-import static org.mifosplatform.portfolio.savings.SavingsApiConstants.chargesParamName;
-import static org.mifosplatform.portfolio.savings.SavingsApiConstants.interestRateCharts;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.accountingRuleParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestRateCharts;
 
 import java.util.*;
 
@@ -15,28 +28,28 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mifosplatform.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
-import org.mifosplatform.infrastructure.core.api.JsonCommand;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResult;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.mifosplatform.infrastructure.core.domain.Tenant;
-import org.mifosplatform.infrastructure.core.exception.AbstractPlatformDomainRuleException;
-import org.mifosplatform.infrastructure.core.exception.PlatformApiDataValidationException;
-import org.mifosplatform.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.mifosplatform.infrastructure.entityaccess.domain.MifosEntityAccessType;
-import org.mifosplatform.infrastructure.entityaccess.domain.MifosEntityType;
-import org.mifosplatform.infrastructure.entityaccess.service.MifosEntityAccessUtil;
-import org.mifosplatform.infrastructure.jobs.annotation.CronTarget;
-import org.mifosplatform.infrastructure.jobs.exception.JobExecutionException;
-import org.mifosplatform.infrastructure.jobs.service.JobName;
-import org.mifosplatform.infrastructure.security.service.PlatformSecurityContext;
-import org.mifosplatform.portfolio.charge.domain.Charge;
-import org.mifosplatform.portfolio.charge.domain.ChargeCalculationType;
-import org.mifosplatform.portfolio.charge.domain.ChargeTimeType;
-import org.mifosplatform.portfolio.savings.DepositAccountType;
-import org.mifosplatform.portfolio.savings.data.SavingsProductDataValidator;
-import org.mifosplatform.portfolio.savings.domain.*;
-import org.mifosplatform.portfolio.savings.exception.SavingsProductNotFoundException;
+import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.domain.Tenant;
+import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
+import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccessType;
+import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
+import org.apache.fineract.infrastructure.entityaccess.service.FineractEntityAccessUtil;
+import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
+import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
+import org.apache.fineract.infrastructure.jobs.service.JobName;
+import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.portfolio.charge.domain.Charge;
+import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
+import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
+import org.apache.fineract.portfolio.savings.DepositAccountType;
+import org.apache.fineract.portfolio.savings.data.SavingsProductDataValidator;
+import org.apache.fineract.portfolio.savings.domain.*;
+import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +66,7 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
     private final SavingsProductDataValidator fromApiJsonDataValidator;
     private final SavingsProductAssembler savingsProductAssembler;
     private final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService;
-    private final MifosEntityAccessUtil mifosEntityAccessUtil;
+    private final FineractEntityAccessUtil FineractEntityAccessUtil;
     private final ApplyChargesToExistingSavingsAccountRepository applyChargesToExistingSavingsAccountRepository;
     private final SavingsAccountRepository savingsAccountRepository;
 
@@ -62,7 +75,7 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
             final SavingsProductRepository savingProductRepository, final SavingsProductDataValidator fromApiJsonDataValidator,
             final SavingsProductAssembler savingsProductAssembler,
             final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService,
-            final MifosEntityAccessUtil mifosEntityAccessUtil,final ApplyChargesToExistingSavingsAccountRepository applyChargesToExistingSavingsAccountRepository,
+            final FineractEntityAccessUtil FineractEntityAccessUtil,final ApplyChargesToExistingSavingsAccountRepository applyChargesToExistingSavingsAccountRepository,
             final SavingsAccountRepository savingsAccountRepository
             ) {
         this.context = context;
@@ -71,7 +84,7 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
         this.savingsProductAssembler = savingsProductAssembler;
         this.logger = LoggerFactory.getLogger(SavingsProductWritePlatformServiceJpaRepositoryImpl.class);
         this.accountMappingWritePlatformService = accountMappingWritePlatformService;
-        this.mifosEntityAccessUtil = mifosEntityAccessUtil;
+        this.FineractEntityAccessUtil = FineractEntityAccessUtil;
         this.applyChargesToExistingSavingsAccountRepository = applyChargesToExistingSavingsAccountRepository;
         this.savingsAccountRepository = savingsAccountRepository;
     }
@@ -121,9 +134,9 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
             
             // check if the office specific products are enabled. If yes, then save this savings product against a specific office
             // i.e. this savings product is specific for this office.
-            mifosEntityAccessUtil.checkConfigurationAndAddProductResrictionsForUserOffice(
-            		MifosEntityAccessType.OFFICE_ACCESS_TO_SAVINGS_PRODUCTS, 
-            		MifosEntityType.SAVINGS_PRODUCT, 
+            FineractEntityAccessUtil.checkConfigurationAndAddProductResrictionsForUserOffice(
+            		FineractEntityAccessType.OFFICE_ACCESS_TO_SAVINGS_PRODUCTS, 
+            		FineractEntityType.SAVINGS_PRODUCT, 
             		product.getId());
 
             return new CommandProcessingResultBuilder() //

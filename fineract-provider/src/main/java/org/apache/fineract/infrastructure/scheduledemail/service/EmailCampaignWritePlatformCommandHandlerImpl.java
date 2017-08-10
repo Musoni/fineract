@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.infrastructure.scheduledemail.service;
+package org.apache.fineract.infrastructure.scheduledemail.service;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
@@ -17,50 +30,50 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.mifosplatform.infrastructure.core.api.JsonCommand;
-import org.mifosplatform.infrastructure.core.api.JsonQuery;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResult;
-import org.mifosplatform.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.mifosplatform.infrastructure.core.domain.MifosPlatformTenant;
-import org.mifosplatform.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.mifosplatform.infrastructure.core.serialization.FromJsonHelper;
-import org.mifosplatform.infrastructure.core.service.DateUtils;
-import org.mifosplatform.infrastructure.core.service.ThreadLocalContextUtil;
-import org.mifosplatform.infrastructure.dataqueries.data.GenericResultsetData;
-import org.mifosplatform.infrastructure.dataqueries.domain.*;
-import org.mifosplatform.infrastructure.dataqueries.exception.ReportNotFoundException;
-import org.mifosplatform.infrastructure.dataqueries.service.GenericDataService;
-import org.mifosplatform.infrastructure.dataqueries.service.ReadReportingService;
-import org.mifosplatform.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
-import org.mifosplatform.infrastructure.reportmailingjob.data.ReportMailingJobEmailData;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJob;
-import org.mifosplatform.infrastructure.reportmailingjob.domain.ReportMailingJobEmailAttachmentFileFormat;
-import org.mifosplatform.infrastructure.reportmailingjob.helper.IPv4Helper;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailMessageWithAttachmentData;
-import org.mifosplatform.infrastructure.scheduledemail.domain.*;
-import org.mifosplatform.infrastructure.scheduledemail.exception.EmailCampaignMustBeClosedToBeDeletedException;
-import org.mifosplatform.infrastructure.scheduledemail.exception.EmailCampaignMustBeClosedToEditException;
-import org.mifosplatform.infrastructure.scheduledemail.exception.EmailCampaignNotFound;
-import org.mifosplatform.infrastructure.jobs.annotation.CronTarget;
-import org.mifosplatform.infrastructure.jobs.exception.JobExecutionException;
-import org.mifosplatform.infrastructure.jobs.service.JobName;
-import org.mifosplatform.infrastructure.jobs.service.SchedularWritePlatformService;
-import org.mifosplatform.infrastructure.security.service.PlatformSecurityContext;
-import org.mifosplatform.infrastructure.scheduledemail.data.PreviewCampaignMessage;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailCampaignData;
-import org.mifosplatform.infrastructure.scheduledemail.data.EmailCampaignValidator;
-import org.mifosplatform.organisation.staff.domain.Staff;
-import org.mifosplatform.portfolio.calendar.service.CalendarUtils;
-import org.mifosplatform.portfolio.client.domain.Client;
-import org.mifosplatform.portfolio.client.domain.ClientRepository;
-import org.mifosplatform.portfolio.loanaccount.domain.Loan;
-import org.mifosplatform.portfolio.loanaccount.domain.LoanRepository;
-import org.mifosplatform.portfolio.loanaccount.service.LoanReadPlatformService;
-import org.mifosplatform.portfolio.savings.domain.SavingsAccount;
-import org.mifosplatform.portfolio.savings.domain.SavingsAccountRepository;
-import org.mifosplatform.template.domain.TemplateRepository;
-import org.mifosplatform.template.service.TemplateMergeService;
-import org.mifosplatform.useradministration.domain.AppUser;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.api.JsonQuery;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
+import org.apache.fineract.infrastructure.dataqueries.domain.*;
+import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
+import org.apache.fineract.infrastructure.dataqueries.service.GenericDataService;
+import org.apache.fineract.infrastructure.dataqueries.service.ReadReportingService;
+import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
+import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobEmailData;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJob;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobEmailAttachmentFileFormat;
+import org.apache.fineract.infrastructure.reportmailingjob.helper.IPv4Helper;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailMessageWithAttachmentData;
+import org.apache.fineract.infrastructure.scheduledemail.domain.*;
+import org.apache.fineract.infrastructure.scheduledemail.exception.EmailCampaignMustBeClosedToBeDeletedException;
+import org.apache.fineract.infrastructure.scheduledemail.exception.EmailCampaignMustBeClosedToEditException;
+import org.apache.fineract.infrastructure.scheduledemail.exception.EmailCampaignNotFound;
+import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
+import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
+import org.apache.fineract.infrastructure.jobs.service.JobName;
+import org.apache.fineract.infrastructure.jobs.service.SchedularWritePlatformService;
+import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.infrastructure.scheduledemail.data.PreviewCampaignMessage;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailCampaignData;
+import org.apache.fineract.infrastructure.scheduledemail.data.EmailCampaignValidator;
+import org.apache.fineract.organisation.staff.domain.Staff;
+import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
+import org.apache.fineract.portfolio.client.domain.Client;
+import org.apache.fineract.portfolio.client.domain.ClientRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
+import org.apache.fineract.portfolio.loanaccount.service.LoanReadPlatformService;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
+import org.apache.fineract.template.domain.TemplateRepository;
+import org.apache.fineract.template.service.TemplateMergeService;
+import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -549,7 +562,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
     private LocalDateTime tenantDateTime(){
         LocalDateTime today = new LocalDateTime();
-        final MifosPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
+        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
 
         if (tenant != null) {
             final DateTimeZone zone = DateTimeZone.forID(tenant.getTimezoneId());

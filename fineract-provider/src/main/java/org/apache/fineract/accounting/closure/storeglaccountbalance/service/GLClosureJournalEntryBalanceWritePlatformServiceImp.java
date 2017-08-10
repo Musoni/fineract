@@ -1,9 +1,22 @@
 /**
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this file,
- * You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-package org.mifosplatform.accounting.closure.storeglaccountbalance.service;
+package org.apache.fineract.accounting.closure.storeglaccountbalance.service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -14,20 +27,20 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.joda.time.LocalDate;
-import org.mifosplatform.accounting.closure.bookoffincomeandexpense.domain.IncomeAndExpenseBooking;
-import org.mifosplatform.accounting.closure.domain.GLClosure;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryData;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.domain.GLClosureJournalEntryBalance;
-import org.mifosplatform.accounting.closure.storeglaccountbalance.domain.GLClosureJournalEntryBalanceRepository;
-import org.mifosplatform.accounting.glaccount.domain.GLAccount;
-import org.mifosplatform.accounting.glaccount.domain.GLAccountRepository;
-import org.mifosplatform.accounting.glaccount.domain.GLAccountType;
-import org.mifosplatform.accounting.journalentry.data.JournalEntryData;
-import org.mifosplatform.accounting.journalentry.domain.JournalEntryType;
-import org.mifosplatform.accounting.journalentry.service.JournalEntryReadPlatformService;
-import org.mifosplatform.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.mifosplatform.infrastructure.core.service.Page;
-import org.mifosplatform.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.accounting.closure.bookoffincomeandexpense.domain.IncomeAndExpenseBooking;
+import org.apache.fineract.accounting.closure.domain.GLClosure;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.data.GLClosureJournalEntryData;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.domain.GLClosureJournalEntryBalance;
+import org.apache.fineract.accounting.closure.storeglaccountbalance.domain.GLClosureJournalEntryBalanceRepository;
+import org.apache.fineract.accounting.glaccount.domain.GLAccount;
+import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
+import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
+import org.apache.fineract.accounting.journalentry.data.JournalEntryData;
+import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
+import org.apache.fineract.accounting.journalentry.service.JournalEntryReadPlatformService;
+import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
