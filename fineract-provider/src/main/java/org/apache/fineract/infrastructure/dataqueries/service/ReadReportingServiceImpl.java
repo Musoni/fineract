@@ -43,6 +43,7 @@ import javax.ws.rs.core.StreamingOutput;
 import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.boot.JDBCDriverConfig;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -96,11 +97,13 @@ public class ReadReportingServiceImpl implements ReadReportingService {
     private final GenericDataService genericDataService;
     private boolean noPentaho = false;
     private final ConfigurationDomainService configurationDomainService;
+    private final JDBCDriverConfig config;
 
 
     @Autowired
     public ReadReportingServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
-            final GenericDataService genericDataService, final ConfigurationDomainService configurationDomainService) {
+            final GenericDataService genericDataService, final ConfigurationDomainService configurationDomainService, 
+            final JDBCDriverConfig config) {
         // kick off pentaho reports server
         ClassicEngineBoot.getInstance().start();
         this.noPentaho = false;
@@ -110,6 +113,7 @@ public class ReadReportingServiceImpl implements ReadReportingService {
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
         this.genericDataService = genericDataService;
         this.configurationDomainService = configurationDomainService;
+        this.config = config;
 
     }
 
@@ -414,7 +418,8 @@ public class ReadReportingServiceImpl implements ReadReportingService {
             String tenantUrl;
             String tenantdb;
             try {
-                tenantUrl = tenantConnection.databaseURL();
+                tenantUrl = config.constructProtocol(tenantConnection.getSchemaServer(), 
+                		tenantConnection.getSchemaServerPort(), tenantConnection.getSchemaName());;
                 tenantdb = tenantConnection.getSchemaName();
             } finally {
                 connection.close();

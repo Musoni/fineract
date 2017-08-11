@@ -23,10 +23,11 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.tomcat.jdbc.pool.PoolConfiguration;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
+import org.apache.fineract.infrastructure.core.boot.JDBCDriverConfig;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
+import org.apache.tomcat.jdbc.pool.PoolConfiguration;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,9 @@ public class TomcatJdbcDataSourcePerTenantService implements RoutingDataSourceSe
     private final Map<Long, DataSource> tenantToDataSourceMap = new HashMap<>(1);
     private final DataSource tenantDataSource;
 
+    @Autowired
+    private JDBCDriverConfig driverConfig ;
+    
     @Autowired
     public TomcatJdbcDataSourcePerTenantService(final @Qualifier("tenantDataSourceJndi") DataSource tenantDataSource) {
         this.tenantDataSource = tenantDataSource;
@@ -82,11 +86,11 @@ public class TomcatJdbcDataSourcePerTenantService implements RoutingDataSourceSe
         // see
         // http://www.tomcatexpert.com/blog/2010/04/01/configuring-jdbc-pool-high-concurrency
 
-        // see also org.apache.fineract.DataSourceProperties.setFineractDefaults()
-
-        final String jdbcUrl = tenantConnectionObj.databaseURL();
+        // see also org.apache.fineract.DataSourceProperties.setDefaults()
+    	 String jdbcUrl = this.driverConfig.constructProtocol(tenantConnectionObj.getSchemaServer(), tenantConnectionObj.getSchemaServerPort(), tenantConnectionObj.getSchemaName()) ;
+        //final String jdbcUrl = tenantConnectionObj.databaseURL();
         final PoolConfiguration poolConfiguration = new PoolProperties();
-        poolConfiguration.setDriverClassName("com.mysql.jdbc.Driver");
+        poolConfiguration.setDriverClassName(this.driverConfig.getDriverClassName());
         poolConfiguration.setName(tenantConnectionObj.getSchemaName() + "_pool");
         poolConfiguration.setUrl(jdbcUrl);
         poolConfiguration.setUsername(tenantConnectionObj.getSchemaUsername());

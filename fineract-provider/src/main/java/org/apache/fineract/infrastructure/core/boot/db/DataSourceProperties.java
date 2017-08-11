@@ -62,16 +62,14 @@ public class DataSourceProperties extends PoolProperties {
 
     @Value("${" + SUBPROTOCOL + ":mysql}")
     private volatile @NotNull String jdbcSubprotocol;
-
-
-    public DataSourceProperties() {
+    
+    public DataSourceProperties(String driverClassName, String protocol, String subProtocol, Integer port) {
         super();
-
-        // default to save us from re-specifying this; note that it can still be
-        // overridden
-        setDriverClassName(com.mysql.jdbc.Driver.class.getName());
-
-        setFineractDefaults();
+        setDriverClassName(driverClassName);
+        this.jdbcProtocol = protocol ;
+        this.jdbcSubprotocol = subProtocol ;
+        this.port = port ;
+        setDefaults();
     }
 
     /**
@@ -80,7 +78,7 @@ public class DataSourceProperties extends PoolProperties {
      * .TomcatJdbcDataSourcePerTenantService
      * .createNewDataSourceFor(FineractPlatformTenant)
      */
-    protected void setFineractDefaults() {
+    protected void setDefaults() {
         setInitialSize(3);
         // setMaxIdle(6); -- strange, why?
         // setMinIdle(3); -- JavaDoc says default is initialSize.. so shouldn't
