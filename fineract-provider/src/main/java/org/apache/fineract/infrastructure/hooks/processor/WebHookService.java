@@ -35,11 +35,11 @@ import com.google.gson.JsonObject;
 
 public interface WebHookService {
 
-	final static String ENTITY_HEADER = "Fineract-Entity";
-	final static String ACTION_HEADER = "Fineract-Action";
-	final static String TENANT_HEADER = "Fineract-Platform-TenantId";
-	final static String ENDPOINT_HEADER = "Fineract-Endpoint";
-	final static String API_KEY_HEADER = "Fineract-API-Key";
+	final static String ENTITY_HEADER = "X-Fineract-Entity";
+	final static String ACTION_HEADER = "X-Fineract-Action";
+	final static String TENANT_HEADER = "X-Fineract-Platform-TenantId";
+	final static String ENDPOINT_HEADER = "X-Fineract-Endpoint";
+	final static String API_KEY_HEADER = "X-Fineract-API-Key";
 
 	// Ping
 	@GET("/")
