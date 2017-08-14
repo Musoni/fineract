@@ -396,7 +396,11 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                         loan, null);
             }
 
-            changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO, paymentDetail);
+            if(configurationDomainService.isPaymentTypeApplicableforDisbursementCharge()){
+            	changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO, paymentDetail);
+            }else{
+            	changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO, null);
+            }
         }
         
         final Set<LoanCharge> loanCharges = loan.charges();
@@ -666,7 +670,11 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                             loan.fetchRepaymentScheduleInstallments(), loan, null);
                 }
 
-                changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO, paymentDetail);
+                if(configurationDomainService.isPaymentTypeApplicableforDisbursementCharge()){
+                	changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO,paymentDetail);
+                }else{
+                	changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO,null);
+                }
             }
             if (!changes.isEmpty()) {
 
