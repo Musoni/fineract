@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,6 +44,9 @@ public class GlobalConfigurationProperty extends AbstractPersistable<Long> {
     @Column(name = "value", nullable = true)
     private Long value;
     
+    @Column(name = "date_value", nullable = true)
+    private Date dateValue;
+    
     @Column(name = "text_value", nullable = true)
     private String textValue;
 
@@ -59,16 +63,18 @@ public class GlobalConfigurationProperty extends AbstractPersistable<Long> {
         this.textValue = null;
         this.description = null;
         this.isTrapDoor = false;
+        this.dateValue = null;
     }
 
     public GlobalConfigurationProperty(final String name, final boolean enabled, final Long value, 
-    		final String description, final boolean isTrapDoor, final String textValue) {
+    		final Date dateValue, final String description, final boolean isTrapDoor, final String textValue) {
         this.name = name;
         this.enabled = enabled;
         this.value = value;
         this.description = description;
         this.isTrapDoor = isTrapDoor;
         this.textValue = textValue;
+        this.dateValue = dateValue;
     }
 
     public boolean isEnabled() {
@@ -119,6 +125,13 @@ public class GlobalConfigurationProperty extends AbstractPersistable<Long> {
         	actualChanges.put(textValueParamName, newValue);
             this.textValue = newValue;
         }
+        
+        final String dateValueParamName = "dateValue";
+        if(command.isChangeInDateParameterNamed(dateValueParamName, this.dateValue)){
+            final Date newDateValue = command.DateValueOfParameterNamed(dateValueParamName);
+            actualChanges.put(dateValueParamName, newDateValue);
+            this.dateValue = newDateValue;
+        }
 
         final String passwordPropertyName = "force-password-reset-days";
         if (this.name.equalsIgnoreCase(passwordPropertyName)) {
@@ -131,7 +144,10 @@ public class GlobalConfigurationProperty extends AbstractPersistable<Long> {
     }
 
     public static GlobalConfigurationProperty newSurveyConfiguration(final String name) {
-        return new GlobalConfigurationProperty(name, false, null, null, false, null);
+        return new GlobalConfigurationProperty(name, false, null, null, null, false, null);
     }
 
+	public Date getDateValue() {
+		return this.dateValue;
+	}
 }

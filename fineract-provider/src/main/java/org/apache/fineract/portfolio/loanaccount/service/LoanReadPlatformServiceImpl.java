@@ -39,6 +39,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
+import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -150,6 +151,8 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
     private final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory;
     private final FloatingRatesReadPlatformService floatingRatesReadPlatformService;
     private final LoanUtilService loanUtilService;
+    private final ConfigurationDomainService configurationDomainService;
+    
     @Autowired
     public LoanReadPlatformServiceImpl(final PlatformSecurityContext context, final LoanRepository loanRepository,
             final LoanTransactionRepository loanTransactionRepository,
@@ -162,7 +165,8 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
             final PaymentTypeReadPlatformService paymentTypeReadPlatformService,
             final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory,
             final FloatingRatesReadPlatformService floatingRatesReadPlatformService, 
-            final LoanUtilService loanUtilService) {
+            final LoanUtilService loanUtilService, 
+            final ConfigurationDomainService configurationDomainService) {
         this.context = context;
         this.loanRepository = loanRepository;
         this.loanTransactionRepository = loanTransactionRepository;
@@ -182,6 +186,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         this.loanRepaymentScheduleTransactionProcessorFactory = loanRepaymentScheduleTransactionProcessorFactory;
         this.floatingRatesReadPlatformService = floatingRatesReadPlatformService;
         this.loanUtilService = loanUtilService;
+        this.configurationDomainService = configurationDomainService;
     }
 
     @Override
@@ -1599,6 +1604,10 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
     public Collection<LoanScheduleAccrualData> retriveScheduleAccrualData() {
 
         LoanScheduleAccrualMapper mapper = new LoanScheduleAccrualMapper();
+        Date organisationStartDate = this.configurationDomainService.retrieveOrganisationStartDate();
+        if(organisationStartDate == null){
+            organisationStartDate = new Date();
+        }
         final StringBuilder sqlBuilder = new StringBuilder(400);
         sqlBuilder
                 .append("select ")
@@ -1606,17 +1615,26 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 .append(" where ((ls.fee_charges_amount <> if(ls.accrual_fee_charges_derived is null,0, ls.accrual_fee_charges_derived))")
                 .append(" or ( ls.penalty_charges_amount <> if(ls.accrual_penalty_charges_derived is null,0,ls.accrual_penalty_charges_derived))")
                 .append(" or ( ls.interest_amount <> if(ls.accrual_interest_derived is null,0,ls.accrual_interest_derived)))")
-                .append("  and (loan.loan_status_id=? or loan.expected_maturedon_date >= CURDATE() or loan.expected_maturedon_date > IFNULL(loan.accrued_till, '1900-01-01')) and mpl.accounting_type=? and loan.is_npa=0 and ls.duedate <= CURDATE() ")
-                .append(" and loan.loan_status_id not in (100,200,400,500,601) order by loan.id,ls.duedate");
+                .append("  and (loan.loan_status_id=:active or loan.expected_maturedon_date >= CURDATE() or loan.expected_maturedon_date > IFNULL(loan.accrued_till, '1900-01-01'))")
+                .append("  and mpl.accounting_type=:type and loan.is_npa=0 and ls.duedate <= CURDATE()")
+                .append(" and ls.duedate > :organisationstartdate and loan.loan_status_id not in (100,200,400,500,601) order by loan.id,ls.duedate");
 
-        return this.jdbcTemplate.query(sqlBuilder.toString(), mapper, new Object[] { LoanStatus.ACTIVE.getValue(),
-                AccountingRuleType.ACCRUAL_PERIODIC.getValue() });
+        Map<String, Object> paramMap = new HashMap<>(3);
+        paramMap.put("active", LoanStatus.ACTIVE.getValue());
+        paramMap.put("type", AccountingRuleType.ACCRUAL_PERIODIC.getValue());
+        paramMap.put("organisationstartdate", formatter.print(new LocalDate(organisationStartDate)));
+        
+        return this.namedParameterJdbcTemplate.query(sqlBuilder.toString(), paramMap, mapper); 
     }
 
     @Override
     public Collection<LoanScheduleAccrualData> retrivePeriodicAccrualData(final LocalDate tillDate) {
 
         LoanSchedulePeriodicAccrualMapper mapper = new LoanSchedulePeriodicAccrualMapper();
+        Date organisationStartDate = this.configurationDomainService.retrieveOrganisationStartDate();
+        if(organisationStartDate == null){
+            organisationStartDate = new Date();
+        }
         final StringBuilder sqlBuilder = new StringBuilder(400);
         sqlBuilder
                 .append("select ")
@@ -1624,12 +1642,15 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 .append(" where ((ls.fee_charges_amount <> if(ls.accrual_fee_charges_derived is null,0, ls.accrual_fee_charges_derived))")
                 .append(" or (ls.penalty_charges_amount <> if(ls.accrual_penalty_charges_derived is null,0,ls.accrual_penalty_charges_derived))")
                 .append(" or (ls.interest_amount <> if(ls.accrual_interest_derived is null,0,ls.accrual_interest_derived)))")
-                .append("  and ( loan.loan_status_id=:active or (loan.expected_maturedon_date >= :tilldate or loan.expected_maturedon_date > IFNULL(loan.accrued_till, '1900-01-01'))) and mpl.accounting_type=:type and loan.is_npa=0 and (ls.duedate <= :tilldate or (ls.duedate > :tilldate and ls.fromdate < :tilldate))")
+                .append(" and ( loan.loan_status_id=:active or (loan.expected_maturedon_date >= :tilldate or loan.expected_maturedon_date > IFNULL(loan.accrued_till, '1900-01-01')))")
+                .append(" and mpl.accounting_type=:type and loan.is_npa=0 and (ls.duedate <= :tilldate or (ls.duedate > :tilldate and ls.fromdate < :tilldate))")
+                .append(" and ls.duedate > :organisationstartdate and (loan.closedon_date <= :tilldate or loan.closedon_date is null)")
                 .append(" and loan.loan_status_id not in (100,200,400,500,601) order by loan.id,ls.duedate");
         Map<String, Object> paramMap = new HashMap<>(3);
         paramMap.put("active", LoanStatus.ACTIVE.getValue());
         paramMap.put("type", AccountingRuleType.ACCRUAL_PERIODIC.getValue());
         paramMap.put("tilldate", formatter.print(tillDate));
+        paramMap.put("organisationstartdate", formatter.print(new LocalDate(organisationStartDate)));
 
         return this.namedParameterJdbcTemplate.query(sqlBuilder.toString(), paramMap, mapper);
     }

@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
+import java.util.Date;
+
 import org.apache.fineract.infrastructure.cache.domain.CacheType;
 
 public interface ConfigurationDomainService {
@@ -73,4 +75,8 @@ public interface ConfigurationDomainService {
     boolean isBackdatePenaltiesEnabled();
     
     boolean storeJournalEntryBalanceAtPeriodClosure();
+    
+    boolean isOrganisationstartDateEnabled();
+    
+    Date retrieveOrganisationStartDate();
 }

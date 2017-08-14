@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.infrastructure.configuration.data;
 
+import java.util.Date;
+
 /**
  * Immutable data object for global configuration property.
  */
@@ -30,6 +32,8 @@ public class GlobalConfigurationPropertyData {
     @SuppressWarnings("unused")
     private final Long value;
     @SuppressWarnings("unused")
+    private final Date dateValue;
+    @SuppressWarnings("unused")
     private final Long id;
     @SuppressWarnings("unused")
     private final String description;
@@ -39,7 +43,7 @@ public class GlobalConfigurationPropertyData {
     private final String textValue;
 
     public GlobalConfigurationPropertyData(final String name, final boolean enabled, final Long value, 
-    		final String description, final boolean trapDoor, final String textValue) {
+    		final Date dateValue, final String description, final boolean trapDoor, final String textValue) {
         this.name = name;
         this.enabled = enabled;
         this.value = value;
@@ -47,10 +51,11 @@ public class GlobalConfigurationPropertyData {
         this.description = description;
         this.trapDoor = trapDoor;
         this.textValue = textValue;
+        this.dateValue = dateValue;
     }
 
-    public GlobalConfigurationPropertyData(final String name, final boolean enabled, final Long value, final Long id,
-            final String description, final boolean isTrapDoor, final String textValue) {
+    public GlobalConfigurationPropertyData(final String name, final boolean enabled, final Long value, 
+    		Date dateValue, final Long id, final String description, final boolean isTrapDoor, final String textValue) {
         this.name = name;
         this.enabled = enabled;
         this.value = value;
@@ -58,5 +63,6 @@ public class GlobalConfigurationPropertyData {
         this.description = description;
         this.trapDoor = isTrapDoor;
         this.textValue = textValue;
+        this.dateValue = dateValue;
     }
 }
