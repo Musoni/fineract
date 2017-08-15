@@ -362,6 +362,8 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final PaymentDetail paymentDetail = this.paymentDetailWritePlatformService.createAndPersistPaymentDetail(command, changes);
 
+        final Boolean isPaymentTypeApplicableForDisbursementCharge = configurationDomainService.isPaymentTypeApplicableforDisbursementCharge();
+        
         // Recalculate first repayment date based in actual disbursement date.
         final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
         updateLoanCounters(loan, actualDisbursementDate);
@@ -396,7 +398,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                         loan, null);
             }
 
-            if(configurationDomainService.isPaymentTypeApplicableforDisbursementCharge()){
+            if(isPaymentTypeApplicableForDisbursementCharge){
             	changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO, paymentDetail);
             }else{
             	changedTransactionDetail = loan.disburse(currentUser, command, changes, scheduleGeneratorDTO, null);
