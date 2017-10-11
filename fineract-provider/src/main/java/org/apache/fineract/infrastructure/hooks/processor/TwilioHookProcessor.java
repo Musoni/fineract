@@ -30,7 +30,7 @@ import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
 import org.apache.fineract.infrastructure.hooks.domain.HookConfigurationRepository;
 import org.apache.fineract.infrastructure.hooks.processor.data.SmsProviderData;
 import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientRepository;
+import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.template.service.TemplateMergeService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -48,16 +48,16 @@ public class TwilioHookProcessor implements HookProcessor {
 
     private final HookConfigurationRepository hookConfigurationRepository;
     private final TemplateMergeService templateMergeService;
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepositoryWrapper;
 
     @Autowired
     public TwilioHookProcessor(
             final HookConfigurationRepository hookConfigurationRepository,
             final TemplateMergeService templateMergeService,
-            final ClientRepository clientRepository) {
+            final ClientRepositoryWrapper clientRepositoryWrapper) {
         this.hookConfigurationRepository = hookConfigurationRepository;
         this.templateMergeService = templateMergeService;
-        this.clientRepository = clientRepository;
+        this.clientRepositoryWrapper = clientRepositoryWrapper;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class TwilioHookProcessor implements HookProcessor {
             if (map.containsKey("clientId")) {
                 final Long clientId = new Long(Integer.toString((int) map
                         .get("clientId")));
-                final Client client = this.clientRepository.findOne(clientId);
+                final Client client = this.clientRepositoryWrapper.findOneWithNotFoundDetection(clientId);
                 final String mobileNo = client.mobileNo();
                 if (mobileNo != null && !mobileNo.isEmpty()) {
                     this.templateMergeService.setAuthToken(authToken);

@@ -49,13 +49,13 @@ public interface SavingsAccountWritePlatformService {
 
     CommandProcessingResult close(Long savingsId, JsonCommand command);
 
-    SavingsAccountTransaction initiateSavingsTransfer(Long accountId, LocalDate transferDate);
+    SavingsAccountTransaction initiateSavingsTransfer(SavingsAccount account, LocalDate transferDate);
 
-    SavingsAccountTransaction withdrawSavingsTransfer(Long accountId, LocalDate transferDate);
+    SavingsAccountTransaction withdrawSavingsTransfer(SavingsAccount account, LocalDate transferDate);
 
-    void rejectSavingsTransfer(Long accountId);
+    void rejectSavingsTransfer(SavingsAccount account);
 
-    SavingsAccountTransaction acceptSavingsTransfer(Long accountId, LocalDate transferDate, Office acceptedInOffice, Staff staff, boolean isOfficeTransfer);
+    SavingsAccountTransaction acceptSavingsTransfer(SavingsAccount account, LocalDate transferDate, Office acceptedInOffice, Staff staff, boolean isOfficeTransfer);
 
     CommandProcessingResult addSavingsAccountCharge(JsonCommand command);
 

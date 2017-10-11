@@ -43,7 +43,7 @@ import org.apache.fineract.organisation.office.domain.OfficeRepository;
 import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.account.service.AccountTransfersWritePlatformService;
 import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientRepository;
+import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.common.service.BusinessEventListner;
@@ -73,7 +73,7 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 
     private final SmsCampaignRepository smsCampaignRepository;
     private final SmsMessageRepository smsMessageRepository;
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final OfficeRepository officeRepository;
     private final AccountTransfersWritePlatformService accountTransfersWritePlatformService;
     private final BusinessEventNotifierService businessEventNotifierService;
@@ -99,7 +99,7 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
                                         final SavingsAccountDomainService savingsAccountDomainService, final GenericDataService genericDataService,
                                         final SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
                                         final AccountTransfersReadPlatformService accountTransfersReadPlatformService,
-                                        final CodeValueRepository codeValueRepository, final ClientRepository clientRepository,
+                                        final CodeValueRepository codeValueRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
                                         final PaymentDetailRepository paymentDetailRepository, final SmsCampaignWritePlatformService smsCampaignWritePlatformCommandHandler,
                                         final GroupRepository groupRepository, final ReadReportingService readReportingService){
         this.smsCampaignRepository = smsCampaignRepository;
@@ -113,7 +113,7 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
         this.savingsHelper = new SavingsHelper(this.accountTransfersReadPlatformService);
         this.codeValueRepository = codeValueRepository;
         this.paymentDetailRepository = paymentDetailRepository;
-        this.clientRepository = clientRepository;
+        this.clientRepositoryWrapper = clientRepositoryWrapper;
         this.officeRepository = officeRepository;
         this.smsCampaignWritePlatformCommandHandler = smsCampaignWritePlatformCommandHandler;
         this.groupRepository = groupRepository;

@@ -55,8 +55,7 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuild
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.apache.fineract.organisation.office.domain.OfficeRepository;
-import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
+import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -72,7 +71,7 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
     private final static Logger logger = LoggerFactory.getLogger(GLClosureWritePlatformServiceJpaRepositoryImpl.class);
 
     private final GLClosureRepository glClosureRepository;
-    private final OfficeRepository officeRepository;
+    private final OfficeRepositoryWrapper officeRepositoryWrapper;
     private final GLClosureCommandFromApiJsonDeserializer fromApiJsonDeserializer;
     private final GLAccountRepository glAccountRepository;
     private final JournalEntryWritePlatformService journalEntryWritePlatformService;
@@ -84,14 +83,14 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
 
     @Autowired
     public GLClosureWritePlatformServiceJpaRepositoryImpl(final GLClosureRepository glClosureRepository,
-            final OfficeRepository officeRepository, final GLClosureCommandFromApiJsonDeserializer fromApiJsonDeserializer,
+    		final OfficeRepositoryWrapper officeRepositoryWrapper, final GLClosureCommandFromApiJsonDeserializer fromApiJsonDeserializer,
             final GLAccountRepository glAccountRepository,
             final JournalEntryWritePlatformService journalEntryWritePlatformService, final IncomeAndExpenseBookingRepository incomeAndExpenseBookingRepository,
             final FromJsonHelper fromApiJsonHelper,final IncomeAndExpenseReadPlatformService incomeAndExpenseReadPlatformService,
             final OfficeReadPlatformService officeReadPlatformService, 
             final GLClosureJournalEntryBalanceWritePlatformService glClosureJournalEntryBalanceWritePlatformService) {
         this.glClosureRepository = glClosureRepository;
-        this.officeRepository = officeRepository;
+        this.officeRepositoryWrapper = officeRepositoryWrapper;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
         this.glAccountRepository  = glAccountRepository;
         this.journalEntryWritePlatformService = journalEntryWritePlatformService;
@@ -111,8 +110,7 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
 
             // check office is valid
             final Long officeId = command.longValueOfParameterNamed(GLClosureJsonInputParams.OFFICE_ID.getValue());
-            final Office office = this.officeRepository.findOne(officeId);
-            if (office == null) { throw new OfficeNotFoundException(officeId); }
+            final Office office = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
 
             // TODO: Get Tenant specific date
             // ensure closure date is not in the future
@@ -155,7 +153,7 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
 
                     final HashMap<Long,List<IncomeAndExpenseJournalEntryData>> allIncomeAndExpenseJLWithSubBranches = new HashMap<>();
                     for(final Long childOffice : childOfficesByHierarchy){
-                        final GLClosure gl = GLClosure.fromJson(this.officeRepository.findOne(childOffice), command); subOfficesGlClosure.add(gl);
+                        final GLClosure gl = GLClosure.fromJson(this.officeRepositoryWrapper.getRepository().findOne(childOffice), command); subOfficesGlClosure.add(gl);
                         final List<IncomeAndExpenseJournalEntryData> incomeAndExpenseJournalEntryDataList = this.incomeAndExpenseReadPlatformService.retrieveAllIncomeAndExpenseJournalEntryData(childOffice, incomeAndExpenseBookOffDate,closureCommand.getCurrencyCode());
                         officeGlClosure.put(childOffice,gl);
                         allIncomeAndExpenseJLWithSubBranches.put(childOffice,incomeAndExpenseJournalEntryDataList);
@@ -168,7 +166,7 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
                     /* create journal entry for each office */
                     for(final Long childOffice : childOfficesByHierarchy){
                         final List<IncomeAndExpenseJournalEntryData> incomeAndExpJL = allIncomeAndExpenseJLWithSubBranches.get(childOffice);
-                        final Office hierarchyOffice = this.officeRepository.findOne(childOffice);
+                        final Office hierarchyOffice = this.officeRepositoryWrapper.getRepository().findOne(childOffice);
                         final String transactionId = this.bookOffIncomeAndExpense(incomeAndExpJL,closureCommand,glAccount,hierarchyOffice);
                         IncomeAndExpenseBooking incomeAndExpenseBooking = null;
                         if(transactionId !=null){incomeAndExpenseBooking = IncomeAndExpenseBooking.createNew(officeGlClosure.get(childOffice),transactionId,hierarchyOffice,false);}
@@ -204,7 +202,8 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
                 /* save subBranches closure if parameter is passed and is true*/
                 if(closureCommand.getSubBranches() && childOfficesByHierarchy.size() > 0){
                     for(final Long childOffice : childOfficesByHierarchy){
-                        final GLClosure subBranchesGlClosure = GLClosure.fromJson(this.officeRepository.findOne(childOffice), command);
+                        final GLClosure subBranchesGlClosure = GLClosure.fromJson(this.officeRepositoryWrapper.
+                        		getRepository().findOne(childOffice), command);
                         this.glClosureRepository.saveAndFlush(subBranchesGlClosure);
                         
                         // store the running balance of the journal entry with entry_date equal to the closure closing

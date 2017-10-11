@@ -35,9 +35,7 @@ import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
 import org.apache.fineract.portfolio.account.domain.AccountAssociationType;
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
-import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
-import org.apache.fineract.portfolio.loanaccount.exception.LoanNotFoundException;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.guarantor.data.GuarantorData;
 import org.apache.fineract.portfolio.loanaccount.guarantor.data.GuarantorFundingData;
 import org.apache.fineract.portfolio.loanaccount.guarantor.data.GuarantorInterestAllocationData;
@@ -58,24 +56,23 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
     private final JdbcTemplate jdbcTemplate;
     private final ClientReadPlatformService clientReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
-    private final LoanRepository loanRepository;
+    private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final GuarantorInterestPaymentRepository guarantorInterestPaymentRepository;
 
     @Autowired
     public GuarantorReadPlatformServiceImpl(final RoutingDataSource dataSource, final ClientReadPlatformService clientReadPlatformService,
-            final StaffReadPlatformService staffReadPlatformService, final LoanRepository loanRepository,
+            final StaffReadPlatformService staffReadPlatformService, final LoanRepositoryWrapper loanRepositoryWrapper,
             final GuarantorInterestPaymentRepository guarantorInterestPaymentRepository) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
         this.staffReadPlatformService = staffReadPlatformService;
-        this.loanRepository = loanRepository;
+        this.loanRepositoryWrapper = loanRepositoryWrapper;
         this.guarantorInterestPaymentRepository = guarantorInterestPaymentRepository;
     }
 
     @Override
     public List<GuarantorData> retrieveGuarantorsForValidLoan(final Long loanId) {
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+    	this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId);
         return retrieveGuarantorsForLoan(loanId);
     }
 

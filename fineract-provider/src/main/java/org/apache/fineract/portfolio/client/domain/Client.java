@@ -56,8 +56,6 @@ import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.client.exception.InvalidClientStateTransitionException;
 import org.apache.fineract.portfolio.group.domain.Group;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
@@ -137,7 +135,7 @@ public final class Client extends AbstractPersistable<Long> {
     @JoinColumn(name = "staff_id")
     private Staff staff;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "m_group_client", joinColumns = @JoinColumn(name = "client_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> groups;
 
@@ -208,13 +206,11 @@ public final class Client extends AbstractPersistable<Long> {
     @JoinColumn(name = "activatedon_userid", nullable = true)
     private AppUser activatedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "default_savings_product", nullable = true)
-    private SavingsProduct savingsProduct;
+    @Column(name = "default_savings_product", nullable = true)
+    private Long savingsProductId;
 
-    @ManyToOne
-    @JoinColumn(name = "default_savings_account", nullable = true)
-    private SavingsAccount savingsAccount;
+    @Column(name = "default_savings_account", nullable = true)
+    private Long savingsAccountId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_type_cv_id", nullable = true)
@@ -231,12 +227,12 @@ public final class Client extends AbstractPersistable<Long> {
 	@Temporal(TemporalType.DATE)
 	private Date reopenedDate;
 
-	@ManyToOne(optional = true, fetch=FetchType.LAZY)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "reopened_by_userid", nullable = true)
 	private AppUser reopenedBy;
 
     public static Client createNew(final AppUser currentUser, final Office clientOffice, final Group clientParentGroup, final Staff staff,
-            final SavingsProduct savingsProduct, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification,
+            final Long savingsProductId, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification,
             final Integer legalForm, final JsonCommand command) {
 
         final String accountNo = command.stringValueOfParameterNamed(ClientApiConstants.accountNoParamName);
@@ -272,9 +268,9 @@ public final class Client extends AbstractPersistable<Long> {
         if (command.hasParameter(ClientApiConstants.submittedOnDateParamName)) {
             submittedOnDate = command.localDateValueOfParameterNamed(ClientApiConstants.submittedOnDateParamName);
         }
-        final SavingsAccount account = null;
+        final Long savingsAccountId = null;
         return new Client(currentUser, status, clientOffice, clientParentGroup, accountNo, firstname, middlename, lastname, fullname,
-                activationDate, officeJoiningDate, externalId, mobileNo, emailAddress, staff, submittedOnDate, savingsProduct, account, dataOfBirth,
+                activationDate, officeJoiningDate, externalId, mobileNo, emailAddress, staff, submittedOnDate, savingsProductId, savingsAccountId, dataOfBirth,
                 gender, clientType, clientClassification, legalForm);
     }
 
@@ -285,7 +281,7 @@ public final class Client extends AbstractPersistable<Long> {
     private Client(final AppUser currentUser, final ClientStatus status, final Office office, final Group clientParentGroup,
             final String accountNo, final String firstname, final String middlename, final String lastname, final String fullname,
             final LocalDate activationDate, final LocalDate officeJoiningDate, final String externalId, final String mobileNo, final String emailAddress,
-            final Staff staff, final LocalDate submittedOnDate, final SavingsProduct savingsProduct, final SavingsAccount savingsAccount,
+            final Staff staff, final LocalDate submittedOnDate, final Long savingsProductId, final Long savingsAccountId,
             final LocalDate dateOfBirth, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final Integer legalForm) {
 
         if (StringUtils.isBlank(accountNo)) {
@@ -355,8 +351,8 @@ public final class Client extends AbstractPersistable<Long> {
         }
 
         this.staff = staff;
-        this.savingsProduct = savingsProduct;
-        this.savingsAccount = savingsAccount;
+        this.savingsProductId = savingsProductId;
+        this.savingsAccountId = savingsAccountId;
 
         if (gender != null) {
             this.gender = gender;
@@ -909,32 +905,24 @@ public final class Client extends AbstractPersistable<Long> {
         return null;
     }
 
-    private Long savingsProductId() {
-        Long savingsProductId = null;
-        if (this.savingsProduct != null) {
-            savingsProductId = this.savingsProduct.getId();
-        }
+    public Long savingsProductId() {
         return savingsProductId;
     }
 
-    public SavingsProduct SavingsProduct() {
-        return this.savingsProduct;
-    }
-
-    public void updateSavingsProduct(SavingsProduct savingsProduct) {
-        this.savingsProduct = savingsProduct;
+    public void updateSavingsProduct(final Long savingsProductId) {
+        this.savingsProductId = savingsProductId;
     }
 
     public AppUser activatedBy() {
         return this.activatedBy;
     }
 
-    public SavingsAccount savingsAccount() {
-        return this.savingsAccount;
+    public Long savingsAccountId() {
+        return this.savingsAccountId;
     }
 
-    public void updateSavingsAccount(SavingsAccount savingsAccount) {
-        this.savingsAccount = savingsAccount;
+    public void updateSavingsAccount(final Long savingsAccountId) {
+        this.savingsAccountId = savingsAccountId;
     }
 
     public Long genderId() {
@@ -1116,5 +1104,9 @@ public final class Client extends AbstractPersistable<Long> {
             final String errorMessage = "only closed,withdrawn and rejected clients may be reactivated.";
             throw new InvalidClientStateTransitionException("reactivation", "on.nonclosed.nonwithdrawn.nonrejected.account", errorMessage);
         }
+    }
+    
+    public void loadLazyCollections() {
+    	this.groups.size();
     }
 }

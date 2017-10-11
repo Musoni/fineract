@@ -146,7 +146,7 @@ public class LoanAssembler {
     }
 
     public Loan assembleFrom(final Long accountId) {
-        final Loan loanAccount = this.loanRepository.findOneWithNotFoundDetection(accountId);
+        final Loan loanAccount = this.loanRepository.findOneWithNotFoundDetection(accountId, true);
         loanAccount.setHelpers(defaultLoanLifecycleStateMachine(), this.loanSummaryWrapper,
                 this.loanRepaymentScheduleTransactionProcessorFactory);
 
@@ -195,7 +195,7 @@ public class LoanAssembler {
         if (loanPurposeId != null) {
             loanPurpose = this.codeValueRepository.findOneWithNotFoundDetection(loanPurposeId);
         }
-        Set<LoanDisbursementDetails> disbursementDetails = null;
+        List<LoanDisbursementDetails> disbursementDetails = null;
         BigDecimal fixedEmiAmount = null;
         if (loanProduct.isMultiDisburseLoan() || loanProduct.canDefineInstallmentAmount()) {
             fixedEmiAmount = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(LoanApiConstants.emiAmountParameterName, element);

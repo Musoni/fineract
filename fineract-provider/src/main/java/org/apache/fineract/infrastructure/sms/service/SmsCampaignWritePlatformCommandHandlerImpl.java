@@ -62,7 +62,7 @@ import org.apache.fineract.infrastructure.sms.exception.SmsCampaignMustBeClosedT
 import org.apache.fineract.infrastructure.sms.exception.SmsCampaignNotFound;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientRepository;
+import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.portfolio.group.domain.GroupRepository;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
@@ -106,7 +106,7 @@ public class SmsCampaignWritePlatformCommandHandlerImpl implements SmsCampaignWr
     private final TemplateRepository templateRepository;
     private final TemplateMergeService templateMergeService;
     private final SmsMessageRepository smsMessageRepository;
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final GroupRepository groupRepository;
     private final SchedularWritePlatformService schedularWritePlatformService;
     private final ReadReportingService readReportingService;
@@ -122,7 +122,7 @@ public class SmsCampaignWritePlatformCommandHandlerImpl implements SmsCampaignWr
     public SmsCampaignWritePlatformCommandHandlerImpl(final PlatformSecurityContext context, final SmsCampaignRepository smsCampaignRepository,
         final SmsCampaignValidator smsCampaignValidator,final SmsCampaignReadPlatformService smsCampaignReadPlatformService,
         final ReportRepository reportRepository,final TemplateRepository templateRepository, final TemplateMergeService templateMergeService,
-        final SmsMessageRepository smsMessageRepository,final ClientRepository clientRepository,final SchedularWritePlatformService schedularWritePlatformService,
+        final SmsMessageRepository smsMessageRepository,final ClientRepositoryWrapper clientRepositoryWrapper,final SchedularWritePlatformService schedularWritePlatformService,
         final ReadReportingService readReportingService, final GenericDataService genericDataService,final FromJsonHelper fromJsonHelper,
         final LoanRepository loanRepository, final GroupRepository groupRepository) {
         this.context = context;
@@ -133,7 +133,7 @@ public class SmsCampaignWritePlatformCommandHandlerImpl implements SmsCampaignWr
         this.templateRepository = templateRepository;
         this.templateMergeService = templateMergeService;
         this.smsMessageRepository = smsMessageRepository;
-        this.clientRepository = clientRepository;
+        this.clientRepositoryWrapper = clientRepositoryWrapper;
         this.schedularWritePlatformService = schedularWritePlatformService;
         this.readReportingService = readReportingService;
         this.genericDataService = genericDataService;
@@ -237,7 +237,7 @@ public class SmsCampaignWritePlatformCommandHandlerImpl implements SmsCampaignWr
                     Integer clientId = (Integer)entry.get("id");
                     Object mobileNo = entry.get("mobileNo");
 
-                    Client client =  this.clientRepository.findOne(clientId.longValue());
+                    Client client =  this.clientRepositoryWrapper.findOneWithNotFoundDetection(clientId.longValue());
                     if(mobileNo !=null) {
                         SmsMessage smsMessage = SmsMessage.pendingSms(null,null,client,null,textMessage,null,mobileNo.toString(),campaignName);
                         this.smsMessageRepository.save(smsMessage);
@@ -273,7 +273,7 @@ public class SmsCampaignWritePlatformCommandHandlerImpl implements SmsCampaignWr
                 campaignParams.put("${groupId}", group.getId().toString());
                 queryParamForRunReport.put("${groupId}", group.getId().toString());
             }else{
-                Client client = this.clientRepository.findOne(loan.getClientId());
+                Client client = this.clientRepositoryWrapper.findOneWithNotFoundDetection(loan.getClientId());
                 clientSet.add(client);
             }
 

@@ -48,9 +48,8 @@ import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
 import org.apache.fineract.infrastructure.dataqueries.service.EntityDatatableChecksWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.apache.fineract.organisation.office.domain.OfficeRepository;
+import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.office.exception.InvalidOfficeException;
-import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
@@ -76,12 +75,11 @@ import org.apache.fineract.portfolio.group.exception.InvalidGroupLevelException;
 import org.apache.fineract.portfolio.group.exception.InvalidGroupStateTransitionException;
 import org.apache.fineract.portfolio.group.serialization.GroupingTypesDataValidator;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -101,19 +99,17 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
     private final PlatformSecurityContext context;
     private final GroupRepositoryWrapper groupRepository;
     private final ClientRepositoryWrapper clientRepositoryWrapper;
-    private final OfficeRepository officeRepository;
+    private final OfficeRepositoryWrapper officeRepositoryWrapper;
     private final StaffRepositoryWrapper staffRepository;
     private final NoteRepository noteRepository;
     private final GroupLevelRepository groupLevelRepository;
     private final GroupingTypesDataValidator fromApiJsonDeserializer;
-    private final LoanRepository loanRepository;
+    private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final CodeValueRepositoryWrapper codeValueRepository;
-    private final SavingsAccountRepository savingsRepository;
     private final CommandProcessingService commandProcessingService;
     private final CalendarInstanceRepository calendarInstanceRepository;
     private final ConfigurationDomainService configurationDomainService;
-    private final SavingsAccountRepository savingsAccountRepository;
-    private final LoanRepositoryWrapper loanRepositoryWrapper;
+    private final SavingsAccountRepositoryWrapper savingsAccountRepositoryWrapper;
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final AccountNumberGenerator accountNumberGenerator;
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
@@ -122,29 +118,26 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
     @Autowired
     public GroupingTypesWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
             final GroupRepositoryWrapper groupRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
-            final OfficeRepository officeRepository, final StaffRepositoryWrapper staffRepository, final NoteRepository noteRepository,
+            final OfficeRepositoryWrapper officeRepositoryWrapper, final StaffRepositoryWrapper staffRepository, final NoteRepository noteRepository,
             final GroupLevelRepository groupLevelRepository, final GroupingTypesDataValidator fromApiJsonDeserializer,
-            final LoanRepository loanRepository, final SavingsAccountRepository savingsRepository,
             final CodeValueRepositoryWrapper codeValueRepository, final CommandProcessingService commandProcessingService,
             final CalendarInstanceRepository calendarInstanceRepository, final ConfigurationDomainService configurationDomainService,
-            final SavingsAccountRepository savingsAccountRepository, final LoanRepositoryWrapper loanRepositoryWrapper, 
+            final SavingsAccountRepositoryWrapper savingsAccountRepositoryWrapper, final LoanRepositoryWrapper loanRepositoryWrapper, 
             final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository, final AccountNumberGenerator accountNumberGenerator, 
             final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService) {
         this.context = context;
         this.groupRepository = groupRepository;
         this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.officeRepository = officeRepository;
+        this.officeRepositoryWrapper = officeRepositoryWrapper;
         this.staffRepository = staffRepository;
         this.noteRepository = noteRepository;
         this.groupLevelRepository = groupLevelRepository;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.loanRepository = loanRepository;
-        this.savingsRepository = savingsRepository;
         this.codeValueRepository = codeValueRepository;
         this.commandProcessingService = commandProcessingService;
         this.calendarInstanceRepository = calendarInstanceRepository;
         this.configurationDomainService = configurationDomainService;
-        this.savingsAccountRepository = savingsAccountRepository;
+        this.savingsAccountRepositoryWrapper = savingsAccountRepositoryWrapper;
         this.loanRepositoryWrapper = loanRepositoryWrapper;
         this.accountNumberFormatRepository = accountNumberFormatRepository;
         this.accountNumberGenerator = accountNumberGenerator;
@@ -168,8 +161,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                 officeId = parentGroup.officeId();
             }
 
-            final Office groupOffice = this.officeRepository.findOne(officeId);
-            if (groupOffice == null) { throw new OfficeNotFoundException(officeId); }
+            final Office groupOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
 
             final LocalDate activationDate = command.localDateValueOfParameterNamed(GroupingTypesApiConstants.activationDateParamName);
             final GroupLevel groupLevel = this.groupLevelRepository.findOne(groupingType.getId());
@@ -530,15 +522,15 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
             if (clients != null) {
                 for (Client client : clients) {
                     client.updateStaff(staff);
-                    if (this.loanRepository.doNonClosedLoanAccountsExistForClient(client.getId())) {
-                        for (final Loan loan : this.loanRepository.findLoanByClientId(client.getId())) {
+                    if (this.loanRepositoryWrapper.doNonClosedLoanAccountsExistForClient(client.getId())) {
+                        for (final Loan loan : this.loanRepositoryWrapper.findLoanByClientId(client.getId())) {
                             if (loan.isDisbursed() && !loan.isClosed()) {
                                 loan.reassignLoanOfficer(staff, loanOfficerReassignmentDate);
                             }
                         }
                     }
-                    if (this.savingsAccountRepository.doNonClosedSavingAccountsExistForClient(client.getId())) {
-                        for (final SavingsAccount savingsAccount : this.savingsAccountRepository
+                    if (this.savingsAccountRepositoryWrapper.doNonClosedSavingAccountsExistForClient(client.getId())) {
+                        for (final SavingsAccount savingsAccount : this.savingsAccountRepositoryWrapper
                                 .findSavingAccountByClientId(client.getId())) {
                             if (!savingsAccount.isClosed()) {
                                 savingsAccount.reassignSavingsOfficer(staff, loanOfficerReassignmentDate);
@@ -614,7 +606,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
     }
 
     private void validateLoansAndSavingsForGroupOrCenterClose(final Group groupOrCenter, final LocalDate closureDate) {
-        final Collection<Loan> groupLoans = this.loanRepository.findByGroupId(groupOrCenter.getId());
+        final Collection<Loan> groupLoans = this.loanRepositoryWrapper.findByGroupId(groupOrCenter.getId());
         for (final Loan loan : groupLoans) {
             final LoanStatusMapper loanStatus = new LoanStatusMapper(loan.status().getValue());
             if (loanStatus.isOpen()) {
@@ -637,7 +629,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
             }
         }
 
-        final List<SavingsAccount> groupSavingAccounts = this.savingsRepository.findByGroupId(groupOrCenter.getId());
+        final List<SavingsAccount> groupSavingAccounts = this.savingsAccountRepositoryWrapper.findByGroupId(groupOrCenter.getId());
 
         for (final SavingsAccount saving : groupSavingAccounts) {
             if (saving.isActive() || saving.isSubmittedAndPendingApproval() || saving.isApproved()) {
@@ -900,7 +892,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
     @Transactional
     private void validateForJLGSavings(final Long groupId, final Set<Client> clientMembers) {
         for (final Client client : clientMembers) {
-            final Collection<SavingsAccount> savings = this.savingsRepository.findByClientIdAndGroupId(client.getId(), groupId);
+            final Collection<SavingsAccount> savings = this.savingsAccountRepositoryWrapper.findByClientIdAndGroupId(client.getId(), groupId);
             if (!CollectionUtils.isEmpty(savings)) {
                 final String defaultUserMessage = "Client with identifier " + client.getId()
                         + " cannot be disassociated it has group savings.";
@@ -925,7 +917,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         if(activationDate != null) {
             for (final Client client : group.getActiveClientMembers()) {
-                final List<Loan> clientLoans = this.loanRepository.findLoanByClientId(client.getId());
+                final List<Loan> clientLoans = this.loanRepositoryWrapper.findLoanByClientId(client.getId());
                 for (final Loan clientLoan : clientLoans) {
                     if (activationDate.isAfter(clientLoan.getSubmittedOnDate())) {
                         final String defaultUserMessage = "Activation date cannot be after a group client's loan submitted on date.";
@@ -936,7 +928,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                         break;
                     }
                 }
-                final List<SavingsAccount> clientSavingsAccounts = this.savingsRepository.findSavingAccountByClientId(client.getId());
+                final List<SavingsAccount> clientSavingsAccounts = this.savingsAccountRepositoryWrapper.findSavingAccountByClientId(client.getId());
                 for (final SavingsAccount clientSavingsAccount : clientSavingsAccounts) {
                     if (activationDate.isAfter(clientSavingsAccount.getSubmittedOnDate())) {
                         final String defaultUserMessage = "Activation date cannot be after a group client's savings submitted on date.";
@@ -949,7 +941,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                 }
             }
             /** For group loans and savings validation */
-            final List<Loan> groupLoans = this.loanRepository.findByGroupId(group.getId());
+            final List<Loan> groupLoans = this.loanRepositoryWrapper.findByGroupId(group.getId());
             for (final Loan groupLoan : groupLoans) {
                 if (activationDate.isAfter(groupLoan.getSubmittedOnDate())) {
                     final String defaultUserMessage = "Activation date cannot be after a group's loan submitted on date.";
@@ -961,7 +953,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                 }
             }
 
-            final List<SavingsAccount> groupSavingsAccounts = this.savingsRepository.findByGroupId(group.getId());
+            final List<SavingsAccount> groupSavingsAccounts = this.savingsAccountRepositoryWrapper.findByGroupId(group.getId());
             for (final SavingsAccount groupSavingAccount : groupSavingsAccounts) {
                 if (activationDate.isAfter(groupSavingAccount.getSubmittedOnDate())) {
                     final String defaultUserMessage = "Activation date cannot be after a group's savings submitted on date.";

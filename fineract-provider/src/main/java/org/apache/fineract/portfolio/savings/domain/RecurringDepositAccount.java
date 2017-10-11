@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -89,12 +88,8 @@ public class RecurringDepositAccount extends SavingsAccount {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private DepositAccountInterestRateChart chart;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true, fetch=FetchType.EAGER)
-    private Set<RecurringDepositScheduleInstallment> depositScheduleInstallments = new HashSet<>();
-
-    private transient List<RecurringDepositScheduleInstallment> sortedDepositInstallments = null ;
-    
-    private transient boolean isDepositScheduleInstallmentDirty = false ;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true, fetch=FetchType.LAZY)
+    private List<RecurringDepositScheduleInstallment> depositScheduleInstallments = new ArrayList<>();
     
     protected RecurringDepositAccount() {
         //
@@ -1130,7 +1125,6 @@ public class RecurringDepositAccount extends SavingsAccount {
 
     public void generateSchedule(final PeriodFrequencyType frequency, final Integer recurringEvery, final Calendar calendar) {
         this.depositScheduleInstallments.clear();
-        this.isDepositScheduleInstallmentDirty = true ;
         LocalDate installmentDate = null;
         if (this.isCalendarInherited()) {
             installmentDate = CalendarUtils.getNextScheduleDate(calendar, accountSubmittedOrActivationDate());
@@ -1162,17 +1156,11 @@ public class RecurringDepositAccount extends SavingsAccount {
     }
 
     private List<RecurringDepositScheduleInstallment> depositScheduleInstallments() {
-        if(this.isDepositScheduleInstallmentDirty || this.sortedDepositInstallments == null) {
-            this.sortedDepositInstallments = new ArrayList<>(this.depositScheduleInstallments) ;
-            this.sortedDepositInstallments.sort(new RecurringDepositScheduleInstallmentComparator());
-            this.isDepositScheduleInstallmentDirty = false ;
-        }
-        return this.sortedDepositInstallments ;
+    	return this.depositScheduleInstallments;
     }
 
     private void addDepositScheduleInstallment(final RecurringDepositScheduleInstallment installment) {
-        this.depositScheduleInstallments.add(installment) ;
-        isDepositScheduleInstallmentDirty = true ;
+        this.depositScheduleInstallments.add(installment);
     }
     
     public boolean isCalendarInherited() {
@@ -1222,5 +1210,11 @@ public class RecurringDepositAccount extends SavingsAccount {
             final int comparsion = o1.installmentNumber().compareTo(o2.installmentNumber());
            return comparsion ;
         }
+    }
+    
+    @Override
+    public void loadLazyCollections() {
+        this.depositScheduleInstallments.size() ;
+        super.loadLazyCollections();
     }
 }

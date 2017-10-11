@@ -76,7 +76,7 @@ import org.apache.fineract.infrastructure.scheduledemail.exception.EmailCampaign
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientRepository;
+import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
@@ -118,7 +118,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     private final TemplateRepository templateRepository;
     private final TemplateMergeService templateMergeService;
     private final EmailMessageRepository emailMessageRepository;
-    private final ClientRepository clientRepository;
+    private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final SchedularWritePlatformService schedularWritePlatformService;
     private final ReadReportingService readReportingService;
     private final GenericDataService genericDataService;
@@ -135,7 +135,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     public EmailCampaignWritePlatformCommandHandlerImpl(final PlatformSecurityContext context, final EmailCampaignRepository emailCampaignRepository,
         final EmailCampaignValidator emailCampaignValidator,final EmailCampaignReadPlatformService emailCampaignReadPlatformService,final ReportParameterUsageRepository reportParameterUsageRepository,
         final ReportRepository reportRepository,final TemplateRepository templateRepository, final TemplateMergeService templateMergeService,
-        final EmailMessageRepository emailMessageRepository,final ClientRepository clientRepository,final SchedularWritePlatformService schedularWritePlatformService,
+        final EmailMessageRepository emailMessageRepository,final ClientRepositoryWrapper clientRepositoryWrapper,final SchedularWritePlatformService schedularWritePlatformService,
         final ReadReportingService readReportingService, final GenericDataService genericDataService,final FromJsonHelper fromJsonHelper,
         final LoanRepository loanRepository,final SavingsAccountRepository savingsAccountRepository,final EmailMessageJobEmailService emailMessageJobEmailService) {
         this.context = context;
@@ -146,7 +146,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
         this.templateRepository = templateRepository;
         this.templateMergeService = templateMergeService;
         this.emailMessageRepository = emailMessageRepository;
-        this.clientRepository = clientRepository;
+        this.clientRepositoryWrapper = clientRepositoryWrapper;
         this.schedularWritePlatformService = schedularWritePlatformService;
         this.readReportingService = readReportingService;
         this.genericDataService = genericDataService;
@@ -271,7 +271,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                     String message = this.compileEmailTemplate(messageTemplate, campaignName, entry);
                     Integer clientId = (Integer)entry.get("id");
                     EmailCampaign emailCampaign = this.emailCampaignRepository.findOne(campaignId);
-                    Client client =  this.clientRepository.findOne(clientId.longValue());
+                    Client client =  this.clientRepositoryWrapper.findOneWithNotFoundDetection(clientId.longValue());
                     String emailAddress = client.emailAddress();
 
                     if(emailAddress !=null && isValidEmail(emailAddress)) {
@@ -503,7 +503,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                         String reportStretchyParam = null;
                         Object var = "id";
                         Integer clientId = (Integer) entry.get(var);
-                        final Client client = this.clientRepository.findOne(clientId.longValue());
+                        final Client client = this.clientRepositoryWrapper.findOneWithNotFoundDetection(clientId.longValue());
                         if(reportStretchyParams != null){
                             HashMap<String, String> reportParams = this.replaceStretchyParamsWithActualClientParams(reportStretchyParams,client);
                             this.replaceStretchyParamsWithActualLoansOrSavingsParam(reportStretchyParams,client); // add loans or savings id to report params only one object

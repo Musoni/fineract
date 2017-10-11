@@ -60,7 +60,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.apache.fineract.organisation.office.domain.OfficeRepository;
+import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.client.domain.ClientTransaction;
@@ -91,16 +91,17 @@ public class AccountingProcessorHelper {
     private final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepository;
     private final GLClosureRepository closureRepository;
     private final GLAccountRepositoryWrapper accountRepositoryWrapper;
-    private final OfficeRepository officeRepository;
+    private final OfficeRepositoryWrapper officeRepositoryWrapper;
     private final LoanTransactionRepository loanTransactionRepository;
     private final ClientTransactionRepositoryWrapper clientTransactionRepository;
     private final SavingsAccountTransactionRepository savingsAccountTransactionRepository;
     private final AccountTransfersReadPlatformService accountTransfersReadPlatformService;
     private final LoanReadPlatformService loanReadPlatformService;
+    
     @Autowired
     public AccountingProcessorHelper(final JournalEntryRepository glJournalEntryRepository,
             final ProductToGLAccountMappingRepository accountMappingRepository, final GLClosureRepository closureRepository,
-            final OfficeRepository officeRepository, final LoanTransactionRepository loanTransactionRepository,
+            final OfficeRepositoryWrapper officeRepositoryWrapper, final LoanTransactionRepository loanTransactionRepository,
             final SavingsAccountTransactionRepository savingsAccountTransactionRepository,
             final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepository,
             final AccountTransfersReadPlatformService accountTransfersReadPlatformService,
@@ -110,7 +111,7 @@ public class AccountingProcessorHelper {
         this.glJournalEntryRepository = glJournalEntryRepository;
         this.accountMappingRepository = accountMappingRepository;
         this.closureRepository = closureRepository;
-        this.officeRepository = officeRepository;
+        this.officeRepositoryWrapper = officeRepositoryWrapper;
         this.loanTransactionRepository = loanTransactionRepository;
         this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
         this.financialActivityAccountRepository = financialActivityAccountRepository;
@@ -548,7 +549,7 @@ public class AccountingProcessorHelper {
     }
 
     public Office getOfficeById(final long officeId) {
-        return this.officeRepository.findOne(officeId);
+    	return this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
     }
 
     private void createJournalEntriesForLoan(final Office office, final String currencyCode, final int accountTypeToDebitId,

@@ -45,6 +45,7 @@ import org.apache.fineract.infrastructure.dataqueries.service.EntityDatatableChe
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepository;
+import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
@@ -69,11 +70,13 @@ import org.apache.fineract.portfolio.group.exception.GroupMemberCountNotInPermis
 import org.apache.fineract.portfolio.group.exception.GroupNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountDataDTO;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
 import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
 import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
@@ -100,15 +103,15 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
     private final PlatformSecurityContext context;
     private final ClientRepositoryWrapper clientRepository;
     private final ClientNonPersonRepositoryWrapper clientNonPersonRepository;
-    private final OfficeRepository officeRepository;
+    private final OfficeRepositoryWrapper officeRepositoryWrapper;
     private final NoteRepository noteRepository;
     private final GroupRepository groupRepository;
     private final ClientDataValidator fromApiJsonDeserializer;
     private final AccountNumberGenerator accountNumberGenerator;
     private final StaffRepositoryWrapper staffRepository;
     private final CodeValueRepositoryWrapper codeValueRepository;
-    private final LoanRepository loanRepository;
-    private final SavingsAccountRepository savingsRepository;
+    private final LoanRepositoryWrapper loanRepositoryWrapper;
+    private final SavingsAccountRepositoryWrapper savingsRepositoryWrapper;
     private final SavingsProductRepository savingsProductRepository;
     private final SavingsApplicationProcessWritePlatformService savingsApplicationProcessWritePlatformService;
     private final CommandProcessingService commandProcessingService;
@@ -121,11 +124,11 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
     @Autowired
     public ClientWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final ClientRepositoryWrapper clientRepository, final ClientNonPersonRepositoryWrapper clientNonPersonRepository, final OfficeRepository officeRepository, final NoteRepository noteRepository,
+            final ClientRepositoryWrapper clientRepository, final ClientNonPersonRepositoryWrapper clientNonPersonRepository, final OfficeRepositoryWrapper officeRepositoryWrapper, final NoteRepository noteRepository,
             final ClientDataValidator fromApiJsonDeserializer, final AccountNumberGenerator accountNumberGenerator,
             final GroupRepository groupRepository, final StaffRepositoryWrapper staffRepository,
-            final CodeValueRepositoryWrapper codeValueRepository, final LoanRepository loanRepository,
-            final SavingsAccountRepository savingsRepository, final SavingsProductRepository savingsProductRepository,
+            final CodeValueRepositoryWrapper codeValueRepository, final LoanRepositoryWrapper loanRepositoryWrapper,
+            final SavingsAccountRepositoryWrapper savingsRepositoryWrapper, final SavingsProductRepository savingsProductRepository,
             final SavingsApplicationProcessWritePlatformService savingsApplicationProcessWritePlatformService,
             final CommandProcessingService commandProcessingService, final ConfigurationDomainService configurationDomainService,
             final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository, final FromJsonHelper fromApiJsonHelper, 
@@ -135,15 +138,15 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         this.context = context;
         this.clientRepository = clientRepository;
         this.clientNonPersonRepository = clientNonPersonRepository;
-        this.officeRepository = officeRepository;
+        this.officeRepositoryWrapper = officeRepositoryWrapper;
         this.noteRepository = noteRepository;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
         this.accountNumberGenerator = accountNumberGenerator;
         this.groupRepository = groupRepository;
         this.staffRepository = staffRepository;
         this.codeValueRepository = codeValueRepository;
-        this.loanRepository = loanRepository;
-        this.savingsRepository = savingsRepository;
+        this.loanRepositoryWrapper = loanRepositoryWrapper;
+        this.savingsRepositoryWrapper = savingsRepositoryWrapper;
         this.savingsProductRepository = savingsProductRepository;
         this.savingsApplicationProcessWritePlatformService = savingsApplicationProcessWritePlatformService;
         this.commandProcessingService = commandProcessingService;
@@ -222,8 +225,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
             final Long officeId = command.longValueOfParameterNamed(ClientApiConstants.officeIdParamName);
 
-            final Office clientOffice = this.officeRepository.findOne(officeId);
-            if (clientOffice == null) { throw new OfficeNotFoundException(officeId); }
+            final Office clientOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
 
             final Long groupId = command.longValueOfParameterNamed(ClientApiConstants.groupIdParamName);
 
@@ -259,10 +261,9 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                         ClientApiConstants.CLIENT_CLASSIFICATION, clientClassificationId);
             }
 
-            SavingsProduct savingsProduct = null;
             final Long savingsProductId = command.longValueOfParameterNamed(ClientApiConstants.savingsProductIdParamName);
             if (savingsProductId != null) {
-                savingsProduct = this.savingsProductRepository.findOne(savingsProductId);
+            	SavingsProduct savingsProduct = this.savingsProductRepository.findOne(savingsProductId);
                 if (savingsProduct == null) { throw new SavingsProductNotFoundException(savingsProductId); }
 
             }
@@ -280,7 +281,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 }
             }
             
-            final Client newClient = Client.createNew(currentUser, clientOffice, clientParentGroup, staff, savingsProduct, gender,
+            final Client newClient = Client.createNew(currentUser, clientOffice, clientParentGroup, staff, savingsProductId, gender,
                     clientType, clientClassification, legalFormValue, command);
             boolean rollbackTransaction = false;
             if (newClient.isActive()) {
@@ -309,15 +310,12 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 
             }
             
-            if(isEntity)            
+            if(isEntity) {
             	extractAndCreateClientNonPerson(newClient, command);
-            	
-			final long clientId = newClient.getId();
-
+            }
+        	
 			if (isAddressEnabled) {
-
 				this.addressWritePlatformService.addNewClientAddress(newClient, command);
-
 			}
 
 
@@ -417,7 +415,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     savingsProduct = this.savingsProductRepository.findOne(savingsProductId);
                     if (savingsProduct == null) { throw new SavingsProductNotFoundException(savingsProductId); }
                 }
-                clientForUpdate.updateSavingsProduct(savingsProduct);
+                clientForUpdate.updateSavingsProduct(savingsProductId);
             }
 
             if (changes.containsKey(ClientApiConstants.genderIdParamName)) {
@@ -527,7 +525,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         try {
             this.fromApiJsonDeserializer.validateActivation(command);
 
-            final Client client = this.clientRepository.findOneWithNotFoundDetection(clientId);
+            final Client client = this.clientRepository.findOneWithNotFoundDetection(clientId, true);
             validateParentGroupRulesBeforeClientActivation(client);
 
             final Locale locale = command.extractLocale();
@@ -557,13 +555,13 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
     private CommandProcessingResult openSavingsAccount(final Client client, final DateTimeFormatter fmt) {
         CommandProcessingResult commandProcessingResult = CommandProcessingResult.empty();
-        if (client.isActive() && client.SavingsProduct() != null) {
-            SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(client, null, client.SavingsProduct(),
+        if (client.isActive() && client.savingsProductId() != null) {
+            SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(client, null, client.savingsProductId(),
                     client.getActivationLocalDate(), client.activatedBy(), fmt);
             commandProcessingResult = this.savingsApplicationProcessWritePlatformService.createActiveApplication(savingsAccountDataDTO);
             if (commandProcessingResult.getSavingsId() != null) {
-                SavingsAccount savingsAccount = this.savingsRepository.findOne(commandProcessingResult.getSavingsId());
-                client.updateSavingsAccount(savingsAccount);
+                SavingsAccount savingsAccount = this.savingsRepositoryWrapper.findOneWithNotFoundDetection(commandProcessingResult.getSavingsId());
+                client.updateSavingsAccount(commandProcessingResult.getSavingsId());
                 client.updateSavingsProduct(null);
             }
         }
@@ -675,7 +673,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             entityDatatableChecksWritePlatformService.runTheCheck(clientId,EntityTables.CLIENT.getName(),StatusEnum.CLOSE.getCode().longValue(),EntityTables.CLIENT.getForeignKeyColumnNameOnDatatable());
 
 
-            final List<Loan> clientLoans = this.loanRepository.findLoanByClientId(clientId);
+            final List<Loan> clientLoans = this.loanRepositoryWrapper.findLoanByClientId(clientId);
 
             for (final Loan loan : clientLoans) {
                 final LoanStatusMapper loanStatus = new LoanStatusMapper(loan.status().getValue());
@@ -691,7 +689,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     throw new InvalidClientStateTransitionException("close", "loan.overpaid", errorMessage);
                 }
             }
-            final List<SavingsAccount> clientSavingAccounts = this.savingsRepository.findSavingAccountByClientId(clientId);
+            final List<SavingsAccount> clientSavingAccounts = this.savingsRepositoryWrapper.findSavingAccountByClientId(clientId);
 
             for (final SavingsAccount saving : clientSavingAccounts) {
                 if (saving.isActive() || saving.isSubmittedAndPendingApproval() || saving.isApproved()) {
@@ -728,14 +726,14 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         SavingsAccount savingsAccount = null;
         final Long savingsId = command.longValueOfParameterNamed(ClientApiConstants.savingsAccountIdParamName);
         if (savingsId != null) {
-            savingsAccount = this.savingsRepository.findOne(savingsId);
-            if (savingsAccount == null) { throw new SavingsAccountNotFoundException(savingsId); }
+            savingsAccount = this.savingsRepositoryWrapper.findOneWithNotFoundDetection(savingsId);
+
             if (!savingsAccount.getClient().identifiedBy(clientId)) {
                 String defaultUserMessage = "saving account must belongs to client";
                 throw new InvalidClientSavingProductException("saving.account", "must.belongs.to.client", defaultUserMessage, savingsId,
                         clientForUpdate.getId());
             }
-            clientForUpdate.updateSavingsAccount(savingsAccount);
+            clientForUpdate.updateSavingsAccount(savingsId);
         }
 
         this.clientRepository.saveAndFlush(clientForUpdate);

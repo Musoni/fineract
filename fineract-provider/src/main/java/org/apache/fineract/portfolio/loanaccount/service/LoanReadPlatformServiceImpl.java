@@ -94,7 +94,7 @@ import org.apache.fineract.portfolio.loanaccount.data.ScheduleGeneratorDTO;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleTransactionProcessorFactory;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanSubStatus;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTermVariationType;
@@ -135,7 +135,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
-    private final LoanRepository loanRepository;
+    private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final ClientReadPlatformService clientReadPlatformService;
@@ -159,7 +159,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
     private final AccountDetailsReadPlatformService accountDetailsReadPlatformService;
 
     @Autowired
-    public LoanReadPlatformServiceImpl(final PlatformSecurityContext context, final LoanRepository loanRepository,
+    public LoanReadPlatformServiceImpl(final PlatformSecurityContext context, final LoanRepositoryWrapper loanRepositoryWrapper,
             final LoanTransactionRepository loanTransactionRepository,
             final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository,
             final LoanProductReadPlatformService loanProductReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
@@ -174,7 +174,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
             final ConfigurationDomainService configurationDomainService, 
             final AccountDetailsReadPlatformService accountDetailsReadPlatformService) {
         this.context = context;
-        this.loanRepository = loanRepository;
+        this.loanRepositoryWrapper = loanRepositoryWrapper;
         this.loanTransactionRepository = loanTransactionRepository;
         this.applicationCurrencyRepository = applicationCurrencyRepository;
         this.loanProductReadPlatformService = loanProductReadPlatformService;
@@ -426,8 +426,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
         this.context.authenticatedUser();
 
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+        final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
         loan.setHelpers(null, null, loanRepaymentScheduleTransactionProcessorFactory);
 
         final MonetaryCurrency currency = loan.getCurrency();
@@ -459,8 +458,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         // TODO - KW -OPTIMIZE - write simple sql query to fetch back overdue
         // interest that can be waived along with the date of repayment period
         // interest is overdue.
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+        final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
 
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
@@ -493,8 +491,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
     @Override
     public LoanApprovalData retrieveApprovalTemplate(final Long loanId) {
 
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+    	final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
 
         return new LoanApprovalData(loan.getProposedPrincipal(), DateUtils.getLocalDateOfTenant());
 
@@ -502,8 +499,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
     @Override
     public LoanTransactionData retrieveDisbursalTemplate(final Long loanId, boolean paymentDetailsRequired) {
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+    	final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
         final LoanTransactionEnumData transactionType = LoanEnumerations.transactionType(LoanTransactionType.DISBURSEMENT);
         Collection<PaymentTypeData> paymentOptions = null;
         if (paymentDetailsRequired) {
@@ -1862,8 +1858,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
     @Override
     public LoanTransactionData retrieveRecoveryPaymentTemplate(Long loanId) {
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+    	final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
         final LoanTransactionEnumData transactionType = LoanEnumerations.transactionType(LoanTransactionType.RECOVERY_REPAYMENT);
         final Collection<PaymentTypeData> paymentOptions = this.paymentTypeReadPlatformService.retrieveAllPaymentTypes(false);
         BigDecimal outstandingLoanBalance = null;
@@ -2118,8 +2113,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
         // TODO - KW - OPTIMIZE - write simple sql query to fetch back date of
         // possible next transaction date.
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+        final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
 
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
@@ -2288,8 +2282,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
     public LoanTransactionData retrieveLoanForeclosureTemplate(final Long loanId, final LocalDate transactionDate) {
         this.context.authenticatedUser();
 
-        final Loan loan = this.loanRepository.findOne(loanId);
-        if (loan == null) { throw new LoanNotFoundException(loanId); }
+        final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
         loan.validateForForeclosure(transactionDate);
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
