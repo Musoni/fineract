@@ -33,22 +33,25 @@ public class PermissionData {
     private final String actionName;
     @SuppressWarnings("unused")
     private final Boolean selected;
+    @SuppressWarnings("unused")
+    private final Boolean productPermission;
 
     public static PermissionData from(final String permissionCode, final boolean isSelected) {
-        return new PermissionData(null, permissionCode, null, null, isSelected);
+        return new PermissionData(null, permissionCode, null, null, isSelected, null);
     }
 
     public static PermissionData instance(final String grouping, final String code, final String entityName, final String actionName,
-            final Boolean selected) {
-        return new PermissionData(grouping, code, entityName, actionName, selected);
+            final Boolean selected, final Boolean productPermission) {
+        return new PermissionData(grouping, code, entityName, actionName, selected, productPermission);
     }
 
     private PermissionData(final String grouping, final String code, final String entityName, final String actionName,
-            final Boolean selected) {
+            final Boolean selected, final Boolean productPermission) {
         this.grouping = grouping;
         this.code = code;
         this.entityName = entityName;
         this.actionName = actionName;
         this.selected = selected;
+        this.productPermission = productPermission;
     }
 }

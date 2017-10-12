@@ -46,6 +46,7 @@ import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSeria
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.portfolio.loanaccount.data.LoanAccountData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionData;
 import org.apache.fineract.portfolio.loanaccount.service.LoanReadPlatformService;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
@@ -171,10 +172,11 @@ public class LoanTransactionsApiResource {
             final String apiRequestBodyAsJson) {
 
         final CommandWrapperBuilder builder = new CommandWrapperBuilder().withJson(apiRequestBodyAsJson);
+        final LoanAccountData loan = this.loanReadPlatformService.retrieveOne(loanId);
 
         CommandProcessingResult result = null;
         if (is(commandParam, "repayment")) {
-            final CommandWrapper commandRequest = builder.loanRepaymentTransaction(loanId).build();
+            final CommandWrapper commandRequest = builder.loanRepaymentTransaction(loanId, loan.loanProductId()).build();
             result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
         } else if (is(commandParam, "waiveinterest")) {
             final CommandWrapper commandRequest = builder.waiveInterestPortionTransaction(loanId).build();
@@ -214,6 +216,7 @@ public class LoanTransactionsApiResource {
     public String adjustLoanTransaction(@PathParam("loanId") final Long loanId, @PathParam("transactionId") final Long transactionId,
             final String apiRequestBodyAsJson) {
 
+        
         final CommandWrapperBuilder builder = new CommandWrapperBuilder().withJson(apiRequestBodyAsJson);
         final CommandWrapper commandRequest = builder.adjustTransaction(loanId, transactionId).build();
 

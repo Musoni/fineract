@@ -223,7 +223,7 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
     @Override
     public boolean validateCommand(final CommandWrapper commandWrapper, final AppUser user) {
         boolean rollbackTransaction = this.configurationDomainService.isMakerCheckerEnabledForTask(commandWrapper.taskPermissionName());
-        user.validateHasPermissionTo(commandWrapper.getTaskPermissionName());
+        user.validateHasPermissionTo(commandWrapper.getTaskPermissionName(), commandWrapper.getProductId());
         return rollbackTransaction;
     }
 

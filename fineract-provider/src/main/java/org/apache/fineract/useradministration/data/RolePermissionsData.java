@@ -35,14 +35,19 @@ public class RolePermissionsData {
     private final Boolean disabled;
 
     @SuppressWarnings("unused")
+    private final Long productGroupId;
+
+
+    @SuppressWarnings("unused")
     private final Collection<PermissionData> permissionUsageData;
 
     public RolePermissionsData(final Long id, final String name, final String description, final Boolean disabled,
-            final Collection<PermissionData> permissionUsageData) {
+                               final Long productGroupId, final Collection<PermissionData> permissionUsageData) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.disabled = disabled;
         this.permissionUsageData = permissionUsageData;
+        this.productGroupId = productGroupId;
     }
 }

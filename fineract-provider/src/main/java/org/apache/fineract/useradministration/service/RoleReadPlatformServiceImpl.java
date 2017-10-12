@@ -78,13 +78,14 @@ public class RoleReadPlatformServiceImpl implements RoleReadPlatformService {
             final Long id = JdbcSupport.getLong(rs, "id");
             final String name = rs.getString("name");
             final String description = rs.getString("description");
+            final Long productGroupId = rs.getLong("productGroupId");
             final Boolean disabled = rs.getBoolean("disabled");
             
-            return new RoleData(id, name, description, disabled);
+            return new RoleData(id, name, description, disabled, productGroupId);
         }
 
         public String schema() {
-            return " r.id as id, r.name as name, r.description as description, r.is_disabled as disabled from m_role r";
+            return " r.id as id, r.name as name, r.description as description, r.is_disabled as disabled, r.product_group_id as productGroupId from m_role r";
         }
     }
 

@@ -30,16 +30,18 @@ public class RoleData implements Serializable {
     private final String name;
     private final String description;
     private final Boolean disabled;
+    private final Long productGroupId;
 
     public RolePermissionsData toRolePermissionData(final Collection<PermissionData> permissionUsageData) {
-        return new RolePermissionsData(this.id, this.name, this.description, this.disabled, permissionUsageData);
+        return new RolePermissionsData(this.id, this.name, this.description, this.disabled, this.productGroupId, permissionUsageData);
     }
 
-    public RoleData(final Long id, final String name, final String description, final Boolean disabled) {
+    public RoleData(final Long id, final String name, final String description, final Boolean disabled, final Long productGroupId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.disabled = disabled;
+        this.productGroupId = productGroupId;
     }
 
     @Override

@@ -51,6 +51,7 @@ import org.apache.fineract.infrastructure.security.service.RandomPasswordGenerat
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.portfolio.client.domain.Client;
+import org.apache.fineract.portfolio.loanproduct.domain.InterestCalculationPeriodMethod;
 import org.apache.fineract.useradministration.service.AppUserConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -516,14 +517,22 @@ public class AppUser extends AbstractPersistable<Long> implements PlatformUser {
     }
 
     private boolean hasNotPermissionTo(final String permissionCode) {
-        return !hasPermissionTo(permissionCode);
+        return !hasPermissionTo(permissionCode, null);
+    }
+
+    private boolean hasNotPermissionTo(final String permissionCode, final Long productId) {
+        return !hasPermissionTo(permissionCode, productId);
     }
 
     private boolean hasPermissionTo(final String permissionCode) {
+        return hasPermissionTo(permissionCode,null);
+    }
+
+    private boolean hasPermissionTo(final String permissionCode, final Long productId) {
         boolean hasPermission = hasAllFunctionsPermission();
         if (!hasPermission) {
             for (final Role role : this.roles) {
-                if (role.hasPermissionTo(permissionCode)) {
+                if (role.hasPermissionTo(permissionCode, productId)) {
                     hasPermission = true;
                     break;
                 }
@@ -564,15 +573,15 @@ public class AppUser extends AbstractPersistable<Long> implements PlatformUser {
         return hasAtLeastOneOf;
     }
 
-    public void validateHasPermissionTo(final String function, final List<String> allowedPermissions) {
+    public void validateHasPermissionTo(final String function, final List<String> allowedPermissions, final Long productId) {
         if (hasNotAnyPermission(allowedPermissions)) {
             final String authorizationMessage = "User has no authority to: " + function;
             throw new NoAuthorizationException(authorizationMessage);
         }
     }
 
-    public void validateHasPermissionTo(final String function) {
-        if (hasNotPermissionTo(function)) {
+    public void validateHasPermissionTo(final String function, final Long productId) {
+        if (hasNotPermissionTo(function, productId)) {
             final String authorizationMessage = "User has no authority to: " + function;
             logger.info("Unauthorized access: userId: " + getId() + " action: " + function + " allowed: " + getAuthorities());
             throw new NoAuthorizationException(authorizationMessage);

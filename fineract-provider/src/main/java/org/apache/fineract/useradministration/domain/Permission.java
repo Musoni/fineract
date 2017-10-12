@@ -43,12 +43,16 @@ public class Permission extends AbstractPersistable<Long> {
     @Column(name = "can_maker_checker", nullable = false)
     private boolean canMakerChecker;
 
+    @Column(name = "product_permission", nullable = false)
+    private boolean productPermission;
+
     public Permission(final String grouping, final String entityName, final String actionName) {
         this.grouping = grouping;
         this.entityName = entityName;
         this.actionName = actionName;
         this.code = actionName + "_" + entityName;
         this.canMakerChecker = false;
+        this.productPermission = false;
     }
 
     protected Permission() {
@@ -57,6 +61,7 @@ public class Permission extends AbstractPersistable<Long> {
         this.actionName = null;
         this.code = null;
         this.canMakerChecker = false;
+        this.productPermission = false;
     }
 
     public boolean hasCode(final String checkCode) {
@@ -80,5 +85,9 @@ public class Permission extends AbstractPersistable<Long> {
         this.canMakerChecker = canMakerChecker;
 
         return !isUpdatedValueSame;
+    }
+
+    public boolean isProductPermission() {
+        return productPermission;
     }
 }

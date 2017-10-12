@@ -74,7 +74,7 @@ configurations {
 	providedRuntime // needed for Spring Boot executable WAR
     providedCompile
 	compile() {
-		exclude module: 'hibernate-entitymanager'		
+		// exclude module: 'hibernate-entitymanager'
 	}
 	runtime
 	all*.exclude group: 'commons-logging'
@@ -158,10 +158,8 @@ task deployPentahoReports() {
 war {
     it.dependsOn deployPentahoReports
     war.finalizedBy(bootRepackage)
-	if (project.hasProperty('buildType') && project.getProperty('buildType') == 'TEST') {
 		from(configurations.hibernateDependencies) { // notice the parens
         	into "WEB-INF/lib/" // no leading slash
-    }
 	}
 }
 

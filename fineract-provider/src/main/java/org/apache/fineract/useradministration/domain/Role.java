@@ -50,6 +50,9 @@ public class Role extends AbstractPersistable<Long> {
     @Column(name = "is_disabled", nullable = false)
     private Boolean disabled;
 
+    @Column(name = "product_group_id")
+    private Long productGroupId;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "m_role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private final Set<Permission> permissions = new HashSet<>();
@@ -57,7 +60,8 @@ public class Role extends AbstractPersistable<Long> {
     public static Role fromJson(final JsonCommand command) {
         final String name = command.stringValueOfParameterNamed("name");
         final String description = command.stringValueOfParameterNamed("description");
-        return new Role(name, description);
+        final Long productGroupId = command.longValueOfParameterNamed("productGroupId");
+        return new Role(name, description, productGroupId);
     }
 
     protected Role() {
@@ -70,6 +74,14 @@ public class Role extends AbstractPersistable<Long> {
         this.disabled = false;
     }
 
+    public Role(final String name, final String description, final Long productGroupId) {
+        this.name = name.trim();
+        this.description = description.trim();
+        this.disabled = false;
+        this.productGroupId = productGroupId;
+    }
+
+
     public Map<String, Object> update(final JsonCommand command) {
 
         final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
@@ -79,6 +91,14 @@ public class Role extends AbstractPersistable<Long> {
             final String newValue = command.stringValueOfParameterNamed(nameParamName);
             actualChanges.put(nameParamName, newValue);
             this.name = newValue;
+        }
+
+        // TODO: This method needs a validator (or needs it in a different place) to ensure only valid ID's get stored.
+        final String productGroupParamName = "productGroupId";
+        if (command.isChangeInLongParameterNamed(productGroupParamName, this.productGroupId)) {
+            final Long newValue = command.longValueOfParameterNamed(productGroupParamName);
+            actualChanges.put(productGroupParamName, newValue);
+            this.productGroupId = newValue;
         }
 
         final String descriptionParamName = "description";
@@ -115,18 +135,32 @@ public class Role extends AbstractPersistable<Long> {
     }
 
     public boolean hasPermissionTo(final String permissionCode) {
+        return hasPermissionTo(permissionCode,null);
+    }
+
+    public boolean hasPermissionTo(final String permissionCode, final Long commandProductId) {
         boolean match = false;
         for (final Permission permission : this.permissions) {
             if (permission.hasCode(permissionCode)) {
-                match = true;
-                break;
+                if(!permission.isProductPermission()) {
+                    match = true;
+                    break;
+                }
+                else
+                {
+                    if(this.productGroupId.equals(commandProductId) || commandProductId.equals(null))
+                    {
+                        match = true;
+                        break;
+                    }
+                }
             }
         }
         return match;
     }
 
     public RoleData toData() {
-        return new RoleData(getId(), this.name, this.description, this.disabled);
+        return new RoleData(getId(), this.name, this.description, this.disabled, this.productGroupId);
     }
 
     public void disableRole() {
@@ -143,5 +177,9 @@ public class Role extends AbstractPersistable<Long> {
 
     public Boolean isEnabled() {
         return this.disabled;
+    }
+
+    public Long getProductGroupId() {
+        return this.productGroupId;
     }
 }
