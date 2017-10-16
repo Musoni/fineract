@@ -32,11 +32,11 @@ import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name="m_undo_transfer")
-public class UndoTransfer extends AbstractPersistable<Long> {
+public class UndoTransfer extends AbstractPersistableCustom<Long> {
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "client_id", nullable = true)

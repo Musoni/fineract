@@ -27,11 +27,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "acc_income_and_expense_bookings",uniqueConstraints = { @UniqueConstraint(columnNames = { "journal_entry_transaction_id" }, name = "journal_entry_transaction_id") })
-public class IncomeAndExpenseBooking extends AbstractPersistable<Long>  {
+public class IncomeAndExpenseBooking extends AbstractPersistableCustom<Long>  {
 
     @ManyToOne
     @JoinColumn(name = "gl_closure_id", nullable = false)

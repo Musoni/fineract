@@ -35,11 +35,11 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartFields;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "m_savings_product_interest_rate_chart")
-public class SavingsProductInterestRateChart extends AbstractPersistable<Long> {
+public class SavingsProductInterestRateChart extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
     @JoinColumn(name = "savings_product_id", nullable = false)

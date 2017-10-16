@@ -31,7 +31,7 @@ public interface SavingsAccountTransactionRepository extends JpaRepository<Savin
     SavingsAccountTransaction findOneByIdAndSavingsAccountId(Long transactionId, Long savingsId);
 
 
-    public static final String FIND_ALL_TRANSACTIONS_AFTER_CLIENT_TRANSFER = "from SavingsAccountTransaction t1 where t1.savingsAccount.id = :savingsAccountId and t1.reversed=false and " +
+    public static final String FIND_ALL_TRANSACTIONS_AFTER_CLIENT_TRANSFER = "select t1 from SavingsAccountTransaction t1 where t1.savingsAccount.id = :savingsAccountId and t1.reversed=false and " +
             "t1.id > (select max(t2.id) from SavingsAccountTransaction  t2 where t2.savingsAccount.id = :savingsAccountId and t2.typeOf = :enumType and t2.reversed=false)";
 
     public static final String FIND_THE_CURRENT_TRANSFER_TRANSACTIONS = "select * from m_savings_account_transaction t1 where t1.savings_account_id = :savingsAccountId and " +

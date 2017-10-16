@@ -28,7 +28,7 @@ import org.springframework.data.repository.query.Param;
 public interface DepositAccountOnHoldTransactionRepository extends JpaRepository<DepositAccountOnHoldTransaction, Long>,
         JpaSpecificationExecutor<DepositAccountOnHoldTransaction> {
 
-        @Query("from DepositAccountOnHoldTransaction sa where sa.savingsAccount = :savingsAccount and sa.reversed = false order by sa.transactionDate, sa.createdDate")
+        @Query("select sa from DepositAccountOnHoldTransaction sa where sa.savingsAccount = :savingsAccount and sa.reversed = false order by sa.transactionDate, sa.createdDate")
         List<DepositAccountOnHoldTransaction> findBySavingsAccountAndReversedFalseOrderByCreatedDateAsc(@Param("savingsAccount") SavingsAccount account );
 
 }

@@ -35,7 +35,7 @@ import org.springframework.data.repository.query.Param;
 public interface CashierRepository extends JpaRepository<Cashier, Long>, JpaSpecificationExecutor<Cashier> {
     // no added behavior
 
-    public static final String FIND_ACTIVE_TELLER_CASHIER = "from Cashier c where c.teller.id= :tellerId and c.isActive = 1 ";
+    public static final String FIND_ACTIVE_TELLER_CASHIER = "select c from Cashier c where c.teller.id= :tellerId and c.isActive = 1 ";
 
     public static final String FIND_ACTIVE_CASHIERS = "select * from m_cashiers c where c.staff_id = :staffId and c.teller_id !=:tellerId and c.is_active = 1 ";
 

@@ -29,11 +29,11 @@ import javax.persistence.Table;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "x_registered_table_metadata")
-public class RegisteredTableMetaData  extends AbstractPersistable<Long> {
+public class RegisteredTableMetaData  extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
     @JoinColumn(name = "registered_table_id")

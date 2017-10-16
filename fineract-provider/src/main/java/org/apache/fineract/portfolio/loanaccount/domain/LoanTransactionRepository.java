@@ -29,7 +29,7 @@ public interface LoanTransactionRepository extends JpaRepository<LoanTransaction
 
     // no added behaviour
 
-    public static final String FIND_ALL_TRANSACTIONS_AFTER_CLIENT_TRANSFER = "from LoanTransaction t1 where t1.loan.id = :loanId and t1.reversed=false and " +
+    public static final String FIND_ALL_TRANSACTIONS_AFTER_CLIENT_TRANSFER = "select t1 from LoanTransaction t1 where t1.loan.id = :loanId and t1.reversed=false and " +
             "t1.id > (select max(t2.id) from LoanTransaction t2 where t2.loan.id = :loanId and t2.typeOf = :enumType and t2.reversed=false)";
 
     public static final String FIND_THE_CURRENT_TRANSFER_TRANSACTIONS = "select * from m_loan_transaction t1 where t1.loan_id = :loanId and " +

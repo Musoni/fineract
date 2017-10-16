@@ -25,11 +25,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.fineract.portfolio.charge.domain.Charge;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name="m_savings_product_add_charge_to_existing_accounts")
-public class ApplyChargesToExistingSavingsAccount extends AbstractPersistable<Long> {
+public class ApplyChargesToExistingSavingsAccount extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
     @JoinColumn(name = "savings_product_id", nullable = false)

@@ -22,11 +22,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "x_registered_table")
-public class RegisteredTable extends AbstractPersistable<Long> {
+public class RegisteredTable extends AbstractPersistableCustom<Long> {
 
     @Column(name="registered_table_name", nullable = false,unique=true)
     private String registeredTableName;

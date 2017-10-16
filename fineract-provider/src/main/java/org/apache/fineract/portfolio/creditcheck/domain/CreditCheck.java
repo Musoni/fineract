@@ -30,16 +30,16 @@ import javax.persistence.UniqueConstraint;
 
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.dataqueries.domain.Report;
 import org.apache.fineract.portfolio.creditcheck.CreditCheckConstants;
 import org.apache.fineract.portfolio.creditcheck.data.CreditCheckData;
 import org.apache.fineract.portfolio.creditcheck.data.CreditCheckEnumerations;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "m_credit_check", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "unique_name") })
-public class CreditCheck extends AbstractPersistable<Long> {
+public class CreditCheck extends AbstractPersistableCustom<Long> {
     
     @Column(name = "name", nullable = false)
     private String name;

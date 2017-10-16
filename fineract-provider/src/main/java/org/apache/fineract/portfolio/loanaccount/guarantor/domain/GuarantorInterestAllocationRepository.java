@@ -32,7 +32,7 @@ public interface GuarantorInterestAllocationRepository extends JpaRepository<Gua
         JpaSpecificationExecutor<GuarantorInterestAllocation> {
 
 
-    public static String FIND_ACITVE_INTEREST_ALLOACTION = "from GuarantorInterestAllocation c where c.loan.id = :loanId and c.reversed = false";
+    public static String FIND_ACITVE_INTEREST_ALLOACTION = "select c from GuarantorInterestAllocation c where c.loan.id = :loanId and c.reversed = false";
 
 
     Collection<GuarantorInterestAllocation> findByLoanAndReversedFalseOrderByIdDesc(Loan loan);

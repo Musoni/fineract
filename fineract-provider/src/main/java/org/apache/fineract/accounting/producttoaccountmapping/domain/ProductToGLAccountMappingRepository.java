@@ -54,7 +54,7 @@ public interface ProductToGLAccountMappingRepository extends JpaRepository<Produ
     List<ProductToGLAccountMapping> findAllPenaltyToIncomeAccountMappings(@Param("productId") Long productId,
             @Param("productType") int productType);
 
-    @Query("from ProductToGLAccountMapping mapping where mapping.glAccount =:glAccount")
+    @Query("select mapping from ProductToGLAccountMapping mapping where mapping.glAccount =:glAccount")
     List<ProductToGLAccountMapping> findAllProductsToGLAccountMappings(@Param("glAccount") GLAccount glAccount);
 
     List<ProductToGLAccountMapping> findByProductIdAndProductType(Long productId, int productType);

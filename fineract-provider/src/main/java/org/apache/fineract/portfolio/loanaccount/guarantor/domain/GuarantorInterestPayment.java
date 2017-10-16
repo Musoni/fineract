@@ -36,12 +36,12 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.joda.time.LocalDate;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 
 @Entity
 @Table(name = "m_guarantor_loan_interest_payment")
-public class GuarantorInterestPayment extends AbstractPersistable<Long> {
+public class GuarantorInterestPayment extends AbstractPersistableCustom<Long> {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "guarantor_id", nullable = false)

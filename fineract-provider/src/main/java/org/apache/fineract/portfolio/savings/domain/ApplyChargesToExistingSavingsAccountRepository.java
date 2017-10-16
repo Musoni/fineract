@@ -29,9 +29,9 @@ public interface ApplyChargesToExistingSavingsAccountRepository extends JpaRepos
         JpaSpecificationExecutor<ApplyChargesToExistingSavingsAccount> {
 
 
-    @Query("from ApplyChargesToExistingSavingsAccount sa where sa.savingsProduct.id =:productId")
+    @Query("select sa from ApplyChargesToExistingSavingsAccount sa where sa.savingsProduct.id =:productId")
     Collection<ApplyChargesToExistingSavingsAccount>  retrieveBySavingsProduct(@Param("productId") Long productId);
 
-    @Query("from ApplyChargesToExistingSavingsAccount sa where sa.savingsProduct.id =:productId and sa.productCharge.id =:chargeId")
+    @Query("select sa from ApplyChargesToExistingSavingsAccount sa where sa.savingsProduct.id =:productId and sa.productCharge.id =:chargeId")
     ApplyChargesToExistingSavingsAccount findBySavingsProductAndCharge(@Param("productId") Long productId, @Param("chargeId") Long chargeId);
 }

@@ -24,10 +24,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface UndoTransferRepository  extends JpaRepository<UndoTransfer, Long>, JpaSpecificationExecutor<UndoTransfer> {
-    public static final String FIND_CLIENT_UNDO_TRANSFER = "from UndoTransfer ut where ut.client.id = :clientId and ut.id=" +
+    public static final String FIND_CLIENT_UNDO_TRANSFER = "select ut from UndoTransfer ut where ut.client.id = :clientId and ut.id=" +
             "(select max(t.id) from UndoTransfer t where t.client.id = :clientId and t.transferUndone = 0)";
 
-    public static final String FIND_GROUP_TO_UNDO_TRANSFER = "from UndoTransfer ut where ut.group.id = :groupId and " +
+    public static final String FIND_GROUP_TO_UNDO_TRANSFER = "select ut from UndoTransfer ut where ut.group.id = :groupId and " +
             "ut.id=(select max(t.id) from UndoTransfer t where t.group.id = :groupId and t.transferUndone =0)";
 
     @Query(FIND_CLIENT_UNDO_TRANSFER)

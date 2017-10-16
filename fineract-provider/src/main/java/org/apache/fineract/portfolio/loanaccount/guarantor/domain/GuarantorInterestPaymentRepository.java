@@ -31,7 +31,7 @@ public interface GuarantorInterestPaymentRepository  extends JpaRepository<Guara
         JpaSpecificationExecutor<GuarantorInterestPayment> {
 
     public static String FIND_ACTIVE_INTEREST_ALLOCATION = "select gI from GuarantorInterestPayment gI inner join gI.interestAllocation m where m.loan.id =:loanId " +
-            "and gI.guarantor.id =:guarantorId and m.reversed is false ";
+            "and gI.guarantor.id =:guarantorId and m.reversed=false ";
 
 
     @Query( FIND_ACTIVE_INTEREST_ALLOCATION)

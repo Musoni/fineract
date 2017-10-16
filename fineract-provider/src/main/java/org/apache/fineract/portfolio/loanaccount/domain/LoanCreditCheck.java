@@ -25,12 +25,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.apache.fineract.portfolio.creditcheck.domain.CreditCheck;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "m_loan_credit_check")
-public class LoanCreditCheck extends AbstractPersistable<Long> {
+public class LoanCreditCheck extends AbstractPersistableCustom<Long> {
     
     @ManyToOne(optional = false)
     @JoinColumn(name = "credit_check_id", nullable = false)
