@@ -24,6 +24,9 @@ DELIMITER $$
 CREATE PROCEDURE remove_anonymous_fk (IN referencee VARCHAR(255), IN referenced VARCHAR(255))
   BEGIN
 	  DECLARE fk2drop VARCHAR(255);
+	  DECLARE db VARCHAR(255);
+	  
+	  select database() into db;
 
 	  SELECT
 	    CONSTRAINT_NAME
@@ -32,18 +35,21 @@ CREATE PROCEDURE remove_anonymous_fk (IN referencee VARCHAR(255), IN referenced 
 	  WHERE
 	    TABLE_NAME = referencee
 	    AND REFERENCED_TABLE_NAME = referenced
+	    AND CONSTRAINT_SCHEMA = db
 	  INTO fk2drop;
 
+	IF(fk2drop IS NOT NULL) THEN
 	  SET @alter_stmt = concat('ALTER TABLE ',referencee,' DROP FOREIGN KEY ',fk2drop);
     PREPARE pstmt FROM @alter_stmt;
     EXECUTE pstmt;
     DEALLOCATE PREPARE pstmt;
+    END IF;
   END $$
 
 DELIMITER ;
 
 CALL remove_anonymous_fk('m_survey_scorecards', 'm_appusers');
 
-ALTER TABLE `m_survey_scorecards` ADD FOREIGN KEY `m_appuser` (`user_id`);
+ALTER TABLE `m_survey_scorecards` ADD FOREIGN KEY (`user_id`) references `m_appuser` (`id`);
 
 DROP PROCEDURE IF EXISTS remove_anonymous_fk;
