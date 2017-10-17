@@ -139,7 +139,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
                 final Long countEntries = readWriteNonCoreDataService.countDatatableEntries(datatableName,entityId,foreignKeyColumn);
 
                 logger.info("The are "+countEntries+" entries in the table "+ datatableName);
-                if(countEntries.intValue()==0){throw new DatatabaleEntryRequiredException(datatableName,displayName);}
+                if(countEntries.intValue()==0){throw new DatatabaleEntryRequiredException(datatableName);}
             }
         }
 
@@ -158,7 +158,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
                 final Long countEntries = readWriteNonCoreDataService.countDatatableEntries(datatableName,entityId,foreignKeyColumn);
 
                 logger.info("The are "+countEntries+" entries in the table "+ datatableName);
-                if(countEntries.intValue()==0){throw new DatatabaleEntryRequiredException(datatableName,displayName);}
+                if(countEntries.intValue()==0){throw new DatatabaleEntryRequiredException(datatableName);}
             }
         }
 
