@@ -62,6 +62,7 @@ import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
+import org.apache.fineract.organisation.teller.data.CashierTransactionDataValidator;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDays;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysRepositoryWrapper;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
@@ -253,6 +254,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
     private final LoanSummaryWrapper loanSummaryWrapper;
     private final LoanRepaymentScheduleTransactionProcessorFactory transactionProcessingStrategy;
     private final CodeValueRepositoryWrapper codeValueRepository;
+    private final CashierTransactionDataValidator cashierTransactionDataValidator;
 
     @Autowired
     public LoanWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
@@ -288,7 +290,8 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             final FloatingRatesReadPlatformService floatingRatesReadPlatformService, 
             final LoanSummaryWrapper loanSummaryWrapper,
             final LoanRepaymentScheduleTransactionProcessorFactory transactionProcessingStrategy, 
-            final CodeValueRepositoryWrapper codeValueRepository) {
+            final CodeValueRepositoryWrapper codeValueRepository, 
+            final CashierTransactionDataValidator cashierTransactionDataValidator) {
         this.context = context;
         this.loanEventApiJsonValidator = loanEventApiJsonValidator;
         this.loanAssembler = loanAssembler;
@@ -332,6 +335,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.loanSummaryWrapper = loanSummaryWrapper;
         this.transactionProcessingStrategy = transactionProcessingStrategy;
         this.codeValueRepository = codeValueRepository;
+        this.cashierTransactionDataValidator = cashierTransactionDataValidator;
     }
 
     private LoanLifecycleStateMachine defaultLoanLifecycleStateMachine() {
@@ -394,6 +398,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final PaymentDetail paymentDetail = this.paymentDetailWritePlatformService.createAndPersistPaymentDetail(command, changes);
 
+        if (paymentDetail != null && paymentDetail.getPaymentType() != null
+				&& paymentDetail.getPaymentType().isCashPayment()) {
+			BigDecimal transactionAmount = command
+					.bigDecimalValueOfParameterNamed("transactionAmount");
+			this.cashierTransactionDataValidator.validateOnLoanDisbursal(
+					currentUser, loan.getCurrencyCode(), transactionAmount);
+        }
+        
         final Boolean isPaymentTypeApplicableForDisbursementCharge = configurationDomainService
                 .isPaymentTypeApplicableforDisbursementCharge();
 

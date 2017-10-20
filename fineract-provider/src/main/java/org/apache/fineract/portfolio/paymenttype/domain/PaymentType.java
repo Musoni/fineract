@@ -118,4 +118,8 @@ public class PaymentType extends AbstractPersistableCustom<Long> {
     public boolean isDeleted() {
         return deleted;
     }
+    
+    public Boolean isCashPayment() {
+		return isCashPayment;
+    }
 }

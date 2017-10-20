@@ -49,6 +49,7 @@ import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepository;
 import org.apache.fineract.organisation.staff.exception.StaffNotFoundException;
+import org.apache.fineract.organisation.teller.data.CashierTransactionDataValidator;
 import org.apache.fineract.organisation.teller.data.TellerData;
 import org.apache.fineract.organisation.teller.domain.Cashier;
 import org.apache.fineract.organisation.teller.domain.CashierRepository;
@@ -91,6 +92,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
     private final TellerManagementReadPlatformService tellerManagementReadPlatformService;
     private final GLAccountReadPlatformService glAccountReadPlatformService;
     private final AppUserRepository appUserRepository;
+    private final CashierTransactionDataValidator cashierTransactionDataValidator;
 
     @Autowired
     public TellerWritePlatformServiceJpaImpl(final PlatformSecurityContext context,
@@ -100,7 +102,9 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             JournalEntryRepository glJournalEntryRepository,
             FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper,
              final TellerManagementReadPlatformService tellerManagementReadPlatformService,
-             final GLAccountReadPlatformService glAccountReadPlatformService, final AppUserRepository appUserRepository) {
+             final GLAccountReadPlatformService glAccountReadPlatformService, 
+             final AppUserRepository appUserRepository, 
+             final CashierTransactionDataValidator cashierTransactionDataValidator) {
         this.context = context;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
         this.tellerRepositoryWrapper = tellerRepositoryWrapper;
@@ -113,6 +117,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
         this.tellerManagementReadPlatformService = tellerManagementReadPlatformService;
         this.glAccountReadPlatformService = glAccountReadPlatformService;
         this.appUserRepository = appUserRepository;
+        this.cashierTransactionDataValidator = cashierTransactionDataValidator;
     }
 
     @Override
@@ -293,6 +298,8 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             final AppUser user =this.appUserRepository.findAppUserByStaffId(staffId);
 
             final Cashier cashier = Cashier.fromJson(tellerOffice, teller, staff, startTime,endTime, command, user);
+            
+            this.cashierTransactionDataValidator.validateCashierAllowedDateAndTime(cashier, teller);
 
             cashier.assign();
 
@@ -491,6 +498,8 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
 
     @Override
     public CommandProcessingResult settleCashFromCashier(final Long cashierId, JsonCommand command) {
+    	this.cashierTransactionDataValidator.validateSettleCashAndCashOutTransactions(cashierId, command);
+    	
         return doTransactionForCashier(cashierId, CashierTxnType.SETTLE, command); // For
                                                                                    // fund
                                                                                    // settlement
