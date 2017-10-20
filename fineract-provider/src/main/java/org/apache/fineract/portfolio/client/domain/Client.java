@@ -230,6 +230,9 @@ public final class Client extends AbstractPersistableCustom<Long> {
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "reopened_by_userid", nullable = true)
 	private AppUser reopenedBy;
+	
+	@Column(name = "is_staff", nullable = false)
+	private boolean isStaff;
 
     public static Client createNew(final AppUser currentUser, final Office clientOffice, final Group clientParentGroup, final Staff staff,
             final Long savingsProductId, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification,
@@ -269,9 +272,12 @@ public final class Client extends AbstractPersistableCustom<Long> {
             submittedOnDate = command.localDateValueOfParameterNamed(ClientApiConstants.submittedOnDateParamName);
         }
         final Long savingsAccountId = null;
+        
+        final boolean isStaff = command.booleanPrimitiveValueOfParameterNamed(ClientApiConstants.isStaffParamName);
+        
         return new Client(currentUser, status, clientOffice, clientParentGroup, accountNo, firstname, middlename, lastname, fullname,
                 activationDate, officeJoiningDate, externalId, mobileNo, emailAddress, staff, submittedOnDate, savingsProductId, savingsAccountId, dataOfBirth,
-                gender, clientType, clientClassification, legalForm);
+                gender, clientType, clientClassification, legalForm, isStaff);
     }
 
     protected Client() {
@@ -282,7 +288,8 @@ public final class Client extends AbstractPersistableCustom<Long> {
             final String accountNo, final String firstname, final String middlename, final String lastname, final String fullname,
             final LocalDate activationDate, final LocalDate officeJoiningDate, final String externalId, final String mobileNo, final String emailAddress,
             final Staff staff, final LocalDate submittedOnDate, final Long savingsProductId, final Long savingsAccountId,
-            final LocalDate dateOfBirth, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final Integer legalForm) {
+            final LocalDate dateOfBirth, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final Integer legalForm, 
+            final boolean isStaff) {
 
         if (StringUtils.isBlank(accountNo)) {
             this.accountNumber = new RandomPasswordGenerator(19).generate();
@@ -353,6 +360,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
         this.staff = staff;
         this.savingsProductId = savingsProductId;
         this.savingsAccountId = savingsAccountId;
+        this.isStaff = isStaff;
 
         if (gender != null) {
             this.gender = gender;
@@ -1109,4 +1117,16 @@ public final class Client extends AbstractPersistableCustom<Long> {
     public void loadLazyCollections() {
     	this.groups.size();
     }
+    
+    public boolean isNotStaff() {
+        return !isStaff();
+    }
+
+    public boolean isStaff() {
+        return this.isStaff;
+    }
+
+	public String getExternalId() {
+		return this.externalId; 
+	}
 }

@@ -194,6 +194,11 @@ public final class ClientDataValidator {
             baseDataValidator.reset().parameter(ClientApiConstants.legalFormIdParamName).value(legalFormId).ignoreIfNull().inMinMaxRange(1, 2);
         }
         
+        if (this.fromApiJsonHelper.parameterExists(ClientApiConstants.isStaffParamName, element)) {
+            final Boolean isStaffFlag = this.fromApiJsonHelper.extractBooleanNamed("isStaff", element);
+            baseDataValidator.reset().parameter(ClientApiConstants.isStaffParamName).value(isStaffFlag).notNull();
+        }
+        
         List<ApiParameterError> dataValidationErrorsForClientNonPerson = getDataValidationErrorsForCreateOnClientNonPerson(element.getAsJsonObject().get(ClientApiConstants.clientNonPersonDetailsParamName));        
         dataValidationErrors.addAll(dataValidationErrorsForClientNonPerson);
         
@@ -459,6 +464,11 @@ public final class ClientDataValidator {
         	atLeastOneParameterPassedForUpdate = true;
         	final Integer legalFormId = this.fromApiJsonHelper.extractIntegerSansLocaleNamed(ClientApiConstants.legalFormIdParamName, element);
             baseDataValidator.reset().parameter(ClientApiConstants.legalFormIdParamName).value(legalFormId).ignoreIfNull().inMinMaxRange(1, 2);
+        }
+        
+        if (this.fromApiJsonHelper.parameterExists(ClientApiConstants.isStaffParamName, element)) {
+            final Boolean isStaffFlag = this.fromApiJsonHelper.extractBooleanNamed("isStaff", element);
+            baseDataValidator.reset().parameter(ClientApiConstants.isStaffParamName).value(isStaffFlag).notNull();
         }
 
         Map<String, Object> parameterUpdateStatusDetails = getParameterUpdateStatusAndDataValidationErrorsForUpdateOnClientNonPerson(element.getAsJsonObject().get(ClientApiConstants.clientNonPersonDetailsParamName));
