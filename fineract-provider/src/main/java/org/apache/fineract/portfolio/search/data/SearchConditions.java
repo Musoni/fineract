@@ -31,6 +31,7 @@ public class SearchConditions {
     private final Boolean clientIdentifierSearch;
     private  Boolean exactMatch;
     private final Integer searchLimit;
+    private final Boolean shareSeach;
 
 	public SearchConditions(final String searchQueryParam, final String searchResource, Boolean exactMatch, 
     		final Integer searchLimit) {
@@ -48,11 +49,13 @@ public class SearchConditions {
                 SEARCH_SUPPORTED_RESOURCES.SAVINGS.name().toLowerCase())) ? true : false;
   		this.clientIdentifierSearch = (null == searchResource || searchResource.toLowerCase().contains(
                 SEARCH_SUPPORTED_RESOURCES.CLIENTIDENTIFIERS.name().toLowerCase())) ? true : false;
+  		this.shareSeach = (null == searchResource || searchResource.toLowerCase().contains(
+  				SEARCH_SUPPORTED_RESOURCES.SHARES.name().toLowerCase())) ? true : false;
     }
 
     public SearchConditions(final String searchQueryParam, final String searchResource, final Boolean clientSearch,
-            final Boolean groupSearch, final Boolean loanSeach, final Boolean savingSeach, final Boolean clientIdentifierSearch, Boolean exactMatch, 
-            final Integer searchLimit) {
+            final Boolean groupSearch, final Boolean loanSeach, final Boolean savingSeach, final Boolean clientIdentifierSearch, 
+            final Boolean shareSeach, Boolean exactMatch,  final Integer searchLimit) {
         this.searchQuery = searchQueryParam;
         this.searchResource = searchResource;
         this.clientSearch = clientSearch;
@@ -62,6 +65,7 @@ public class SearchConditions {
         this.clientIdentifierSearch = clientIdentifierSearch;
         this.exactMatch=exactMatch;
         this.searchLimit = searchLimit;
+        this.shareSeach = shareSeach;
     }
 
     public String getSearchQuery() {
@@ -99,5 +103,12 @@ public class SearchConditions {
 	 */
 	public Integer getSearchLimit() {
 		return searchLimit;
+	}
+	
+	/**
+	 * @return shareSeach
+	 */
+	public Boolean isShareSearch() {
+		return shareSeach;
 	}
 }

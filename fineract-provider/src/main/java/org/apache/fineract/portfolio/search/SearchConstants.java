@@ -25,7 +25,8 @@ public class SearchConstants {
 
     public static enum SEARCH_RESPONSE_PARAMETERS {
         ENTITY_ID("entityId"), ENTITY_ACCOUNT_NO("entityAccountNo"), ENTITY_EXTERNAL_ID("entityExternalId"), ENTITY_NAME("entityName"), ENTITY_TYPE(
-                "entityType"), PARENT_ID("parentId"), PARENT_NAME("parentName"),ENTITY_MOBILE_NO("entityMobileNo"), ENTITY_STATUS("entityStatus");
+                "entityType"), PARENT_ID("parentId"), PARENT_NAME("parentName"),ENTITY_MOBILE_NO("entityMobileNo"), 
+        ENTITY_STATUS("entityStatus"), SHARES("shares");
 
         private final String value;
 
@@ -85,7 +86,7 @@ public class SearchConstants {
     }
 
     public static enum SEARCH_SUPPORTED_RESOURCES {
-        CLIENTS("clients"), GROUPS("groups"), LOANS("loans"), SAVINGS("savings"), CLIENTIDENTIFIERS("clientIdentifiers");
+        CLIENTS("clients"), GROUPS("groups"), LOANS("loans"), SAVINGS("savings"), CLIENTIDENTIFIERS("clientIdentifiers"), SHARES("shares");
 
         private final String value;
 
