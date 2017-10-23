@@ -102,13 +102,13 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     public Collection<ChargeData> retrieveAllChargesForCurrency(String currencyCode) {
         final ChargeMapper rm = new ChargeMapper();
 
-        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false and c.currency_code='" + currencyCode + "' ";
+        String sql = "select " + rm.chargeSchema() + " where c.is_deleted=false and c.currency_code= ? ";
 
         sql += addInClauseToSQL_toLimitChargesMappedToOffice_ifOfficeSpecificProductsEnabled();
 
         sql += " order by c.name ";
 
-        return this.jdbcTemplate.query(sql, rm, new Object[] {});
+        return this.jdbcTemplate.query(sql, rm, new Object[] {currencyCode});
     }
 
     @Override
@@ -302,7 +302,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         }
 
         @Override
-        public ChargeData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
+        public ChargeData mapRow(final ResultSet rs, final int rowNum) throws SQLException {
             final Long id = rs.getLong("id");
             final String name = rs.getString("name");
             final BigDecimal amount = rs.getBigDecimal("amount");

@@ -33,6 +33,7 @@ import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.service.CurrencyReadPlatformService;
 import org.apache.fineract.organisation.office.data.OfficeData;
@@ -69,21 +70,22 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
     private final TellerLookupMapper lookupMapper = new TellerLookupMapper();
-    private final TellerInOfficeHierarchyMapper tellerInOfficeHierarchyMapper = new TellerInOfficeHierarchyMapper();
     private final OfficeReadPlatformService officeReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
     private final CurrencyReadPlatformService currencyReadPlatformService;
     private final PaginationHelper<CashierTransactionData> paginationHelper = new PaginationHelper<>();
+    private final ColumnValidator columnValidator;
 
     @Autowired
     public TellerManagementReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
             final OfficeReadPlatformService officeReadPlatformService, StaffReadPlatformService staffReadPlatformService,
-            final CurrencyReadPlatformService currencyReadPlatformService) {
+            final CurrencyReadPlatformService currencyReadPlatformService, final ColumnValidator columnValidator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.officeReadPlatformService = officeReadPlatformService;
         this.staffReadPlatformService = staffReadPlatformService;
         this.currencyReadPlatformService = currencyReadPlatformService;
+        this.columnValidator = columnValidator;
     }
 
     private static final class TellerMapper implements RowMapper<TellerData> {
@@ -355,10 +357,10 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
     @Override
     public Collection<TellerData> retrieveAllTellers(final String sqlSearch, final Long officeId, final String status) {
         final String extraCriteria = getTellerCriteria(sqlSearch, officeId, status);
-        return retrieveAllTeller(extraCriteria);
+        return retrieveAllTeller(extraCriteria, officeId);
     }
 
-    private Collection<TellerData> retrieveAllTeller(final String extraCriteria) {
+    private Collection<TellerData> retrieveAllTeller(final String extraCriteria, final Long officeId) {
 
         final TellerMapper tm = new TellerMapper();
         String sql = "select " + tm.schema();
@@ -366,6 +368,9 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             sql += " where " + extraCriteria;
         }
         sql = sql + " order by t.teller_name";
+        if(officeId!=null){
+        	return this.jdbcTemplate.query(sql, tm, new Object[] {officeId});
+        }
         return this.jdbcTemplate.query(sql, tm, new Object[] {});
     }
 
@@ -375,9 +380,11 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
 
         if (sqlSearch != null) {
             extraCriteria.append(" and (").append(sqlSearch).append(")");
+            final TellerMapper tm = new TellerMapper();
+            this.columnValidator.validateSqlInjection(tm.schema(), sqlSearch);
         }
         if (officeId != null) {
-            extraCriteria.append(" and office_id = ").append(officeId).append(" ");
+            extraCriteria.append(" and office_id = ? ");
         }
         // Passing status parameter to get ACTIVE (By Default), INACTIVE or ALL
         // (Both active and Inactive) employees
@@ -419,6 +426,8 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
 
         if (sqlSearch != null) {
             extraCriteria.append(" and (").append(sqlSearch).append(")");
+            final CashierMapper cm = new CashierMapper();
+            this.columnValidator.validateSqlInjection(cm.schema(), sqlSearch);
         }
         if (tellerId != null) {
             extraCriteria.append(" and teller_id = ").append(tellerId).append(" ");

@@ -54,7 +54,7 @@ public class MeetingReadPlatformServiceImpl implements MeetingReadPlatformServic
         }
 
         @Override
-        public MeetingData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
+        public MeetingData mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
             final Long id = rs.getLong("id");
             final LocalDate meetingDate = JdbcSupport.getLocalDate(rs, "meetingDate");
@@ -82,7 +82,9 @@ public class MeetingReadPlatformServiceImpl implements MeetingReadPlatformServic
         final MeetingDataMapper rm = new MeetingDataMapper();
         String sql = rm.schema() + " where ci.entity_id = ? and ci.entity_type_enum = ? ";
         if (limit != null && limit > 0) {
-            sql = sql + " order by m.meeting_date desc " + " limit " + limit;
+        	sql = sql + " order by m.meeting_date desc " + " limit ? ";
+        	
+        	return this.jdbcTemplate.query(sql, rm, new Object[] { entityId, entityTypeId, limit });
         }
 
         return this.jdbcTemplate.query(sql, rm, new Object[] { entityId, entityTypeId });

@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.dataqueries.service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -68,24 +69,31 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
         if(status !=null || entity !=null || productLoanId !=null )
         sql +=" where ";
 
+        List<Object> paramList = new ArrayList<>();
         if(status !=null) {
 
-            sql +="  status_enum ="+ status;
+            sql +="  status_enum =? ";
             and = " and ";
+            
+            paramList.add(status);
         }
 
         if(entity !=null){
 
-            sql += and + " t.application_table_name = '"+ entity+"'";
+            sql += and + " t.application_table_name = ? ";
             and = " and ";
+            
+            paramList.add(entity);
         }
 
         if(productLoanId !=null){
 
-            sql += and + " t.product_loan_id = "+ productLoanId;
+            sql += and + " t.product_loan_id = ? ";
+            
+            paramList.add(productLoanId);
         }
 
-        return this.jdbcTemplate.query(sql, this.entityDataTableChecksMapper);
+        return this.jdbcTemplate.query(sql, this.entityDataTableChecksMapper, paramList.toArray());
 
     }
 
