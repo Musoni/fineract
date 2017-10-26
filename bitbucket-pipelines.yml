@@ -17,12 +17,19 @@
 # under the License.
 #
 
-image: java:8
+image:
+  name: 077447965480.dkr.ecr.eu-west-1.amazonaws.com/musonisystem-bitbucket:latest
+  aws:
+    access-key: $AWS_ACCESS_KEY_ID
+    secret-key: $AWS_SECRET_ACCESS_KEY
+options:
+  max-time: 20
 pipelines:
   default:
     - step:
         caches:
           - gradle
+          - gradlewrapper
         script:
           - bash ./gradlew clean build war
   branches:
@@ -30,27 +37,24 @@ pipelines:
       - step:
           caches:
             - gradle
+            - gradlewrapper
           script:
-            - apt-get -qq update
-            - apt-get -qq --no-install-recommends -y install awscli
             - ./gradlew clean build war
             - aws s3 mv build/libs/ s3://musonisystem-configurations/prod/ --recursive --exclude "*" --include "*.war" --only-show-errors
     demo:
       - step:
           caches:
             - gradle
+            - gradlewrapper
           script:
-            - apt-get -qq update
-            - apt-get -qq --no-install-recommends -y install awscli
             - ./gradlew clean build war
             - aws s3 mv build/libs/ s3://musonisystem-configurations/demo/ --recursive --exclude "*" --include "*.war" --only-show-errors
     develop:
       - step:
           caches:
             - gradle
+            - gradlewrapper
           script:
-            - apt-get -qq update
-            - apt-get -qq --no-install-recommends -y install awscli
             - ./gradlew clean build war
             - aws s3 mv build/libs/ s3://musonisystem-configurations/develop/ --recursive --exclude "*" --include "*.war" --only-show-errors
 definitions:
