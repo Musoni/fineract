@@ -30,6 +30,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.portfolio.shareproducts.data.ShareProductMarketPriceData;
+import org.joda.time.LocalDate;
 
 @Entity
 @Table(name = "m_share_product_market_price")
@@ -50,25 +52,29 @@ public class ShareProductMarketPrice extends AbstractPersistableCustom<Long> {
 	
     }
     
-    public ShareProductMarketPrice(final Date fromDate, final BigDecimal shareValue) {
-        this.fromDate = fromDate ;
+    public ShareProductMarketPrice(final LocalDate fromDate, final BigDecimal shareValue) {
+        this.fromDate = fromDate.toDate() ;
         this.shareValue = shareValue ;
     }
     
     public void setShareProduct(final ShareProduct product) {
         this.product = product ;
     }
+
+    public ShareProductMarketPriceData toData(){
+        return new ShareProductMarketPriceData(getId(),new LocalDate(this.fromDate),this.shareValue);
+    }
     
-    public Date getStartDate() {
-        return this.fromDate ;
+    public LocalDate getStartDate() {
+        return new LocalDate(this.fromDate) ;
     }
     
     public BigDecimal getPrice() {
         return this.shareValue ;
     }
     
-    public void setStartDate(Date date) {
-    	this.fromDate = date ;
+    public void setStartDate(LocalDate date) {
+    	this.fromDate = date.toDate() ;
     }
     
     public void setShareValue(BigDecimal value) {

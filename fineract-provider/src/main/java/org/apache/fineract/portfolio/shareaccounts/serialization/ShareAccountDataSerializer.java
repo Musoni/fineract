@@ -185,7 +185,7 @@ public class ShareAccountDataSerializer {
         String accountNo = null;
         Long approvedShares = null;
         Long pendingShares = requestedShares;
-        BigDecimal unitPrice = shareProduct.deriveMarketPrice(applicationDate.toDate());
+        BigDecimal unitPrice = shareProduct.deriveMarketPrice(applicationDate);
         ShareAccountTransaction transaction = new ShareAccountTransaction(applicationDate.toDate(), requestedShares, unitPrice);
         Set<ShareAccountTransaction> sharesPurchased = new HashSet<>();
         sharesPurchased.add(transaction);
@@ -326,17 +326,16 @@ public class ShareAccountDataSerializer {
         if (this.fromApiJsonHelper.parameterExists(ShareAccountApiConstants.requestedshares_paramname, element)) {
             Long requestedShares = this.fromApiJsonHelper.extractLongNamed(ShareAccountApiConstants.requestedshares_paramname, element);
             baseDataValidator.reset().parameter(ShareAccountApiConstants.requestedshares_paramname).value(requestedShares).notNull();
-            Date applicationDate = null ;
+            LocalDate applicationDate = null ;
             purchaseTransactionsList.clear() ;
             if(this.fromApiJsonHelper.parameterExists(ShareAccountApiConstants.applicationdate_param, element)) {
-                applicationDate = this.fromApiJsonHelper.extractLocalDateNamed(ShareAccountApiConstants.applicationdate_param, element)
-                        .toDate();
+                applicationDate = this.fromApiJsonHelper.extractLocalDateNamed(ShareAccountApiConstants.applicationdate_param, element);
                 baseDataValidator.reset().parameter(ShareAccountApiConstants.applicationdate_param).value(applicationDate).notNull();
             }else {
-                applicationDate = existingApplicationDate ;
+                applicationDate = LocalDate.fromDateFields(existingApplicationDate);
             }
             BigDecimal unitPrice = shareProduct.deriveMarketPrice(applicationDate);
-            ShareAccountTransaction transaction = new ShareAccountTransaction(applicationDate, requestedShares, unitPrice);
+            ShareAccountTransaction transaction = new ShareAccountTransaction(applicationDate.toDate(), requestedShares, unitPrice);
             purchaseTransactionsList.add(transaction) ;
             actualChanges.put(ShareAccountApiConstants.requestedshares_paramname, "Transaction");
             
@@ -670,7 +669,7 @@ public class ShareAccountDataSerializer {
         }
         
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
-        final BigDecimal unitPrice = shareProduct.deriveMarketPrice(requestedDate.toDate());
+        final BigDecimal unitPrice = shareProduct.deriveMarketPrice(requestedDate);
         ShareAccountTransaction purchaseTransaction = new ShareAccountTransaction(requestedDate.toDate(), sharesRequested, unitPrice);
         account.addAdditionalPurchasedShares(purchaseTransaction);
         handleAdditionalSharesChargeTransactions(account, purchaseTransaction);
@@ -818,7 +817,7 @@ public class ShareAccountDataSerializer {
             .failWithCodeNoParameterAddedToErrorCode("redeem.transaction.date.cannot.be.before.existing.transactions");
         }
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
-        BigDecimal unitPrice = account.getShareProduct().deriveMarketPrice(requestedDate.toDate()) ;
+        BigDecimal unitPrice = account.getShareProduct().deriveMarketPrice(requestedDate) ;
         ShareAccountTransaction transaction = ShareAccountTransaction.createRedeemTransaction(requestedDate.toDate(), sharesRequested,
                 unitPrice);
         validateRedeemRequest(account, transaction, baseDataValidator, dataValidationErrors) ;
@@ -965,7 +964,7 @@ public class ShareAccountDataSerializer {
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
         
         AppUser approvedUser = this.platformSecurityContext.authenticatedUser();
-        final BigDecimal unitPrice = account.getShareProduct().deriveMarketPrice(DateUtils.getDateOfTenant());
+        final BigDecimal unitPrice = account.getShareProduct().deriveMarketPrice(DateUtils.getLocalDateOfTenant());
         ShareAccountTransaction transaction = ShareAccountTransaction.createRedeemTransaction(closedDate.toDate(),
                 account.getTotalApprovedShares(), unitPrice);
         account.addAdditionalPurchasedShares(transaction);

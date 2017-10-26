@@ -196,7 +196,7 @@ public class ShareProductDataSerializer {
                         arrayElement);
                 final BigDecimal shareValue = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(
                         ShareProductApiConstants.sharevalue_paramname, arrayElement);
-                ShareProductMarketPriceData obj = new ShareProductMarketPriceData(id, localDate.toDate(), shareValue);
+                ShareProductMarketPriceData obj = new ShareProductMarketPriceData(id, localDate, shareValue);
                 set.add(obj);
             }
         }
@@ -213,7 +213,7 @@ public class ShareProductDataSerializer {
                         arrayElement);
                 final BigDecimal shareValue = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(
                         ShareProductApiConstants.sharevalue_paramname, arrayElement);
-                ShareProductMarketPrice obj = new ShareProductMarketPrice(localDate.toDate(), shareValue);
+                ShareProductMarketPrice obj = new ShareProductMarketPrice(localDate, shareValue);
                 set.add(obj);
             }
         }

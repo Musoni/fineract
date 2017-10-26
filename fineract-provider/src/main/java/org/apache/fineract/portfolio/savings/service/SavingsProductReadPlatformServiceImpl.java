@@ -143,7 +143,7 @@ public class SavingsProductReadPlatformServiceImpl implements SavingsProductRead
             sqlBuilder.append("sp.min_balance_for_interest_calculation as minBalanceForInterestCalculation,");
             sqlBuilder.append("sp.accounting_type as accountingType, ");
             sqlBuilder.append("sp.start_date as startDate, ");
-            sqlBuilder.append("sp.close_date as closeDate ");
+            sqlBuilder.append("sp.close_date as closeDate, ");
             sqlBuilder.append("sp.withhold_tax as withHoldTax,");
             sqlBuilder.append("tg.id as taxGroupId, tg.name as taxGroupName, ");
             sqlBuilder.append("sp.is_dormancy_tracking_active as isDormancyTrackingActive,");

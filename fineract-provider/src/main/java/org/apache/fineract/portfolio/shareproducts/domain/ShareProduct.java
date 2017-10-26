@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.shareproducts.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -47,6 +48,7 @@ import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductMarketPriceData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 @Entity
 @Table(name = "m_share_product")
@@ -283,21 +285,35 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
 
     public boolean setMarketPrice(Set<ShareProductMarketPriceData> marketPrice) {
         boolean update = false;
+        Set<ShareProductMarketPrice> marketPriceSet = new HashSet<>();
         for (ShareProductMarketPriceData data : marketPrice) {
-            if (data.getId() == null) {
-                ShareProductMarketPrice entity = new ShareProductMarketPrice(data.getStartDate(), data.getShareValue());
+            Long id = data.getId();
+            LocalDate fromDate = data.getStartDate();
+            BigDecimal shareValue = data.getShareValue();
+            if (id == null) {
+                ShareProductMarketPrice entity = new ShareProductMarketPrice(fromDate, shareValue);
                 entity.setShareProduct(this);
+                marketPriceSet.add(entity);
                 this.marketPrice.add(entity);
                 update = true;
             } else {
                 for (ShareProductMarketPrice priceData : this.marketPrice) {
-                    if (priceData.getId() == data.getId()) {
-                        priceData.setStartDate(data.getStartDate());
-                        priceData.setShareValue(data.getShareValue());
-                        update = true;
+                    if (priceData.getId().equals(data.getId())) {
+                        if(!priceData.getStartDate().equals(fromDate)) {
+                            priceData.setStartDate(data.getStartDate());
+                            update = true;
+                        }
+                        if(!priceData.getPrice().equals(shareValue)) {
+                            priceData.setShareValue(data.getShareValue());
+                            update = true;
+                        }
+                        marketPriceSet.add(priceData);
                     }
                 }
             }
+        }
+        if(update){
+            this.marketPrice = marketPriceSet;
         }
         return update;
     }
@@ -397,12 +413,12 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
         return allowed;
     }
 
-    public BigDecimal deriveMarketPrice(final Date currentDate) {
+    public BigDecimal deriveMarketPrice(final LocalDate currentDate) {
         BigDecimal marketValue = this.unitPrice;
         if (this.marketPrice != null && !this.marketPrice.isEmpty()) {
             for (ShareProductMarketPrice data : this.marketPrice) {
-                Date futureDate = data.getStartDate();
-                if (currentDate.equals(futureDate) || currentDate.after(futureDate)) {
+                LocalDate futureDate = data.getStartDate();
+                if (currentDate.equals(futureDate) || currentDate.toDate().after(futureDate.toDate())) {
                     marketValue = data.getPrice();
                 }
             }

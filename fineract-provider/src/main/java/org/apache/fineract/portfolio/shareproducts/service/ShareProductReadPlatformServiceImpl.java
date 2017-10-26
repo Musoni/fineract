@@ -42,12 +42,15 @@ import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.service.CurrencyReadPlatformService;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.charge.service.ChargeReadPlatformService;
+import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
+import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
 import org.apache.fineract.portfolio.products.data.ProductData;
 import org.apache.fineract.portfolio.products.exception.ProductNotFoundException;
 import org.apache.fineract.portfolio.products.service.ProductReadPlatformService;
 import org.apache.fineract.portfolio.shareaccounts.service.SharesEnumerations;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductData;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductMarketPriceData;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -62,6 +65,7 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
     private final ChargeReadPlatformService chargeReadPlatformService;
     private final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService;
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
+    private final PaymentTypeReadPlatformService paymentTypeReadPlatformService;
     private final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService;
     private final PaginationHelper<ProductData> shareProductDataPaginationHelper = new PaginationHelper<>();
 
@@ -70,13 +74,15 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
             final CurrencyReadPlatformService currencyReadPlatformService, final ChargeReadPlatformService chargeReadPlatformService,
             final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
             final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
-            final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService) {
+            final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService,
+            final PaymentTypeReadPlatformService paymentTypeReadPlatformService) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.currencyReadPlatformService = currencyReadPlatformService;
         this.chargeReadPlatformService = chargeReadPlatformService;
         this.shareProductDropdownReadPlatformService = shareProductDropdownReadPlatformService;
         this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
         this.accountMappingReadPlatformService = accountMappingReadPlatformService;
+        this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
     }
 
     @Override
@@ -133,8 +139,10 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
                         .retrieveMinimumActivePeriodFrequencyTypeOptions();
                 final Map<String, List<GLAccountData>> accountingMappingOptions = this.accountingDropdownReadPlatformService
                         .retrieveAccountMappingOptionsForShareProducts();
+                final List<EnumOptionData> accountingRuleOptions = this.accountingDropdownReadPlatformService.retrieveAccountingRuleTypeOptions();
+                final Collection<PaymentTypeData> paymentTypeOptions = this.paymentTypeReadPlatformService.retrieveAllPaymentTypes(false);
                 data = ShareProductData.template(data, currencyOptions, chargeOptions, minimumActivePeriodFrequencyTypeOptions,
-                        lockinPeriodFrequencyTypeOptions, accountingMappingOptions);
+                        lockinPeriodFrequencyTypeOptions, accountingMappingOptions, accountingRuleOptions, paymentTypeOptions);
             }
             return data;
         } catch (final EmptyResultDataAccessException e) {
@@ -152,8 +160,10 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
                 .retrieveMinimumActivePeriodFrequencyTypeOptions();
         final Map<String, List<GLAccountData>> accountingMappingOptions = this.accountingDropdownReadPlatformService
                 .retrieveAccountMappingOptionsForShareProducts();
+        final List<EnumOptionData> accountingRuleOptions = this.accountingDropdownReadPlatformService.retrieveAccountingRuleTypeOptions();
+        final Collection<PaymentTypeData> paymentTypeOptions = this.paymentTypeReadPlatformService.retrieveAllPaymentTypes(false);
         return ShareProductData.template(currencyOptions, chargeOptions, minimumActivePeriodFrequencyTypeOptions,
-                lockinPeriodFrequencyTypeOptions, accountingMappingOptions);
+                lockinPeriodFrequencyTypeOptions, accountingMappingOptions, accountingRuleOptions, paymentTypeOptions);
     }
 
     @Override
@@ -193,7 +203,7 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
             final Long id = rs.getLong("id");
             final Date fromDate = rs.getDate("from_date");
             final BigDecimal shareValue = rs.getBigDecimal("share_value");
-            return new ShareProductMarketPriceData(id, fromDate, shareValue);
+            return new ShareProductMarketPriceData(id, LocalDate.fromDateFields(fromDate), shareValue);
         }
 
         public String schema() {
