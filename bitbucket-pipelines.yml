@@ -18,11 +18,14 @@
 #
 
 image: java:8
+options:
+  max-time: 20
 pipelines:
   default:
     - step:
         caches:
           - gradle
+          - gradlewrapper
         script:
           - bash ./gradlew clean build war
   branches:
@@ -30,6 +33,7 @@ pipelines:
       - step:
           caches:
             - gradle
+            - gradlewrapper
           script:
             - apt-get -qq update
             - apt-get -qq --no-install-recommends -y install awscli
@@ -39,6 +43,7 @@ pipelines:
       - step:
           caches:
             - gradle
+            - gradlewrapper
           script:
             - apt-get -qq update
             - apt-get -qq --no-install-recommends -y install awscli
@@ -48,6 +53,7 @@ pipelines:
       - step:
           caches:
             - gradle
+            - gradlewrapper
           script:
             - apt-get -qq update
             - apt-get -qq --no-install-recommends -y install awscli
