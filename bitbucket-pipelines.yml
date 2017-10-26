@@ -1,0 +1,43 @@
+image: java:8
+pipelines:
+  default:
+    - step:
+        caches:
+          - gradle
+          - gradlewrapper
+        script:
+          - bash ./gradlew clean build war
+  branches:
+    master:
+      - step:
+          caches:
+            - gradle
+            - gradlewrapper
+          script:
+            - apt-get -qq update
+            - apt-get -qq --no-install-recommends -y install awscli
+            - bash ./gradlew clean build war
+            - aws s3 mv build/libs/ s3://musonisystem-configurations/prod/ --recursive --exclude "*" --include "*.war" --only-show-errors
+    demo:
+      - step:
+          caches:
+            - gradle
+            - gradlewrapper
+          script:
+            - apt-get -qq update
+            - apt-get -qq --no-install-recommends -y install awscli
+            - bash ./gradlew clean build war
+            - aws s3 mv build/libs/ s3://musonisystem-configurations/demo/ --recursive --exclude "*" --include "*.war" --only-show-errors
+    develop:
+      - step:
+          caches:
+            - gradle
+            - gradlewrapper
+          script:
+            - apt-get -qq update
+            - apt-get -qq --no-install-recommends -y install awscli
+            - bash ./gradlew clean build war
+            - aws s3 mv build/libs/ s3://musonisystem-configurations/develop/ --recursive --exclude "*" --include "*.war" --only-show-errors
+definitions:
+  caches:
+    gradlewrapper: ~/.gradle/wrapper
