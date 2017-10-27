@@ -40,7 +40,7 @@ pipelines:
             - gradlewrapper
           script:
             - ./gradlew clean build war
-            - aws --region=eu-west-1 s3 mv build/libs/ s3://musonisystem-configurations/prod/ --recursive --exclude "*" --include "*.war"
+            - aws --region=eu-west-1 s3 mv build/libs/ s3://musonisystem-configurations/prod/release/ --recursive --exclude "*" --include "*.war"
     demo:
       - step:
           caches:
@@ -48,7 +48,7 @@ pipelines:
             - gradlewrapper
           script:
             - ./gradlew clean build war
-            - aws --region=eu-west-1 s3 mv build/libs/ s3://musonisystem-configurations/demo/ --recursive --exclude "*" --include "*.war"
+            - aws --region=eu-west-1 s3 mv build/libs/ s3://musonisystem-configurations/demo/release/ --recursive --exclude "*" --include "*.war"
     develop:
       - step:
           caches:
@@ -56,7 +56,7 @@ pipelines:
             - gradlewrapper
           script:
             - ./gradlew clean build war
-            - aws --region=eu-west-1 s3 mv build/libs/ s3://musonisystem-configurations/develop/ --recursive --exclude "*" --include "*.war" 
+            - aws --region=eu-west-1 s3 mv build/libs/ s3://musonisystem-configurations/develop/release/ --recursive --exclude "*" --include "*.war" 
 definitions:
   caches:
     gradlewrapper: ~/.gradle/wrapper
