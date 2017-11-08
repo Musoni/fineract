@@ -547,7 +547,7 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             builder.append("cvSubStatus.code_value as subStatusValue,cvSubStatus.code_description as subStatusDesc,c.office_id as officeId, o.name as officeName, ");
             builder.append("c.transfer_to_office_id as transferToOfficeId, transferToOffice.name as transferToOfficeName, ");
             builder.append("c.firstname as firstname, c.middlename as middlename, c.lastname as lastname, ");
-            builder.append("c.fullname as fullname, c.display_name as displayName, ");
+            builder.append("c.fullname as fullname, c.display_name as displayName, c.is_staff as isStaff, ");
             builder.append("c.mobile_no as mobileNo, ");
             builder.append("c.email_address as emailAddress, ");
             builder.append("c.date_of_birth as dateOfBirth, ");
